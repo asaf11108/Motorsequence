@@ -24,4 +24,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
+    private static final String SQL_CREATE_ENTRIES =
+            "CREATE TABLE " + FeedEntry.TABLE_NAME + " (" +
+                    FeedEntry._ID + " INTEGER PRIMARY KEY," +
+                    FeedEntry.COLUMN_NAME_TITLE + " TEXT," +
+                    FeedEntry.COLUMN_NAME_SUBTITLE + " TEXT)";
+
+    private static final String SQL_DELETE_ENTRIES =
+            "DROP TABLE IF EXISTS " + FeedEntry.TABLE_NAME;
 }
