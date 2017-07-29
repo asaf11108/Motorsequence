@@ -1,4 +1,4 @@
-package braude.motorsequence;
+package database;
 
 import android.provider.BaseColumns;
 
