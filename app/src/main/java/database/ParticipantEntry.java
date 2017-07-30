@@ -8,8 +8,6 @@ import android.util.Pair;
 
 import java.util.List;
 
-import static util.Methods.convertToString;
-
 /**
  * Created by ASAF on 28/7/2017.
  */
@@ -25,7 +23,7 @@ public class ParticipantEntry extends AbstractDbAdapter {
     public static final String GROUP = "group";
     //-------------------------------------//
 
-    private static final String DATABASE_TABLE = "participant";
+    public static final String DATABASE_TABLE = "participant";
 
     /**
      * Constructor - takes the context to allow the database to be
@@ -64,7 +62,7 @@ public class ParticipantEntry extends AbstractDbAdapter {
      * Update the record.
      *
      * @param pk_participant_id
-     * @param values - the values to update
+     * @param values the values to update
      * @return the number of rows affected
      */
     public int update(int pk_participant_id, ContentValues values){
@@ -85,7 +83,7 @@ public class ParticipantEntry extends AbstractDbAdapter {
     public boolean delete(int pk_participant_id) {
         SQLiteDatabase db = open().getWritableDatabase();
 
-        boolean tmp = db.delete(DATABASE_TABLE, PK_PARTICIPANT_ID + "=" + pk_participant_id, null) > 0;
+        boolean tmp = db.delete(DATABASE_TABLE, PK_PARTICIPANT_ID + " = " + pk_participant_id, null) > 0;
 
         db.close();
         return tmp;
@@ -117,7 +115,7 @@ public class ParticipantEntry extends AbstractDbAdapter {
         SQLiteDatabase db = open().getReadableDatabase();
         String where = convertToString(pairList);
 
-        Cursor mCursor = db.rawQuery("SELECT * FROM " + DATABASE_TABLE + "WHERE " + where , null);
+        Cursor mCursor = db.rawQuery("SELECT * FROM " + DATABASE_TABLE + " WHERE " + where , null);
 
         if (mCursor != null)
             mCursor.moveToFirst();
