@@ -1,6 +1,8 @@
 package database;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -14,25 +16,26 @@ import java.util.List;
 public abstract class AbstractDbAdapter {
 
     protected static final String TAG = "AbstractDbAdapter";
-    protected DatabaseHelper mDbHelper;
+    private DatabaseHelper mDbHelper;
 
-    protected static final String TABLE_CREATE_Participant =
+    private static final String TABLE_CREATE_Participant =
             "CREATE TABLE Participant (" +
-                    "participantID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "participantID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "first_name varchar(20) NOT NULL, " +
                     "last_name varchar(20) NOT NULL, " +
                     "age integer(10) NOT NULL, " +
                     "email varchar(50) NOT NULL, " +
-                    "user_name varchar(50) NOT NULL, " +
-                    "group varchar(255) NOT NULL)";
-    protected static final String TABLE_CREATE_TestSet =
+                    "user_name varchar(50) NOT NULL UNIQUE, " +
+                    "password varchar(50) NOT NULL, " +
+                    "'group' varchar(255) NOT NULL)";
+    private static final String TABLE_CREATE_TestSet =
             "CREATE TABLE TestSet (" +
                     "participantID integer(10) NOT NULL, " +
                     "testSetID integer(10) NOT NULL, " +
                     "testTypeID integer(10) NOT NULL, " +
                     "num_of_tests integer(10) NOT NULL, " +
                     "PRIMARY KEY (participantID, testSetID))";
-    protected static final String TABLE_CREATE_TestType =
+    private static final String TABLE_CREATE_TestType =
             "CREATE TABLE TestType (" +
                     "testTypeID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
                     "A_x double(10) NOT NULL, " +
@@ -43,7 +46,7 @@ public abstract class AbstractDbAdapter {
                     "C_y double(10) NOT NULL, " +
                     "D_x double(10) NOT NULL, " +
                     "D_y double(10) NOT NULL)";
-    protected static final String TABLE_CREATE_RecordTest =
+    private static final String TABLE_CREATE_RecordTest =
             "CREATE TABLE RecordTest (" +
                     "participantID integer(10) NOT NULL, " +
                     "testSetID integer(10) NOT NULL, " +
@@ -53,7 +56,7 @@ public abstract class AbstractDbAdapter {
                     "velocity_peaks double(10) NOT NULL, " +
                     "max_velocity double(10) NOT NULL, " +
                     "PRIMARY KEY (participantID, testSetID, recordTestID))";
-    protected static final String TABLE_CREATE_RecordRound =
+    private static final String TABLE_CREATE_RecordRound =
             "CREATE TABLE RecordRound (" +
                     "participantID integer(10) NOT NULL, " +
                     "testSetID integer(10) NOT NULL, " +
@@ -62,7 +65,7 @@ public abstract class AbstractDbAdapter {
                     "round_time double(10) NOT NULL, " +
                     "max_velocity double(10) NOT NULL, " +
                     "PRIMARY KEY (participantID, testSetID, recordTestID, recordRoundID))";
-    protected static final String TABLE_CREATE_XYRound =
+    private static final String TABLE_CREATE_XYRound =
             "CREATE TABLE XYRound (" +
                     "participantID integer(10) NOT NULL, " +
                     "testSetID integer(10) NOT NULL, " +
@@ -75,12 +78,13 @@ public abstract class AbstractDbAdapter {
                     "jerk double(10) NOT NULL, " +
                     "PRIMARY KEY (participantID, testSetID, recordTestID, recordRoundID))";
 
-    protected static final String DATABASE_NAME = "data.db";
-    protected static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "data.db";
+    private static final int DATABASE_VERSION = 1;
 
-    protected final Context mCtx;
+    private final Context mCtx;
+    public String DATABASE_TABLE;
 
-    protected static class DatabaseHelper extends SQLiteOpenHelper {
+    private static class DatabaseHelper extends SQLiteOpenHelper {
 
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -133,15 +137,92 @@ public abstract class AbstractDbAdapter {
 
 
     //-----------extra methods-----------//
-    public String convertToString(List<Pair<String,String>> pairList){
-        String ans = "";
+    protected String[] convertToWhereStr(List<Pair<String,String>> pairList, StringBuilder whereClause){
+        String[] whereArgs = new String[pairList.size()];
         String prefix = "";
-        for (Pair<String,String> pair : pairList) {
-            ans += prefix + pair.first + " = " + pair.second;
+        for (int i = 0; i <pairList.size(); i++){
+            Pair<String,String> pair = pairList.get(i);
+            whereClause.append(prefix).append(pair.first).append(" = ?");
             prefix = " AND ";
+            whereArgs[i] = pair.second;
+
         }
-        return ans;
+        return whereArgs;
     }
     //----------------------------------//
+
+    /**
+     * Insert a new record.
+     *
+     * @return rowId or -1 if failed
+     */
+    public long insert(ContentValues values){
+        SQLiteDatabase db = open().getWritableDatabase();
+        long tmp = db.insert(DATABASE_TABLE, null,values);
+        close();
+        return tmp;
+    }
+
+    /**
+     * Update the record.
+     *
+     * @param values the columns to update
+     * @param where list of all where rows to update
+     * @return the number of rows affected
+     */
+    public int update(ContentValues values, List<Pair<String,String>> where){
+        SQLiteDatabase db = open().getWritableDatabase();
+        StringBuilder whereClause =  new StringBuilder();
+        String[] whereArgs = convertToWhereStr(where, whereClause);
+        int count = db.update(DATABASE_TABLE, values, whereClause.toString(), whereArgs);
+        close();
+        return count;
+    }
+
+    /**
+     * Delete the record.
+     *
+     * @param where list of all where rows to delete
+     * @return true if deleted, false otherwise
+     */
+    public boolean delete(List<Pair<String,String>> where) {
+        SQLiteDatabase db = open().getWritableDatabase();
+        String whereStr = convertToWhereStr(where);
+        boolean tmp = db.delete(DATABASE_TABLE, whereStr, null) > 0;
+        db.close();
+        return tmp;
+    }
+
+    /**
+     * Return a Cursor over the list of all table in the database.
+     * note - close cursor when done using!
+     *
+     * @return Cursor over all notes
+     */
+    public Cursor fetchAll(){
+        SQLiteDatabase db = open().getReadableDatabase();
+        Cursor tmp = db.rawQuery("SELECT * FROM " + DATABASE_TABLE, null);
+        close();
+        return tmp;
+    }
+
+    /**
+     * Return a Cursor positioned at the record that matches the given where list.
+     * note - close cursor when done using!
+     *
+     * @param select list of all selection columns to filter
+     * @param where list of all where rows to filter
+     * @return Cursor positioned to matching record, if found
+     */
+    public Cursor fetch(String[] select, List<Pair<String,String>> where){
+        SQLiteDatabase db = open().getReadableDatabase();
+        String whereStr = convertToWhereStr(where);
+        String selectStr = convertToSelectStr(select);
+        Cursor mCursor = db.query("SELECT " + selectStr + " FROM " + DATABASE_TABLE + " WHERE " + whereStr, null);
+        if (mCursor != null)
+            mCursor.moveToFirst();
+        close();
+        return mCursor;
+    }
 }
 

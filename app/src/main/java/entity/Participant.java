@@ -11,7 +11,7 @@ public class Participant {
 	private String password;
 	private String group;
 
-	public Participant(int id, String first_name, String last_name, int age, String email, String user_name, String password, String group) {
+	public Participant(int id) {
 		this.id = id;
 		this.first_name = first_name;
 		this.last_name = last_name;
