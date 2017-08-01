@@ -10,6 +10,8 @@ import android.util.Pair;
 
 import java.util.List;
 
+import static android.provider.Contacts.SettingsColumns.KEY;
+
 /**
  * Created by ASAF on 26/7/2017.
  */
@@ -27,17 +29,20 @@ public abstract class AbstractDbAdapter {
                     "email varchar(50) NOT NULL, " +
                     "user_name varchar(50) NOT NULL UNIQUE, " +
                     "password varchar(50) NOT NULL, " +
-                    "'group' varchar(255) NOT NULL)";
+                    "'group' varchar(255) NOT NULL, " +
+                    "testSetSeq integer(10) NOT NULL)";
     private static final String TABLE_CREATE_TestSet =
-            "CREATE TABLE TestSet (" +
-                    "participantID integer(10) NOT NULL, " +
+            "CREATE TABLE TestSet (participantID integer(10) NOT NULL, " +
                     "testSetID integer(10) NOT NULL, " +
                     "testTypeID integer(10) NOT NULL, " +
-                    "num_of_tests integer(10) NOT NULL, " +
-                    "PRIMARY KEY (participantID, testSetID))";
+                    "recordTestSeq integer(10) NOT NULL, " +
+                    "PRIMARY KEY (participantID, testSetID), " +
+                    "FOREIGN KEY(participantID) REFERENCES Participant(participantID), " +
+                    "FOREIGN KEY(testTypeID) REFERENCES TestType(testTypeID))";
     private static final String TABLE_CREATE_TestType =
             "CREATE TABLE TestType (" +
-                    "testTypeID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, " +
+                    "testTypeID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "num_of_tests integer(10) NOT NULL, " +
                     "A_x double(10) NOT NULL, " +
                     "A_y double(10) NOT NULL, " +
                     "B_x double(10) NOT NULL, " +
@@ -55,7 +60,8 @@ public abstract class AbstractDbAdapter {
                     "total_time double(10) NOT NULL, " +
                     "velocity_peaks double(10) NOT NULL, " +
                     "max_velocity double(10) NOT NULL, " +
-                    "PRIMARY KEY (participantID, testSetID, recordTestID))";
+                    "PRIMARY KEY (participantID, testSetID, recordTestID), " +
+                    "FOREIGN KEY(participantID, testSetID) REFERENCES TestSet(participantID, testSetID))";
     private static final String TABLE_CREATE_RecordRound =
             "CREATE TABLE RecordRound (" +
                     "participantID integer(10) NOT NULL, " +
@@ -64,7 +70,8 @@ public abstract class AbstractDbAdapter {
                     "recordRoundID integer(10) NOT NULL, " +
                     "round_time double(10) NOT NULL, " +
                     "max_velocity double(10) NOT NULL, " +
-                    "PRIMARY KEY (participantID, testSetID, recordTestID, recordRoundID))";
+                    "PRIMARY KEY (participantID, testSetID, recordTestID, recordRoundID), " +
+                    "FOREIGN KEY(participantID, testSetID, recordTestID) REFERENCES RecordTest(participantID, testSetID, recordTestID))";
     private static final String TABLE_CREATE_XYRound =
             "CREATE TABLE XYRound (" +
                     "participantID integer(10) NOT NULL, " +
@@ -76,7 +83,8 @@ public abstract class AbstractDbAdapter {
                     "s double(10) NOT NULL, " +
                     "v double(10) NOT NULL, " +
                     "jerk double(10) NOT NULL, " +
-                    "PRIMARY KEY (participantID, testSetID, recordTestID, recordRoundID))";
+                    "PRIMARY KEY (participantID, testSetID, recordTestID, recordRoundID), " +
+                    "FOREIGN KEY(participantID, testSetID, recordTestID, recordRoundID) REFERENCES RecordRound(participantID, testSetID, recordTestID, recordRoundID))";
 
     private static final String DATABASE_NAME = "data.db";
     private static final int DATABASE_VERSION = 1;
