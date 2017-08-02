@@ -10,15 +10,10 @@ import android.util.Pair;
 
 import java.util.List;
 
-import static android.provider.Contacts.SettingsColumns.KEY;
-
 /**
  * Created by ASAF on 26/7/2017.
  */
 public abstract class AbstractDbAdapter {
-
-    protected static final String TAG = "AbstractDbAdapter";
-    private DatabaseHelper mDbHelper;
 
     private static final String TABLE_CREATE_Participant =
             "CREATE TABLE Participant (" +
@@ -86,11 +81,136 @@ public abstract class AbstractDbAdapter {
                     "PRIMARY KEY (participantID, testSetID, recordTestID, recordRoundID), " +
                     "FOREIGN KEY(participantID, testSetID, recordTestID, recordRoundID) REFERENCES RecordRound(participantID, testSetID, recordTestID, recordRoundID))";
 
+    protected static final String TAG = "AbstractDbAdapter";
     private static final String DATABASE_NAME = "data.db";
     private static final int DATABASE_VERSION = 1;
 
+    private final String tableName;
+    private DatabaseHelper mDbHelper;
     private final Context mCtx;
-    public String DATABASE_TABLE;
+
+    /**
+     * Constructor - takes the context to allow the database to be
+     * opened/created
+     *
+     * @param ctx the Context within which to work
+     * @param tableName database table name
+     */
+    public AbstractDbAdapter(Context ctx, String tableName) {
+        this.mCtx = ctx;
+        this.tableName = tableName;
+    }
+
+    /**
+     * @return tableName - database table name
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * Insert a new record.
+     *
+     * @return rowId or -1 if failed
+     */
+    public long insert(ContentValues values){
+        SQLiteDatabase db = open().getWritableDatabase();
+        long tmp = db.insert(tableName, null,values);
+        close();
+        return tmp;
+    }
+
+    /**
+     * Update the record.
+     *
+     * @param values the columns to update
+     * @param where list of all where rows to update
+     * @return the number of rows affected
+     */
+    public int update(ContentValues values, List<Pair<String,String>> where){
+        SQLiteDatabase db = open().getWritableDatabase();
+        StringBuilder whereClause =  new StringBuilder();
+        String[] whereArgs = convertToWhereStr(where, whereClause);
+        int count = db.update(tableName, values, whereClause.toString(), whereArgs);
+        close();
+        return count;
+    }
+
+    /**
+     * Delete the record.
+     *
+     * @param where list of all where rows to delete
+     * @return true if deleted, false otherwise
+     */
+    public boolean delete(List<Pair<String,String>> where) {
+        SQLiteDatabase db = open().getWritableDatabase();
+        StringBuilder whereClause =  new StringBuilder();
+        String[] whereArgs = convertToWhereStr(where, whereClause);
+        boolean tmp = db.delete(tableName, whereClause.toString(), whereArgs) > 0;
+        db.close();
+        return tmp;
+    }
+
+    /**
+     * Return a Cursor over the list of all table in the database.
+     * note - close cursor when done using!
+     *
+     * @return Cursor over all notes
+     */
+    public Cursor fetchAll(){
+        SQLiteDatabase db = open().getReadableDatabase();
+        Cursor tmp = db.rawQuery("SELECT * FROM " + tableName, null);
+        close();
+        return tmp;
+    }
+
+    /**
+     * Return a Cursor positioned at the record that matches the given where list.
+     * note - close cursor when done using!
+     *
+     * @param columns list of all selection columns to filter. null indicates: select * ...
+     * @param where list of all where rows to filter
+     * @return Cursor positioned to matching record, if found
+     */
+    public Cursor fetch(String[] columns, List<Pair<String,String>> where){
+        SQLiteDatabase db = open().getReadableDatabase();
+        StringBuilder whereClause =  new StringBuilder();
+        String[] whereArgs = convertToWhereStr(where, whereClause);
+        Cursor mCursor = db.query(false, tableName, columns, whereClause.toString(), whereArgs, null, null, null, null);
+        if (mCursor != null)
+            mCursor.moveToFirst();
+        close();
+        return mCursor;
+    }
+
+    /**
+     * Open or create the data database.
+     *
+     * @return this
+     */
+    protected SQLiteOpenHelper open() {
+        if (mDbHelper == null) {
+            mDbHelper = new DatabaseHelper(mCtx);
+        }
+        return mDbHelper;
+    }
+
+    protected void close() {
+        mDbHelper.close();
+    }
+
+    protected String[] convertToWhereStr(List<Pair<String,String>> pairList, StringBuilder whereClause){
+        String[] whereArgs = new String[pairList.size()];
+        String prefix = "";
+        for (int i = 0; i <pairList.size(); i++){
+            Pair<String,String> pair = pairList.get(i);
+            whereClause.append(prefix).append(pair.first).append(" = ?");
+            prefix = " AND ";
+            whereArgs[i] = pair.second;
+
+        }
+        return whereArgs;
+    }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -115,122 +235,6 @@ public abstract class AbstractDbAdapter {
 //            db.execSQL("DROP TABLE IF EXISTS routes");
 //            onCreate(db);
         }
-    }
-
-    /**
-     * Constructor - takes the context to allow the database to be
-     * opened/created
-     *
-     * @param ctx the Context within which to work
-     */
-    public AbstractDbAdapter(Context ctx) {
-        this.mCtx = ctx;
-    }
-
-    /**
-     * Open or create the data database.
-     *
-     * @return this
-     */
-    protected SQLiteOpenHelper open() {
-        if (mDbHelper == null) {
-            mDbHelper = new DatabaseHelper(mCtx);
-        }
-        return mDbHelper;
-    }
-
-    protected void close() {
-        mDbHelper.close();
-    }
-
-
-    //-----------extra methods-----------//
-    protected String[] convertToWhereStr(List<Pair<String,String>> pairList, StringBuilder whereClause){
-        String[] whereArgs = new String[pairList.size()];
-        String prefix = "";
-        for (int i = 0; i <pairList.size(); i++){
-            Pair<String,String> pair = pairList.get(i);
-            whereClause.append(prefix).append(pair.first).append(" = ?");
-            prefix = " AND ";
-            whereArgs[i] = pair.second;
-
-        }
-        return whereArgs;
-    }
-    //----------------------------------//
-
-    /**
-     * Insert a new record.
-     *
-     * @return rowId or -1 if failed
-     */
-    public long insert(ContentValues values){
-        SQLiteDatabase db = open().getWritableDatabase();
-        long tmp = db.insert(DATABASE_TABLE, null,values);
-        close();
-        return tmp;
-    }
-
-    /**
-     * Update the record.
-     *
-     * @param values the columns to update
-     * @param where list of all where rows to update
-     * @return the number of rows affected
-     */
-    public int update(ContentValues values, List<Pair<String,String>> where){
-        SQLiteDatabase db = open().getWritableDatabase();
-        StringBuilder whereClause =  new StringBuilder();
-        String[] whereArgs = convertToWhereStr(where, whereClause);
-        int count = db.update(DATABASE_TABLE, values, whereClause.toString(), whereArgs);
-        close();
-        return count;
-    }
-
-    /**
-     * Delete the record.
-     *
-     * @param where list of all where rows to delete
-     * @return true if deleted, false otherwise
-     */
-    public boolean delete(List<Pair<String,String>> where) {
-        SQLiteDatabase db = open().getWritableDatabase();
-        String whereStr = convertToWhereStr(where);
-        boolean tmp = db.delete(DATABASE_TABLE, whereStr, null) > 0;
-        db.close();
-        return tmp;
-    }
-
-    /**
-     * Return a Cursor over the list of all table in the database.
-     * note - close cursor when done using!
-     *
-     * @return Cursor over all notes
-     */
-    public Cursor fetchAll(){
-        SQLiteDatabase db = open().getReadableDatabase();
-        Cursor tmp = db.rawQuery("SELECT * FROM " + DATABASE_TABLE, null);
-        close();
-        return tmp;
-    }
-
-    /**
-     * Return a Cursor positioned at the record that matches the given where list.
-     * note - close cursor when done using!
-     *
-     * @param select list of all selection columns to filter
-     * @param where list of all where rows to filter
-     * @return Cursor positioned to matching record, if found
-     */
-    public Cursor fetch(String[] select, List<Pair<String,String>> where){
-        SQLiteDatabase db = open().getReadableDatabase();
-        String whereStr = convertToWhereStr(where);
-        String selectStr = convertToSelectStr(select);
-        Cursor mCursor = db.query("SELECT " + selectStr + " FROM " + DATABASE_TABLE + " WHERE " + whereStr, null);
-        if (mCursor != null)
-            mCursor.moveToFirst();
-        close();
-        return mCursor;
     }
 }
 
