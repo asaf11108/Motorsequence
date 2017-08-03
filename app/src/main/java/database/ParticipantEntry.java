@@ -2,13 +2,6 @@ package database;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Pair;
-
-import java.util.List;
-
-import static braude.motorsequence.R.id.email;
 
 /**
  * Created by ASAF on 28/7/2017.
@@ -22,7 +15,7 @@ public class ParticipantEntry extends AbstractDbAdapter {
     public static final String EMAIL = "email";
     public static final String USER_NAME = "user_name";
     public static final String PASSWORD = "password";
-    public static final String GROUP = "'group'";
+    public static final String GROUP = "_group";
     public static final String TEST_SET_SEQ = "testSetSeq";
 
     /**

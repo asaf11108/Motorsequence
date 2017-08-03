@@ -5,10 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.util.Log;
-import android.util.Pair;
 
 import java.util.List;
+
+import util.MyPair;
 
 /**
  * Created by ASAF on 26/7/2017.
@@ -24,7 +26,7 @@ public abstract class AbstractDbAdapter {
                     "email varchar(50) NOT NULL, " +
                     "user_name varchar(50) NOT NULL UNIQUE, " +
                     "password varchar(50) NOT NULL, " +
-                    "'group' varchar(255) NOT NULL, " +
+                    "_group varchar(255) NOT NULL, " +
                     "testSetSeq integer(10) NOT NULL)";
     private static final String TABLE_CREATE_TestSet =
             "CREATE TABLE TestSet (participantID integer(10) NOT NULL, " +
@@ -80,10 +82,12 @@ public abstract class AbstractDbAdapter {
                     "jerk double(10) NOT NULL, " +
                     "PRIMARY KEY (participantID, testSetID, recordTestID, recordRoundID), " +
                     "FOREIGN KEY(participantID, testSetID, recordTestID, recordRoundID) REFERENCES RecordRound(participantID, testSetID, recordTestID, recordRoundID))";
+    private static final String INSERT_1_TestType =
+            "INSERT INTO";
 
     protected static final String TAG = "AbstractDbAdapter";
     private static final String DATABASE_NAME = "data.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     private final String tableName;
     private DatabaseHelper mDbHelper;
@@ -127,7 +131,7 @@ public abstract class AbstractDbAdapter {
      * @param where list of all where rows to update
      * @return the number of rows affected
      */
-    public int update(ContentValues values, List<Pair<String,String>> where){
+    public int update(ContentValues values, List<MyPair> where){
         SQLiteDatabase db = open().getWritableDatabase();
         StringBuilder whereClause =  new StringBuilder();
         String[] whereArgs = convertToWhereStr(where, whereClause);
@@ -142,7 +146,7 @@ public abstract class AbstractDbAdapter {
      * @param where list of all where rows to delete
      * @return true if deleted, false otherwise
      */
-    public boolean delete(List<Pair<String,String>> where) {
+    public boolean delete(List<MyPair> where) {
         SQLiteDatabase db = open().getWritableDatabase();
         StringBuilder whereClause =  new StringBuilder();
         String[] whereArgs = convertToWhereStr(where, whereClause);
@@ -172,7 +176,7 @@ public abstract class AbstractDbAdapter {
      * @param where list of all where rows to filter
      * @return Cursor positioned to matching record, if found
      */
-    public Cursor fetch(String[] columns, List<Pair<String,String>> where){
+    public Cursor fetch(String[] columns, List<MyPair> where){
         SQLiteDatabase db = open().getReadableDatabase();
         StringBuilder whereClause =  new StringBuilder();
         String[] whereArgs = convertToWhereStr(where, whereClause);
@@ -199,11 +203,11 @@ public abstract class AbstractDbAdapter {
         mDbHelper.close();
     }
 
-    protected String[] convertToWhereStr(List<Pair<String,String>> pairList, StringBuilder whereClause){
+    protected String[] convertToWhereStr(List<MyPair> pairList, StringBuilder whereClause){
         String[] whereArgs = new String[pairList.size()];
         String prefix = "";
         for (int i = 0; i <pairList.size(); i++){
-            Pair<String,String> pair = pairList.get(i);
+            MyPair pair = pairList.get(i);
             whereClause.append(prefix).append(pair.first).append(" = ?");
             prefix = " AND ";
             whereArgs[i] = pair.second;
@@ -226,14 +230,16 @@ public abstract class AbstractDbAdapter {
             db.execSQL(TABLE_CREATE_RecordTest);
             db.execSQL(TABLE_CREATE_RecordRound);
             db.execSQL(TABLE_CREATE_XYRound);
+            Log.w(TAG, "Upgrading database from version " + DATABASE_VERSION + ", which will destroy all old data");
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
                     + newVersion + ", which will destroy all old data");
-//            db.execSQL("DROP TABLE IF EXISTS routes");
-//            onCreate(db);
+
+//            db.execSQL("DROP TABLE IF EXISTS participant");
+//            db.execSQL(TABLE_CREATE_Participant);
         }
     }
 }

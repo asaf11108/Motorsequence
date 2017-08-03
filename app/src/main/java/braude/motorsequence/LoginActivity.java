@@ -32,6 +32,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import database.ParticipantEntry;
+import entity.Participant;
+
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
@@ -92,6 +95,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+//        ParticipantEntry pe = new ParticipantEntry(getApplicationContext());
+//        pe.create("asaf", "regev", 27, "asaf11108@gmail.com", "asaf", "123", "ADHD");
+//        Participant participant = new Participant(1, pe);
     }
 
     private void populateAutoComplete() {
