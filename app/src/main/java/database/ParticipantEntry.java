@@ -18,18 +18,27 @@ public class ParticipantEntry extends AbstractDbAdapter {
     public static final String GROUP = "_group";
     public static final String TEST_SET_SEQ = "testSetSeq";
 
+    private static ParticipantEntry mParticipantEntry;
+
     /**
      * Constructor - takes the context to allow the database to be
      * opened/created
      *
      * @param ctx the Context within which to work
      */
-    public ParticipantEntry(Context ctx) {
+    private ParticipantEntry(Context ctx) {
         super(ctx, "participant");
+    }
+
+    static ParticipantEntry getInstance(Context context){
+        if (mParticipantEntry == null) mParticipantEntry = new ParticipantEntry(context);
+        return mParticipantEntry;
     }
 
     /**
      * create participant to insert
+     *
+     * @return rowId or -1 if failed
      */
     public long create(String first_name, String last_name, int age, String email, String user_name, String password, String group){
         ContentValues values = new ContentValues();

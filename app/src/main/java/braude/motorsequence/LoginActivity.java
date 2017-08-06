@@ -3,21 +3,19 @@ package braude.motorsequence;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
-
 import android.content.CursorLoader;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -32,8 +30,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import database.FactoryEntry;
 import database.ParticipantEntry;
-import entity.Participant;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -96,7 +94,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
-//        ParticipantEntry pe = new ParticipantEntry(getApplicationContext());
+        FactoryEntry.createFactoryEntry(getApplicationContext());
+        ParticipantEntry pe = FactoryEntry.getParticipantEntry();
 //        pe.create("asaf", "regev", 27, "asaf11108@gmail.com", "asaf", "123", "ADHD");
 //        Participant participant = new Participant(1, pe);
     }

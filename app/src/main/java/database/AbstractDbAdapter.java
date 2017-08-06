@@ -5,10 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Build;
 import android.util.Log;
-
-import java.util.List;
 
 import util.MyPair;
 
@@ -49,7 +46,7 @@ public abstract class AbstractDbAdapter {
                     "D_x double(10) NOT NULL, " +
                     "D_y double(10) NOT NULL)";
     private static final String TABLE_CREATE_RecordTest =
-            "CREATE TABLE RecordTest (" +
+            "CREATE TABLE RecordTestEntry (" +
                     "participantID integer(10) NOT NULL, " +
                     "testSetID integer(10) NOT NULL, " +
                     "recordTestID integer(10) NOT NULL, " +
@@ -68,7 +65,7 @@ public abstract class AbstractDbAdapter {
                     "round_time double(10) NOT NULL, " +
                     "max_velocity double(10) NOT NULL, " +
                     "PRIMARY KEY (participantID, testSetID, recordTestID, recordRoundID), " +
-                    "FOREIGN KEY(participantID, testSetID, recordTestID) REFERENCES RecordTest(participantID, testSetID, recordTestID))";
+                    "FOREIGN KEY(participantID, testSetID, recordTestID) REFERENCES RecordTestEntry(participantID, testSetID, recordTestID))";
     private static final String TABLE_CREATE_XYRound =
             "CREATE TABLE XYRound (" +
                     "participantID integer(10) NOT NULL, " +
@@ -100,7 +97,7 @@ public abstract class AbstractDbAdapter {
      * @param ctx the Context within which to work
      * @param tableName database table name
      */
-    public AbstractDbAdapter(Context ctx, String tableName) {
+    protected AbstractDbAdapter(Context ctx, String tableName) {
         this.mCtx = ctx;
         this.tableName = tableName;
     }
@@ -131,7 +128,7 @@ public abstract class AbstractDbAdapter {
      * @param where list of all where rows to update
      * @return the number of rows affected
      */
-    public int update(ContentValues values, List<MyPair> where){
+    public int update(ContentValues values, MyPair[] where){
         SQLiteDatabase db = open().getWritableDatabase();
         StringBuilder whereClause =  new StringBuilder();
         String[] whereArgs = convertToWhereStr(where, whereClause);
@@ -146,7 +143,7 @@ public abstract class AbstractDbAdapter {
      * @param where list of all where rows to delete
      * @return true if deleted, false otherwise
      */
-    public boolean delete(List<MyPair> where) {
+    public boolean delete(MyPair[] where) {
         SQLiteDatabase db = open().getWritableDatabase();
         StringBuilder whereClause =  new StringBuilder();
         String[] whereArgs = convertToWhereStr(where, whereClause);
@@ -176,7 +173,7 @@ public abstract class AbstractDbAdapter {
      * @param where list of all where rows to filter
      * @return Cursor positioned to matching record, if found
      */
-    public Cursor fetch(String[] columns, List<MyPair> where){
+    public Cursor fetch(String[] columns, MyPair[] where){
         SQLiteDatabase db = open().getReadableDatabase();
         StringBuilder whereClause =  new StringBuilder();
         String[] whereArgs = convertToWhereStr(where, whereClause);
@@ -203,11 +200,11 @@ public abstract class AbstractDbAdapter {
         mDbHelper.close();
     }
 
-    protected String[] convertToWhereStr(List<MyPair> pairList, StringBuilder whereClause){
-        String[] whereArgs = new String[pairList.size()];
+    protected String[] convertToWhereStr(MyPair[] pairList, StringBuilder whereClause){
+        String[] whereArgs = new String[pairList.length];
         String prefix = "";
-        for (int i = 0; i <pairList.size(); i++){
-            MyPair pair = pairList.get(i);
+        for (int i = 0; i <pairList.length; i++){
+            MyPair pair = pairList[i];
             whereClause.append(prefix).append(pair.first).append(" = ?");
             prefix = " AND ";
             whereArgs[i] = pair.second;
@@ -230,7 +227,6 @@ public abstract class AbstractDbAdapter {
             db.execSQL(TABLE_CREATE_RecordTest);
             db.execSQL(TABLE_CREATE_RecordRound);
             db.execSQL(TABLE_CREATE_XYRound);
-            Log.w(TAG, "Upgrading database from version " + DATABASE_VERSION + ", which will destroy all old data");
         }
 
         @Override

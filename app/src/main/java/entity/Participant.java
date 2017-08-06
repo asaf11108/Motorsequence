@@ -2,16 +2,14 @@ package entity;
 
 import android.database.Cursor;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import database.FactoryEntry;
 import database.ParticipantEntry;
 import util.MyPair;
 
 
 public class Participant {
 
-	public int id;
+	public final int id;
 	public String firstName;
 	public String lastName;
 	public int age;
@@ -21,13 +19,12 @@ public class Participant {
 	public String group;
     public int testSetSeq;
 
-	public Participant(int id, ParticipantEntry pe) {
-		this.id = id;
-
-        List<MyPair> where = new ArrayList(1);
-        where.add(new MyPair(pe.PK_AI_PARTICIPANT_ID, String.valueOf(id)));
-        Cursor cursor = pe.fetch(null, where);
-
+	public Participant(int id) {
+        this.id = id;
+        ParticipantEntry pe = FactoryEntry.getParticipantEntry();
+        Cursor cursor = pe.fetch(
+                            null,
+                            new MyPair[]{new MyPair(pe.PK_AI_PARTICIPANT_ID, id)});
         firstName = cursor.getString(cursor.getColumnIndex(pe.FIRST_NAME));
         lastName = cursor.getString(cursor.getColumnIndex(pe.LAST_NAME));
         age = cursor.getInt(cursor.getColumnIndex(pe.AGE));
