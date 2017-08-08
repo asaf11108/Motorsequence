@@ -31,7 +31,7 @@ public class RecordTestEntry extends AbstractDbAdapter {
      * @param ctx the Context within which to work
      */
     private RecordTestEntry(Context ctx) {
-        super(ctx, "RecordTestEntry");
+        super(ctx, "RecordTest");
     }
 
     static RecordTestEntry getInstance(Context context){
@@ -42,20 +42,20 @@ public class RecordTestEntry extends AbstractDbAdapter {
     /**
      * create record test to insert
      *
-     * @return test set id or -1 if faild
+     * @return record test participanID or -1 if faild
      */
     public long create(int participantID, int testSetID, Date _date){
         ContentValues values = new ContentValues();
         values.put(PK_PARTICIPANT_ID, participantID);
         values.put(PK_TEST_SET_ID, testSetID);
-        TestSetEntry tse = FactoryEntry.getTestSetEntryEntry();
+        TestSetEntry tse = FactoryEntry.getTestSetEntry();
         Cursor cursor = tse.fetch(
                 new String[]{tse.RECORD_TEST_SEQ},
                 new MyPair[]{new MyPair(tse.PK_PARTICIPANT_ID, participantID),
                 new MyPair(PK_TEST_SET_ID, testSetID)});
-        int recordTestId = cursor.getInt(cursor.getColumnIndex(tse.RECORD_TEST_SEQ));
-        recordTestId++;
-        values.put(PK_RECORD_TEST_ID, recordTestId);
+        int recordTestID = cursor.getInt(cursor.getColumnIndex(tse.RECORD_TEST_SEQ));
+        recordTestID++;
+        values.put(PK_RECORD_TEST_ID, recordTestID);
         values.put(DATE, _date.toString());
         values.put(TOTAL_TIME, 0);
         values.put(VELOCITY_PEEKS, 0);
@@ -69,6 +69,6 @@ public class RecordTestEntry extends AbstractDbAdapter {
                     new MyPair[]{new MyPair(tse.PK_PARTICIPANT_ID, participantID),
                     new MyPair(PK_TEST_SET_ID, testSetID)}) == 1;
         }
-        return (flag) ? (testSetID) : (-1);
+        return (flag) ? (recordTestID) : (-1);
     }
 }

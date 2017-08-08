@@ -67,7 +67,7 @@ public abstract class AbstractDbAdapter {
                     "PRIMARY KEY (participantID, testSetID, recordTestID, recordRoundID), " +
                     "FOREIGN KEY(participantID, testSetID, recordTestID) REFERENCES RecordTestEntry(participantID, testSetID, recordTestID))";
     private static final String TABLE_CREATE_XYRound =
-            "CREATE TABLE XYRound (" +
+            "CREATE TABLE XYRoundEntry (" +
                     "participantID integer(10) NOT NULL, " +
                     "testSetID integer(10) NOT NULL, " +
                     "recordTestID integer(10) NOT NULL, " +

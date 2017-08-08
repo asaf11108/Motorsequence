@@ -35,7 +35,7 @@ public class TestSetEntry extends AbstractDbAdapter {
     /**
      * create test set to insert
      *
-     * @return test set id or -1 if faild
+     * @return test set participanID or -1 if faild
      */
     public long create(int participantID, int testTypeID){
         ContentValues values = new ContentValues();

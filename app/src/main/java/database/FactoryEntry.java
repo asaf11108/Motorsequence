@@ -34,8 +34,48 @@ public class FactoryEntry {
      *
      * @return TestSetEntry
      */
-    public static TestSetEntry getTestSetEntryEntry(){
+    public static TestSetEntry getTestSetEntry(){
         return TestSetEntry.getInstance(mFactoryEntry.mContext);
+
+    }
+
+    /**
+     * create single tone TestSetEntry entry.
+     *
+     * @return TestSetEntry
+     */
+    public static TestTypeEntry getTestTypeEntry(){
+        return TestTypeEntry.getInstance(mFactoryEntry.mContext);
+
+    }
+
+    /**
+     * create single tone TestSetEntry entry.
+     *
+     * @return TestSetEntry
+     */
+    public static RecordTestEntry getRecordTestEntry(){
+        return RecordTestEntry.getInstance(mFactoryEntry.mContext);
+
+    }
+
+    /**
+     * create single tone TestSetEntry entry.
+     *
+     * @return TestSetEntry
+     */
+    public static RecordRoundEntry getRecordRoundEntry(){
+        return RecordRoundEntry.getInstance(mFactoryEntry.mContext);
+
+    }
+
+    /**
+     * create single tone TestSetEntry entry.
+     *
+     * @return TestSetEntry
+     */
+    public static XYRoundEntry getXYRoundEntry(){
+        return XYRoundEntry.getInstance(mFactoryEntry.mContext);
 
     }
 }
