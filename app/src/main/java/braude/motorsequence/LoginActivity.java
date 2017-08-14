@@ -30,6 +30,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import database.Participant;
 import database.FactoryEntry;
 import database.ParticipantEntry;
 
@@ -96,8 +97,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         FactoryEntry.createFactoryEntry(getApplicationContext());
         ParticipantEntry pe = FactoryEntry.getParticipantEntry();
-//        pe.create("asaf", "regev", 27, "asaf11108@gmail.com", "asaf", "123", "ADHD");
-//        Participant participant = new Participant(1, pe);
+        pe.create("asaf", "regev", 27, "asaf11108@gmail.com", "asaf", "123", "ADHD");
+        Participant participant = new Participant(1);
+        participant.attachAllTestSet();
     }
 
     private void populateAutoComplete() {

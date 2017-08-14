@@ -1,20 +1,19 @@
-package entity;
+package database;
 
 import android.database.Cursor;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import database.FactoryEntry;
-import database.ParticipantEntry;
+import util.MyArrayList;
 import util.MyPair;
 
+import static android.R.attr.x;
 import static android.media.CamcorderProfile.get;
 
 
-public class Participant {
+public class Participant implements Identifier, Adder {
 
-	public final int participantID;
+	private final int participantID;
 	public String firstName;
 	public String lastName;
 	public int age;
@@ -22,8 +21,7 @@ public class Participant {
 	public String userName;
 	public String password;
 	public String group;
-    public int testSetSeq;
-    public List<TestSet> testSets;
+    public MyArrayList<TestSet> testSets;
 
 	public Participant(int participantID) {
         this.participantID = participantID;
@@ -38,37 +36,21 @@ public class Participant {
         userName = cursor.getString(cursor.getColumnIndex(pe.USER_NAME));
         password = cursor.getString(cursor.getColumnIndex(pe.PASSWORD));
         group = cursor.getString(cursor.getColumnIndex(pe.GROUP));
-        testSetSeq = cursor.getInt(cursor.getColumnIndex(pe.TEST_SET_SEQ));
+        int testSetSeq = cursor.getInt(cursor.getColumnIndex(pe.TEST_SET_SEQ));
         cursor.close();
-        testSets = new ArrayList<>();
+        testSets = new MyArrayList<>(testSetSeq, this);
 	}
 
-    /**
-     * add new test set to list.
-     * @param i thr disirable test set index
-     * @return true or false if the parameter i is invalid
-     */
-	public boolean attachTestSet(int i){
-        if (i <= 0 || i > testSetSeq) return false;
-        insert(i);
-        return true;
+    public int getID() {
+        return participantID;
     }
 
-    public void attachLastTestSet(){
-        attachTestSet(testSetSeq);
+    public void myAdd(int i, int id){
+        testSets.add(i, new TestSet(participantID, id));
     }
 
-    public void attachAllTestSet(){
-        for (int i = 1; i <= testSetSeq; i++) attachTestSet(i);
+    public void myAdd(int id){
+        testSets.add(new TestSet(participantID, id));
     }
 
-    private void insert(int x){
-        for (int i = 0; i < testSets.size(); i++) {
-            if (testSets.get(i).testSetID < x) continue;
-            if (testSets.get(i).testSetID == x) return;
-            testSets.add(i, new TestSet(participantID, x));
-            return;
-        }
-        testSets.add(new TestSet(participantID, x));
-    }
 }
