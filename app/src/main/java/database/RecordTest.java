@@ -37,4 +37,16 @@ class RecordTest implements Identifier, Adder {
         cursor.close();
         recordRounds = new MyArrayList<>(numOfTests, this);
     }
+
+    public int getID() {
+        return recordTestID;
+    }
+
+    public void myAdd(int i, int id){
+        recordRounds.add(i, new RecordRound(participantID, testSetID, recordTestID, id));
+    }
+
+    public void myAdd(int id){
+        recordRounds.add(new RecordRound(participantID, testSetID, recordTestID, id));
+    }
 }

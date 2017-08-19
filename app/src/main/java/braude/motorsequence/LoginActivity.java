@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -33,6 +34,7 @@ import java.util.List;
 import database.Participant;
 import database.FactoryEntry;
 import database.ParticipantEntry;
+import util.MyPair;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -41,7 +43,9 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    /**ח
+    private static final String ADMIN_USER = "admin";
+    private static final String ADMIN_PASSWORD = "admin";
+    /**
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
@@ -96,10 +100,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
 
         FactoryEntry.createFactoryEntry(getApplicationContext());
-        ParticipantEntry pe = FactoryEntry.getParticipantEntry();
-        pe.create("asaf", "regev", 27, "asaf11108@gmail.com", "asaf", "123", "ADHD");
-        Participant participant = new Participant(1);
-        participant.attachAllTestSet();
+//        ParticipantEntry pe = FactoryEntry.getParticipantEntry();
+//        pe.create("asaf", "regev", 27, "asaf11108@gmail.com", "asaf", "123", "ADHD");
+//        Participant participant = new Participant(1);
+//        participant.attachAllTestSet();
     }
 
     private void populateAutoComplete() {
@@ -168,7 +172,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
@@ -179,10 +183,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
+//        } else if (!isEmailValid(email)) {
+//            mEmailView.setError(getString(R.string.error_invalid_email));
+//            focusView = mEmailView;
+//            cancel = true;
         }
 
         if (cancel) {
@@ -198,15 +202,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
+//    private boolean isEmailValid(String email) {
+//        TODO: Replace this with your own logic
+//        return true;
+//    }
 
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
-    }
+//    private boolean isPasswordValid(String password) {
+//        TODO: Replace this with your own logic
+//        return password.length() > 4;
+//    }
 
     /**
      * Shows the progress UI and hides the login form.
@@ -304,35 +308,29 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
+        private final String mUser;
         private final String mPassword;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
+        UserLoginTask(String user, String password) {
+            mUser = user;
             mPassword = password;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
+            if(ADMIN_USER.equals(mUser) && ADMIN_PASSWORD.equals(mPassword)) {
+                Intent i = new Intent(LoginActivity.this, DiagnosticianActivity.class);
+                startActivity(i);
+                return true;
             }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
+            ParticipantEntry pe = FactoryEntry.getParticipantEntry();
+            Cursor check = pe.fetch(new String[]{pe.PASSWORD}, new MyPair[]{new MyPair(pe.USER_NAME, mUser)});
+            if(check.getCount() == 1 && check.getString(check.getColumnIndex(pe.PASSWORD)).equals(mPassword)){
+                Intent i = new Intent(LoginActivity.this, ParticipantActivity.class);
+                startActivity(i);
+                return true;
             }
-
-            // TODO: register the new account here.
-            return true;
+            return false;
         }
 
         @Override
