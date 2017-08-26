@@ -40,7 +40,7 @@ public class ParticipantEntry extends AbstractDbAdapter {
      *
      * @return rowId or -1 if failed
      */
-    long create(String first_name, String last_name, int age, String email, String user_name, String password, String group){
+    public long create(String first_name, String last_name, int age, String email, String user_name, String password, String group){
         ContentValues values = new ContentValues();
         values.put(FIRST_NAME, first_name);
         values.put(LAST_NAME, last_name);
