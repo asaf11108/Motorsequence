@@ -13,4 +13,9 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."</string>
     <string name="key_Participent">key_participent</string>
+    <string-array name="array_group">
+        <item>ADHD</item>
+        <item>Parkinson</item>
+        <item>Strokes</item>>
+    </string-array>
 </resources>

@@ -1,7 +1,9 @@
 package braude.motorsequence;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -25,6 +27,15 @@ public class ParticipantActivity extends AppCompatActivity {
 
             Button buttPractice = (Button) findViewById(R.id.button_participant_practice);
             Button buttTest = (Button) findViewById(R.id.button_participant_test);
+
+            buttPractice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(ParticipantActivity.this, ExerciseActivity.class);
+                    i.putExtra(getString(R.string.key_Participent), mParticipant);
+                    startActivity(i);
+                }
+            });
 
         }
     }
