@@ -21,10 +21,7 @@ public class DiagnosticianActivity extends AppCompatActivity {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: need to build search activity
-                Intent i = new Intent(DiagnosticianActivity.this, ParticipantAnalysisActivity.class);
-                Participant participant = new Participant(1);
-                i.putExtra(getString(R.string.key_Participent), participant);
+                Intent i = new Intent(DiagnosticianActivity.this, SearchActivity.class);
                 startActivity(i);
             }
         });
