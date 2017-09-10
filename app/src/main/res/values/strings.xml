@@ -16,6 +16,7 @@
     <string name="show_advance_search"><u>▼ Show advance Search</u></string>
     <string name="hide_advance_search"><u>▲ Hide advance Search</u></string>
     <string-array name="array_group">
+        <item>Select Group</item>
         <item>ADHD</item>
         <item>Parkinson</item>
         <item>Strokes</item>>

@@ -68,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
         flag &= !checkEmptyFiled(mAge);
         flag &= !checkEmptyFiled(mEmail);
         flag &= isUserValid(mUserName);
+        flag &= isGroupValid(mGroup);
 
         if (flag) {
             ParticipantEntry pe = FactoryEntry.getParticipantEntry();
@@ -83,7 +84,11 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    boolean checkEmptyFiled(TextView field) {
+    private boolean isGroupValid(Spinner mGroup) {
+        return mGroup.getSelectedItemPosition() != 0;
+    }
+
+    private boolean checkEmptyFiled(TextView field) {
         if (TextUtils.isEmpty(field.getText())) {
             field.setError("Please fill this field");
             field.requestFocus();
@@ -91,7 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
         } else return false;
     }
 
-    boolean isUserValid(TextView field) {
+    private boolean isUserValid(TextView field) {
         ParticipantEntry pe = FactoryEntry.getParticipantEntry();
         Cursor cursor = pe.fetch(null, new MyPair[]{new MyPair(pe.USER_NAME, field.getText().toString())});
         if (cursor.getCount() <= 0) {
