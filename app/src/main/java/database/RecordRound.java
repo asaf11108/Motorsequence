@@ -2,51 +2,63 @@ package database;
 
 import android.database.Cursor;
 
-import java.sql.Date;
+import java.util.List;
 
-import util.MyArrayList;
 import util.MyPair;
-
-import static database.RecordTest.numOfTests;
 
 /**
  * Created by ASAF on 16/8/2017.
  */
-class RecordRound implements Identifier, Adder{
+class RecordRound implements Identifier {
 
-    private int participantID;
-    private int testSetID;
-    private int recordTestID;
+    private final RecordTest recordTest;
+    private int recordRoundID;
 
-    public RecordRound(int participantID, int testSetID, int recordTestID, int recordRoundID) {
-        this.participantID = participantID;
-        this.testSetID = testSetID;
-        this.recordTestID = recordTestID;
-        RecordTestEntry rte = FactoryEntry.getRecordTestEntry();
-        Cursor cursor = rte.fetch(
+    public double roundTime;
+    public double maxVelocity;
+
+    public List<Double> x;
+    public List<Double> y;
+    public List<Double> s;
+    public List<Double> v;
+    public List<Double> jerk;
+
+    public RecordRound(RecordTest recordTest, int recordRoundID) {
+        this.recordTest = recordTest;
+        this.recordRoundID = recordRoundID;
+        RecordRoundEntry rre = FactoryEntry.getRecordRoundEntry();
+        Cursor cursor = rre.fetch(
                 null,
-                new MyPair[]{new MyPair(rte.PK_PARTICIPANT_ID, participantID),
-                        new MyPair(rte.PK_TEST_SET_ID, testSetID),
-                        new MyPair(rte.PK_RECORD_TEST_ID, recordTestID)});
-//        date = new Date(cursor.getLong(cursor.getColumnIndex(rte.DATE))*1000);
-//        totalTime = cursor.getDouble(cursor.getColumnIndex(rte.VELOCITY_PEEKS));
-//        velocityPeaks = cursor.getDouble(cursor.getColumnIndex(rte.MAX_VELOCITY));
-//        cursor.close();
-//        recordRounds = new MyArrayList<>(numOfTests, this);
+                new MyPair[]{new MyPair(rre.PK_PARTICIPANT_ID, recordTest.getParent().getParent().getID()),
+                        new MyPair(rre.PK_TEST_SET_ID, recordTest.getParent().getID()),
+                        new MyPair(rre.PK_RECORD_TEST_ID, recordTest.getID()),
+                        new MyPair(rre.PK_RECORD_ROUND_ID, recordRoundID)});
+        roundTime = cursor.getDouble(cursor.getColumnIndex(rre.ROUND_TIME));
+        maxVelocity = cursor.getDouble(cursor.getColumnIndex(rre.MAX_VELOCITY));
+        cursor.close();
+        XYRoundEntry xyre = FactoryEntry.getXYRoundEntry();
+        cursor = xyre.fetch(
+                null,
+                new MyPair[]{new MyPair(xyre.PK_PARTICIPANT_ID, recordTest.getParent().getParent().getID()),
+                        new MyPair(xyre.PK_TEST_SET_ID, recordTest.getParent().getID()),
+                        new MyPair(xyre.PK_RECORD_TEST_ID, recordTest.getID()),
+                        new MyPair(xyre.PK_RECORD_ROUND_ID, recordRoundID)});
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            x.add(cursor.getDouble(cursor.getColumnIndex(xyre.X)));
+            y.add(cursor.getDouble(cursor.getColumnIndex(xyre.Y)));
+            s.add(cursor.getDouble(cursor.getColumnIndex(xyre.S)));
+            v.add(cursor.getDouble(cursor.getColumnIndex(xyre.V)));
+            jerk.add(cursor.getDouble(cursor.getColumnIndex(xyre.JERK)));
+        }
+        cursor.close();
     }
 
-    @Override
-    public void myAdd(int i, int id) {
-
-    }
-
-    @Override
-    public void myAdd(int id) {
-
+    public RecordTest getParent() {
+        return recordTest;
     }
 
     @Override
     public int getID() {
-        return 0;
+        return recordRoundID;
     }
 }

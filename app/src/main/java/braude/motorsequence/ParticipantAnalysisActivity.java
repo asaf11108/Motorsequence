@@ -1,17 +1,24 @@
 package braude.motorsequence;
 
-import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
+import android.support.v7.app.AppCompatActivity;
+
+import database.Participant;
 
 public class ParticipantAnalysisActivity extends AppCompatActivity {
+
+    private Participant mParticipant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_participant_analysis);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras == null)
+            return;
+        mParticipant = (Participant) getIntent().getSerializableExtra(getString(R.string.key_Participent));
+//        mParticipant.
 //        ViewCompat.setLayoutDirection(findViewById(R.id.acti), ViewCompat.LAYOUT_DIRECTION_RTL);
 //        String udata="Underlined Text";
 //        SpannableString content = new SpannableString(udata);

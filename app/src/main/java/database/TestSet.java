@@ -2,31 +2,27 @@ package database;
 
 import android.database.Cursor;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import util.MyArrayList;
 import util.MyPair;
 
 /**
  * Created by ASAF on 5/8/2017.
  */
 
-public class TestSet implements Identifier, Adder {
+public class TestSet implements Identifier, NewObject<RecordTest> {
 
-    private final int participantID;
+    private final Participant participant;
     private final int testSetID;
     public TestType testType;
     public int recordTestSeq;
     public MyArrayList<RecordTest> recordTests;
 
-    public TestSet(int participantID, int testSetID) {
-        this.participantID = participantID;
+    TestSet(Participant participant, int testSetID) {
+        this.participant = participant;
         this.testSetID = testSetID;
         TestSetEntry tse = FactoryEntry.getTestSetEntry();
         Cursor cursor = tse.fetch(
                 null,
-                new MyPair[]{new MyPair(tse.PK_PARTICIPANT_ID, participantID),
+                new MyPair[]{new MyPair(tse.PK_PARTICIPANT_ID, participant.getID()),
                         new MyPair(tse.PK_TEST_SET_ID, testSetID)});
         int testTypeID = cursor.getInt(cursor.getColumnIndex(tse.TEST_TYPE_ID));
         this.testType = new TestType(testTypeID);
@@ -34,16 +30,17 @@ public class TestSet implements Identifier, Adder {
         this.recordTests = new MyArrayList<>(recordTestSeq, this);
     }
 
+    Participant getParent() {
+        return participant;
+    }
+
+    @Override
     public int getID() {
         return testSetID;
     }
 
-    public void myAdd(int i, int id){
-        recordTests.add(i, new RecordTest(participantID, testSetID, id));
+    @Override
+    public RecordTest newObject(int id) {
+        return new RecordTest(this, id);
     }
-
-    public void myAdd(int id){
-        recordTests.add(new RecordTest(participantID, testSetID, id));
-    }
-
 }
