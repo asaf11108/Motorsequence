@@ -37,6 +37,7 @@ public abstract class AbstractDbAdapter {
             "CREATE TABLE TestType (" +
                     "testTypeID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "num_of_tests integer(10) NOT NULL, " +
+                    "num_of_rounds integer(10) NOT NULL, " +
                     "A_x double(10) NOT NULL, " +
                     "A_y double(10) NOT NULL, " +
                     "B_x double(10) NOT NULL, " +
@@ -46,10 +47,11 @@ public abstract class AbstractDbAdapter {
                     "D_x double(10) NOT NULL, " +
                     "D_y double(10) NOT NULL)";
     private static final String TABLE_CREATE_RecordTest =
-            "CREATE TABLE RecordTestEntry (" +
+            "CREATE TABLE RecordTest (" +
                     "participantID integer(10) NOT NULL, " +
                     "testSetID integer(10) NOT NULL, " +
                     "recordTestID integer(10) NOT NULL, " +
+                    "recordRoundSeq integer(10) NOT NULL, " +
                     "_date date NOT NULL, " +
                     "total_time double(10) NOT NULL, " +
                     "velocity_peaks double(10) NOT NULL, " +
@@ -65,9 +67,9 @@ public abstract class AbstractDbAdapter {
                     "round_time double(10) NOT NULL, " +
                     "max_velocity double(10) NOT NULL, " +
                     "PRIMARY KEY (participantID, testSetID, recordTestID, recordRoundID), " +
-                    "FOREIGN KEY(participantID, testSetID, recordTestID) REFERENCES RecordTestEntry(participantID, testSetID, recordTestID))";
+                    "FOREIGN KEY(participantID, testSetID, recordTestID) REFERENCES RecordTest(participantID, testSetID, recordTestID))";
     private static final String TABLE_CREATE_XYRound =
-            "CREATE TABLE XYRoundEntry (" +
+            "CREATE TABLE XYRound (" +
                     "participantID integer(10) NOT NULL, " +
                     "testSetID integer(10) NOT NULL, " +
                     "recordTestID integer(10) NOT NULL, " +
@@ -80,11 +82,12 @@ public abstract class AbstractDbAdapter {
                     "PRIMARY KEY (participantID, testSetID, recordTestID, recordRoundID), " +
                     "FOREIGN KEY(participantID, testSetID, recordTestID, recordRoundID) REFERENCES RecordRound(participantID, testSetID, recordTestID, recordRoundID))";
     private static final String INSERT_1_TestType =
-            "INSERT INTO";
+            "INSERT INTO TestType (num_of_tests, num_of_rounds, A_x, A_y, B_x, B_y, C_x, C_y, D_x, D_7)" +
+                    "VALUES ( 5, 7, 1, 2, 3, 4, 5, 6, 7, 8)";
 
     protected static final String TAG = "AbstractDbAdapter";
     private static final String DATABASE_NAME = "data.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 1;
 
     private final String tableName;
     private DatabaseHelper mDbHelper;
@@ -174,7 +177,7 @@ public abstract class AbstractDbAdapter {
      * @return Cursor positioned to matching record, if found
      */
     public Cursor fetch(String[] columns, MyPair[] where){
-        SQLiteDatabase db = open().getReadableDatabase();
+        SQLiteDatabase db = open().getWritableDatabase();
         StringBuilder whereClause =  new StringBuilder();
         String[] whereArgs = convertToWhereStr(where, whereClause);
         Cursor mCursor = db.query(false, tableName, columns, whereClause.toString(), whereArgs, null, null, null, null);
@@ -227,6 +230,12 @@ public abstract class AbstractDbAdapter {
             db.execSQL(TABLE_CREATE_RecordTest);
             db.execSQL(TABLE_CREATE_RecordRound);
             db.execSQL(TABLE_CREATE_XYRound);
+//
+//
+//            db.execSQL(INSERT_1_TestType);
+//            db.execSQL(INSERT_2_TestType);
+//            db.execSQL(INSERT_3_TestType);
+//            db.execSQL(INSERT_4_TestType);
         }
 
         @Override
@@ -234,8 +243,13 @@ public abstract class AbstractDbAdapter {
             Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
                     + newVersion + ", which will destroy all old data");
 
-//            db.execSQL("DROP TABLE IF EXISTS participant");
-//            db.execSQL(TABLE_CREATE_Participant);
+            db.execSQL("DROP TABLE IF EXISTS XYRound");
+            db.execSQL("DROP TABLE IF EXISTS RecordRound");
+            db.execSQL("DROP TABLE IF EXISTS RecordTest");
+            db.execSQL("DROP TABLE IF EXISTS TestType");
+            db.execSQL("DROP TABLE IF EXISTS TestSet");
+            db.execSQL("DROP TABLE IF EXISTS participant");
+            onCreate(db);
         }
     }
 }

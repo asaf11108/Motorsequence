@@ -6,12 +6,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ExerciseActivity extends AppCompatActivity {
+public abstract class ExerciseActivity extends AppCompatActivity {
+
+    protected TextView textRounds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
+        init();
+
+        textRounds = (TextView) findViewById(R.id.text_exercise_rounds);
 
     }
+
+    protected void init(){}
 }

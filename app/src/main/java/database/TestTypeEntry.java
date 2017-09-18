@@ -11,6 +11,7 @@ public class TestTypeEntry extends AbstractDbAdapter{
 
     public static final String PK_AI_TEST_TYPE_ID = "testTypeID";
     public static final String NUM_OF_TESTS = "num_of_tests";
+    public static final String NUM_OF_ROUNDS = "num_of_rounds";
     public static final String A_X = "A_x";
     public static final String A_Y = "A_y";
     public static final String B_X = "B_x";
@@ -42,13 +43,14 @@ public class TestTypeEntry extends AbstractDbAdapter{
      *
      * @return rowId or -1 if failed
      */
-    public long create(int num_of_tests,
+    public long create(int num_of_tests, int num_of_rounds,
                        double A_x, double A_y,
                        double B_x, double B_y,
                        double C_x, double C_y,
                        double D_x, double D_y){
         ContentValues values = new ContentValues();
         values.put(NUM_OF_TESTS, num_of_tests);
+        values.put(NUM_OF_ROUNDS, num_of_rounds);
         values.put(A_X, A_x);
         values.put(A_Y, A_y);
         values.put(B_X, B_x);

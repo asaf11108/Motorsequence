@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         FactoryEntry.createFactoryEntry(getApplicationContext());
 //        ParticipantEntry pe = FactoryEntry.getParticipantEntry();
-//        pe.create("asaf", "regev", 27, "asaf11108@gmail.com", "Asaf", "123", "ADHD");
+//        pe.create("Asaf", "regev", 27, "asaf11108@gmail.com", "asaf", "123", "ADHD");
     }
 
     private void populateAutoComplete() {

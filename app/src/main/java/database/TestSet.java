@@ -13,20 +13,20 @@ public class TestSet implements Identifier, NewObject<RecordTest> {
     private final Participant participant;
     private final int testSetID;
     public TestType testType;
-    public int recordTestSeq;
     public MyArrayList<RecordTest> recordTests;
 
     TestSet(Participant participant, int testSetID) {
         this.participant = participant;
         this.testSetID = testSetID;
+
         TestSetEntry tse = FactoryEntry.getTestSetEntry();
         Cursor cursor = tse.fetch(
                 null,
                 new MyPair[]{new MyPair(tse.PK_PARTICIPANT_ID, participant.getID()),
                         new MyPair(tse.PK_TEST_SET_ID, testSetID)});
-        int testTypeID = cursor.getInt(cursor.getColumnIndex(tse.TEST_TYPE_ID));
-        this.testType = new TestType(testTypeID);
-        this.recordTestSeq = cursor.getInt(cursor.getColumnIndex(tse.RECORD_TEST_SEQ));
+        this.testType = new TestType(cursor.getInt(cursor.getColumnIndex(tse.TEST_TYPE_ID)));
+        int recordTestSeq = cursor.getInt(cursor.getColumnIndex(tse.RECORD_TEST_SEQ));
+
         this.recordTests = new MyArrayList<>(recordTestSeq, this);
     }
 
@@ -42,5 +42,11 @@ public class TestSet implements Identifier, NewObject<RecordTest> {
     @Override
     public RecordTest newObject(int id) {
         return new RecordTest(this, id);
+    }
+
+    public RecordTest createRecordTest(){
+        RecordTestEntry rte = FactoryEntry.getRecordTestEntry();
+        if (rte.create(participant.getID(), testSetID) == -1) return null;
+        return recordTests.add();
     }
 }

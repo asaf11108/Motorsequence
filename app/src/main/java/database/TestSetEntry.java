@@ -37,7 +37,7 @@ public class TestSetEntry extends AbstractDbAdapter {
      *
      * @return test set participanID or -1 if faild
      */
-    public long create(int participantID, int testTypeID){
+    long create(int participantID, int testTypeID){
         ContentValues values = new ContentValues();
         values.put(PK_PARTICIPANT_ID, participantID);
         ParticipantEntry pe = FactoryEntry.getParticipantEntry();
@@ -52,7 +52,7 @@ public class TestSetEntry extends AbstractDbAdapter {
         boolean flag = insert(values) != -1;
         if (flag){
             values.clear();
-            values.put(PK_TEST_SET_ID, testSetID);
+            values.put(pe.TEST_SET_SEQ, testSetID);
             flag = pe.update(
                         values,
                         new MyPair[]{new MyPair(pe.PK_AI_PARTICIPANT_ID, participantID)}) == 1;

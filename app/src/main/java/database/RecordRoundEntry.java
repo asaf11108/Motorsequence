@@ -2,6 +2,9 @@ package database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+
+import util.MyPair;
 
 /**
  * Created by ASAF on 6/8/2017.
@@ -37,15 +40,32 @@ public class RecordRoundEntry extends AbstractDbAdapter{
      *
      * @return record round participanID or -1 if faild
      */
-    public long create(int participantID, int testSetID, int recordTestID, int recordRoundID,
-                       double round_time, double max_velocity){
+    long create(int participantID, int testSetID, int recordTestID){
         ContentValues values = new ContentValues();
         values.put(PK_PARTICIPANT_ID, participantID);
         values.put(PK_TEST_SET_ID, testSetID);
         values.put(PK_RECORD_TEST_ID, recordTestID);
+        RecordTestEntry rte = FactoryEntry.getRecordTestEntry();
+        Cursor cursor = rte.fetch(
+                new String[]{rte.RECORD_ROUND_SEQ},
+                new MyPair[]{new MyPair(rte.PK_PARTICIPANT_ID, participantID),
+                        new MyPair(rte.PK_TEST_SET_ID, testSetID),
+                        new MyPair(rte.PK_RECORD_TEST_ID, recordTestID)});
+        int recordRoundID = cursor.getInt(cursor.getColumnIndex(rte.RECORD_ROUND_SEQ));
+        recordRoundID++;
         values.put(PK_RECORD_ROUND_ID, recordRoundID);
-        values.put(ROUND_TIME, round_time);
-        values.put(MAX_VELOCITY, max_velocity);
-        return insert(values);
+        values.put(ROUND_TIME, 0);
+        values.put(MAX_VELOCITY, 0);
+        boolean flag = insert(values) != -1;
+        if (flag){
+            values.clear();
+            values.put(rte.RECORD_ROUND_SEQ, recordRoundID);
+            flag = rte.update(
+                    values,
+                    new MyPair[]{new MyPair(rte.PK_PARTICIPANT_ID, participantID),
+                                new MyPair(PK_TEST_SET_ID, testSetID),
+                                new MyPair(rte.PK_RECORD_TEST_ID, recordTestID)}) == 1;
+        }
+        return (flag) ? (recordRoundID) : (-1);
     }
 }

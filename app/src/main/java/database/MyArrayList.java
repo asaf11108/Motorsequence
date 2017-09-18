@@ -1,5 +1,6 @@
 package database;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,9 +8,9 @@ import java.util.List;
  * Created by ASAF on 11/8/2017.
  */
 
-public class MyArrayList<E extends Identifier> {
+public class MyArrayList<E extends Identifier> implements Serializable{
 
-    public int seq;
+    private int seq;
     private NewObject<E> exe;
     private List<E> data;
 
@@ -63,5 +64,14 @@ public class MyArrayList<E extends Identifier> {
     public E get(int id) {
         if (id <= 0 || id > seq) return null;
         return fetchToList(id);
+    }
+
+    public int getSeq() {
+        return seq;
+    }
+
+    E add() {
+        seq++;
+        return getLast();
     }
 }

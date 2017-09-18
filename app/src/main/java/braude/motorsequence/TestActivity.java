@@ -1,29 +1,23 @@
 package braude.motorsequence;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import util.TargetPoint;
-import util.TouchView;
-
 /**
- * Created by ASAF on 27/8/2017.
+ * Created by ASAF on 16/9/2017.
  */
-public class PracticeActivity extends ExerciseActivity {
+
+public class TestActivity extends ExerciseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        super.init(savedInstanceState);
-//        setContentView(R.layout.activity_exercise);
-//        init
+        setContentView(R.layout.activity_exercise);
 
-        textRounds.setVisibility(View.INVISIBLE);
+//        textRounds.setVisibility(View.INVISIBLE);
+//        System.out.println("ttt");
 //        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.relative_exercise_drawFrame);
 //        LinearLayout.LayoutParams paramLayout = new LinearLayout.LayoutParams(
 //                LinearLayout.LayoutParams.MATCH_PARENT,
@@ -51,4 +45,16 @@ public class PracticeActivity extends ExerciseActivity {
 
 
     }
+
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//
+//
+//    }
+
+//    @Override
+//    protected void init() {
+
+
 }

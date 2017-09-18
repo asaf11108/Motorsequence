@@ -2,6 +2,8 @@ package database;
 
 import android.database.Cursor;
 
+import junit.framework.Test;
+
 import util.MyPair;
 
 public class Participant implements Identifier, NewObject<TestSet> {
@@ -18,10 +20,12 @@ public class Participant implements Identifier, NewObject<TestSet> {
 
     public Participant(int participantID) {
         this.participantID = participantID;
+
         ParticipantEntry pe = FactoryEntry.getParticipantEntry();
         Cursor cursor = pe.fetch(
                 null,
                 new MyPair[]{new MyPair(pe.PK_AI_PARTICIPANT_ID, participantID)});
+
         firstName = cursor.getString(cursor.getColumnIndex(pe.FIRST_NAME));
         lastName = cursor.getString(cursor.getColumnIndex(pe.LAST_NAME));
         age = cursor.getInt(cursor.getColumnIndex(pe.AGE));
@@ -42,5 +46,11 @@ public class Participant implements Identifier, NewObject<TestSet> {
     @Override
     public TestSet newObject(int id) {
         return new TestSet(this, id);
+    }
+
+    public TestSet createTestSet(int testTypeID){
+        TestSetEntry tse = FactoryEntry.getTestSetEntry();
+        if (tse.create(participantID, testTypeID) == -1) return null;
+        return testSets.add();
     }
 }

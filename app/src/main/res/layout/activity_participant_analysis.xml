@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Test Set:"
+                android:text="Test Type:"
                 android:textSize="@dimen/activity_font_subtitle" />
 
             <LinearLayout
@@ -40,7 +40,7 @@
                     android:textSize="@dimen/activity_font_regular" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_currentSet"
+                    android:id="@+id/text_participantAnalysis_currentSetType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/activity_font_regular" />

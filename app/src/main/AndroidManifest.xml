@@ -30,7 +30,8 @@
         <activity android:name=".ParticipantAnalysisActivity" />
         <activity android:name=".ExerciseActivity" />
         <activity android:name=".SearchActivity" />
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".PracticeActivity" />
     </application>
 
 </manifest>

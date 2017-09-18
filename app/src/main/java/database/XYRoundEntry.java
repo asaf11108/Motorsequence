@@ -40,7 +40,7 @@ public class XYRoundEntry extends AbstractDbAdapter {
      *
      * @return row participanID or -1 if faild
      */
-    public long create(int participantID, int testSetID, int recordTestID, int recordRoundID,
+    long create(int participantID, int testSetID, int recordTestID, int recordRoundID,
                        double x, double y, double s, double v, double jerk){
         ContentValues values = new ContentValues();
         values.put(PK_PARTICIPANT_ID, participantID);

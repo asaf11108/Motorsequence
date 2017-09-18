@@ -6,5 +6,6 @@
     <color name="Transparent">#00000000</color>
     <color name="LinkHover">#33B1FF</color>
     <color name="Link">#005999</color>
+    <color name="TouchView">#d3d3d3</color>
 
 </resources>

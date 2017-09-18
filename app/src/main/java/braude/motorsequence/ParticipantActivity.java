@@ -32,7 +32,7 @@ public class ParticipantActivity extends AppCompatActivity {
         buttPractice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(ParticipantActivity.this, ExerciseActivity.class);
+                Intent i = new Intent(ParticipantActivity.this, PracticeActivity.class);
                 i.putExtra(getString(R.string.key_Participent), mParticipant);
                 startActivity(i);
             }
