@@ -2,41 +2,45 @@ package util;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class TargetPoint extends View
-{
-    private static final int DEFAULT_CIRCLE_COLOR = Color.RED;
+import static util.PointCluster.COLOR_RED;
 
-    private int circleColor = DEFAULT_CIRCLE_COLOR;
+/**
+ * Created by ASAF on 23/9/2017.
+ */
+
+public class PointCircle extends View {
+
+    public static final int POINT_RADIUS = 20;
+
     private Paint paint;
 
     private int cx;
     private int cy;
-    private int radius;
+    private int circleColor;
 
-    public TargetPoint(Context context, int cx, int cy, int radius)
+    public PointCircle(Context context, int cx, int cy)
     {
         super(context);
-        init(context, null, cx, cy, radius);
+        init(context, null, cx, cy);
     }
 
-    public TargetPoint(Context context, AttributeSet attrs, int cx, int cy, int radius)
+    public PointCircle(Context context, AttributeSet attrs, int cx, int cy)
     {
         super(context, attrs);
-        init(context, attrs, cx, cy, radius);
+        init(context, attrs, cx, cy);
     }
 
-    private void init(Context context, AttributeSet attrs, int cx, int cy, int radius)
+    private void init(Context context, AttributeSet attrs, int cx, int cy)
     {
         paint = new Paint();
         paint.setAntiAlias(true);
         this.cx = cx;
         this.cy = cy;
-        this.radius = radius;
+        this.circleColor = PointCluster.COLOR_DEFULT;
     }
 
     public void setCircleColor(int circleColor)
@@ -55,6 +59,14 @@ public class TargetPoint extends View
         super.onDraw(canvas);
 
         paint.setColor(circleColor);
-        canvas.drawCircle(cx, cy, radius, paint);
+        canvas.drawCircle(cx, cy, POINT_RADIUS, paint);
+    }
+
+    public int getCx() {
+        return cx;
+    }
+
+    public int getCy() {
+        return cy;
     }
 }

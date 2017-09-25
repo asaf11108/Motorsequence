@@ -28,10 +28,10 @@
         <activity android:name=".DiagnosticianActivity" />
         <activity android:name=".ParticipantActivity" />
         <activity android:name=".ParticipantAnalysisActivity" />
-        <activity android:name=".ExerciseActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".PracticeActivity" />
+        <activity android:name=".TestActivity" />
     </application>
 
 </manifest>

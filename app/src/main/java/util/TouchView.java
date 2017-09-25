@@ -3,7 +3,6 @@ package util;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
@@ -21,6 +20,8 @@ public class TouchView extends View {
     Paint drawPaint;
     private Path path = new Path();
 
+    private int next;
+    private PointCluster[] pointClusters;
 
     public TouchView(Context context) {
         super(context);
@@ -36,6 +37,7 @@ public class TouchView extends View {
 //        drawPaint.setPathEffect(new CornerPathEffect(10) );
         drawPaint.setStrokeWidth(3);
         setWillNotDraw(false);
+        next = 0;
     }
 
     @Override
@@ -56,14 +58,39 @@ public class TouchView extends View {
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 path.moveTo(x, y);
+                checkPointInsideCircle(x, y);
                 return true;
             case MotionEvent.ACTION_MOVE:
                 path.lineTo(x, y);
+                checkPointInsideCircle(x, y);
                 break;
             default:
                 return false;
         }
         invalidate();
         return true;
+    }
+
+
+    private boolean checkPointInsideCircle(float x, float y){
+        if (Math.sqrt(
+                (x - pointClusters[next].getCx())*(x - pointClusters[next].getCx()) +
+                (y - pointClusters[next].getCy())*(y - pointClusters[next].getCy())) <
+                PointCircle.POINT_RADIUS) {
+            pointClusters[next].setClusterColor(PointCluster.COLOR_DARK_RED);
+            next = (next + 1) % PointCluster.POINT_CLUSTERS_SIZE;
+            pointClusters[next].setClusterColor(PointCluster.COLOR_RED);
+            if (next == 1) {
+                path.reset();
+                path.moveTo(x, y);
+            }
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public void setArray(PointCluster[] array) {
+        this.pointClusters = array;
     }
 }

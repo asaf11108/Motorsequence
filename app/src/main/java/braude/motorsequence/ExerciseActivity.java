@@ -10,15 +10,13 @@ public abstract class ExerciseActivity extends AppCompatActivity {
 
     protected TextView textRounds;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
-        init();
 
         textRounds = (TextView) findViewById(R.id.text_exercise_rounds);
 
     }
-
-    protected void init(){}
 }

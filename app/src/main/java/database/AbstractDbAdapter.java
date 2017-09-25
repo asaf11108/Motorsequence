@@ -81,9 +81,12 @@ public abstract class AbstractDbAdapter {
                     "jerk double(10) NOT NULL, " +
                     "PRIMARY KEY (participantID, testSetID, recordTestID, recordRoundID), " +
                     "FOREIGN KEY(participantID, testSetID, recordTestID, recordRoundID) REFERENCES RecordRound(participantID, testSetID, recordTestID, recordRoundID))";
+    private static final String INSERT_ASAF =
+            "INSERT INTO Participant (first_name, last_name, age, email, user_name, password, _group, testSetSeq) " +
+                    "VALUES ('Asaf', 'Regev', 27, 'asaf11108@gmail.com', 'asaf', '123', 'ADHD', 0)";
     private static final String INSERT_1_TestType =
-            "INSERT INTO TestType (num_of_tests, num_of_rounds, A_x, A_y, B_x, B_y, C_x, C_y, D_x, D_7)" +
-                    "VALUES ( 5, 7, 1, 2, 3, 4, 5, 6, 7, 8)";
+            "INSERT INTO TestType (num_of_tests, num_of_rounds, A_x, A_y, B_x, B_y, C_x, C_y, D_x, D_y) " +
+                    "VALUES ( 5, 7, 800, 200, 450, 160, 250, 80, 650, 340)";
 
     protected static final String TAG = "AbstractDbAdapter";
     private static final String DATABASE_NAME = "data.db";
@@ -230,9 +233,9 @@ public abstract class AbstractDbAdapter {
             db.execSQL(TABLE_CREATE_RecordTest);
             db.execSQL(TABLE_CREATE_RecordRound);
             db.execSQL(TABLE_CREATE_XYRound);
-//
-//
-//            db.execSQL(INSERT_1_TestType);
+
+            db.execSQL(INSERT_ASAF);
+            db.execSQL(INSERT_1_TestType);
 //            db.execSQL(INSERT_2_TestType);
 //            db.execSQL(INSERT_3_TestType);
 //            db.execSQL(INSERT_4_TestType);

@@ -103,8 +103,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mProgressView = findViewById(R.id.login_progress);
 
         FactoryEntry.createFactoryEntry(getApplicationContext());
-//        ParticipantEntry pe = FactoryEntry.getParticipantEntry();
-//        pe.create("Asaf", "regev", 27, "asaf11108@gmail.com", "asaf", "123", "ADHD");
     }
 
     private void populateAutoComplete() {
