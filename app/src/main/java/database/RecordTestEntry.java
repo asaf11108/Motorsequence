@@ -59,7 +59,7 @@ public class RecordTestEntry extends AbstractDbAdapter {
         recordTestID++;
         values.put(PK_RECORD_TEST_ID, recordTestID);
         values.put(RECORD_ROUND_SEQ, 0);
-        values.put(DATE, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        values.put(DATE, System.currentTimeMillis());
         values.put(TOTAL_TIME, 0);
         values.put(VELOCITY_PEEKS, 0);
         values.put(MAX_VELOCITY, 0);

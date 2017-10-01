@@ -31,7 +31,7 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
             currentTestType.setText("None");
             testSetFlag = true;
         }
-        else if(testSet.recordTests.getSeq() == testSet.testType.num_of_tests) {
+        else if(testSet.recordTests.getSeq() >= testSet.testType.num_of_tests) {
             currentTestType.setText("Participant finished Test Set");
             testSetFlag = true;
         }

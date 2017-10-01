@@ -9,11 +9,11 @@ import util.MyPair;
 /**
  * Created by ASAF on 8/8/2017.
  */
-class RecordTest implements Identifier, NewObject<RecordRound> {
+public class RecordTest implements Identifier, NewObject<RecordRound> {
 
     private final TestSet testSet;
     private final int recordTestID;
-    public Date date;
+    public long date;
     public double totalTime;
     public double velocityPeaks;
     public MyArrayList<RecordRound> recordRounds;
@@ -27,7 +27,7 @@ class RecordTest implements Identifier, NewObject<RecordRound> {
                 new MyPair[]{new MyPair(rte.PK_PARTICIPANT_ID, testSet.getParent().getID()),
                         new MyPair(rte.PK_TEST_SET_ID, testSet.getID()),
                         new MyPair(rte.PK_RECORD_TEST_ID, recordTestID)});
-        date = new Date(cursor.getLong(cursor.getColumnIndex(rte.DATE)) * 1000);
+        date = cursor.getLong(cursor.getColumnIndex(rte.DATE));
         totalTime = cursor.getDouble(cursor.getColumnIndex(rte.VELOCITY_PEEKS));
         velocityPeaks = cursor.getDouble(cursor.getColumnIndex(rte.MAX_VELOCITY));
         int recordRoundSeq = cursor.getInt(cursor.getColumnIndex(rte.RECORD_ROUND_SEQ));
@@ -49,7 +49,7 @@ class RecordTest implements Identifier, NewObject<RecordRound> {
         return new RecordRound(this, id);
     }
 
-    public RecordRound createRecordTest(){
+    public RecordRound createRecordRound(){
         RecordRoundEntry rre = FactoryEntry.getRecordRoundEntry();
         if (rre.create(testSet.getParent().getID(), testSet.getID(), recordTestID) == -1) return null;
         return  recordRounds.add();

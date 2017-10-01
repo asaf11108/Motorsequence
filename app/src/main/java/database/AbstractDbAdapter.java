@@ -38,21 +38,21 @@ public abstract class AbstractDbAdapter {
                     "testTypeID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "num_of_tests integer(10) NOT NULL, " +
                     "num_of_rounds integer(10) NOT NULL, " +
-                    "A_x double(10) NOT NULL, " +
-                    "A_y double(10) NOT NULL, " +
-                    "B_x double(10) NOT NULL, " +
-                    "B_y double(10) NOT NULL, " +
-                    "C_x double(10) NOT NULL, " +
-                    "C_y double(10) NOT NULL, " +
-                    "D_x double(10) NOT NULL, " +
-                    "D_y double(10) NOT NULL)";
+                    "A_x integer(10) NOT NULL, " +
+                    "A_y integer(10) NOT NULL, " +
+                    "B_x integer(10) NOT NULL, " +
+                    "B_y integer(10) NOT NULL, " +
+                    "C_x integer(10) NOT NULL, " +
+                    "C_y integer(10) NOT NULL, " +
+                    "D_x integer(10) NOT NULL, " +
+                    "D_y integer(10) NOT NULL)";
     private static final String TABLE_CREATE_RecordTest =
             "CREATE TABLE RecordTest (" +
                     "participantID integer(10) NOT NULL, " +
                     "testSetID integer(10) NOT NULL, " +
                     "recordTestID integer(10) NOT NULL, " +
                     "recordRoundSeq integer(10) NOT NULL, " +
-                    "_date date NOT NULL, " +
+                    "_date INTEGER NOT NULL, " +
                     "total_time double(10) NOT NULL, " +
                     "velocity_peaks double(10) NOT NULL, " +
                     "max_velocity double(10) NOT NULL, " +
@@ -74,19 +74,18 @@ public abstract class AbstractDbAdapter {
                     "testSetID integer(10) NOT NULL, " +
                     "recordTestID integer(10) NOT NULL, " +
                     "recordRoundID integer(10) NOT NULL, " +
-                    "x double(10) NOT NULL, " +
-                    "y double(10) NOT NULL, " +
-                    "s double(10) NOT NULL, " +
+                    "x REAL NOT NULL, " +
+                    "y REAL NOT NULL, " +
+                    "s INTEGER NOT NULL, " +
                     "v double(10) NOT NULL, " +
                     "jerk double(10) NOT NULL, " +
-                    "PRIMARY KEY (participantID, testSetID, recordTestID, recordRoundID), " +
                     "FOREIGN KEY(participantID, testSetID, recordTestID, recordRoundID) REFERENCES RecordRound(participantID, testSetID, recordTestID, recordRoundID))";
     private static final String INSERT_ASAF =
             "INSERT INTO Participant (first_name, last_name, age, email, user_name, password, _group, testSetSeq) " +
                     "VALUES ('Asaf', 'Regev', 27, 'asaf11108@gmail.com', 'asaf', '123', 'ADHD', 0)";
     private static final String INSERT_1_TestType =
             "INSERT INTO TestType (num_of_tests, num_of_rounds, A_x, A_y, B_x, B_y, C_x, C_y, D_x, D_y) " +
-                    "VALUES ( 5, 7, 800, 200, 450, 160, 250, 80, 650, 340)";
+                    "VALUES ( 5, 7, 850, 240, 400, 170, 150, 50, 650, 380)";
 
     protected static final String TAG = "AbstractDbAdapter";
     private static final String DATABASE_NAME = "data.db";
@@ -188,6 +187,10 @@ public abstract class AbstractDbAdapter {
             mCursor.moveToFirst();
         close();
         return mCursor;
+    }
+
+    public SQLiteDatabase getDB(){
+        return open().getWritableDatabase();
     }
 
     /**

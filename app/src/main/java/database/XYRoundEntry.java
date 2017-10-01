@@ -2,6 +2,7 @@ package database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteStatement;
 
 /**
  * Created by ASAF on 6/8/2017.
@@ -11,7 +12,7 @@ public class XYRoundEntry extends AbstractDbAdapter {
     public static final String PK_PARTICIPANT_ID = "participantID";
     public static final String PK_TEST_SET_ID = "testSetID";
     public static final String PK_RECORD_TEST_ID = "recordTestID";
-    public static final String PK_RECORD_ROUND_ID = "recordRoundID";
+    public static final String RECORD_ROUND_ID = "recordRoundID";
     public static final String X = "x";
     public static final String Y = "y";
     public static final String S = "s";
@@ -40,18 +41,14 @@ public class XYRoundEntry extends AbstractDbAdapter {
      *
      * @return row participanID or -1 if faild
      */
-    long create(int participantID, int testSetID, int recordTestID, int recordRoundID,
-                       double x, double y, double s, double v, double jerk){
-        ContentValues values = new ContentValues();
-        values.put(PK_PARTICIPANT_ID, participantID);
-        values.put(PK_TEST_SET_ID, testSetID);
-        values.put(PK_RECORD_TEST_ID, recordTestID);
-        values.put(PK_RECORD_ROUND_ID, recordRoundID);
-        values.put(X, x);
-        values.put(Y, y);
-        values.put(S, s);
-        values.put(V, v);
-        values.put(JERK, jerk);
-        return insert(values);
+    long create(SQLiteStatement statement,
+                       float x, float y, long s, double v, double jerk){
+        statement.clearBindings();
+        statement.bindDouble(1, x);
+        statement.bindDouble(2, y);
+        statement.bindLong(3, s);
+        statement.bindDouble(4, v);
+        statement.bindDouble(5, jerk);
+        return statement.executeInsert();
     }
 }

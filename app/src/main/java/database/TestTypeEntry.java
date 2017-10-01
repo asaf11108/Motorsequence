@@ -44,10 +44,10 @@ public class TestTypeEntry extends AbstractDbAdapter{
      * @return rowId or -1 if failed
      */
     public long create(int num_of_tests, int num_of_rounds,
-                       double A_x, double A_y,
-                       double B_x, double B_y,
-                       double C_x, double C_y,
-                       double D_x, double D_y){
+                       int A_x, int A_y,
+                       int B_x, int B_y,
+                       int C_x, int C_y,
+                       int D_x, int D_y){
         ContentValues values = new ContentValues();
         values.put(NUM_OF_TESTS, num_of_tests);
         values.put(NUM_OF_ROUNDS, num_of_rounds);

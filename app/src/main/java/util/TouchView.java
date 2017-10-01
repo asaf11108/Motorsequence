@@ -8,6 +8,12 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
+
+import braude.motorsequence.TestActivity;
+import database.RecordRound;
+import database.RecordTest;
+import database.TestType;
 
 /**
  * https://inducesmile.com/android/android-touch-screen-example-tutorial/
@@ -22,6 +28,13 @@ public class TouchView extends View {
 
     private int next;
     private PointCluster[] pointClusters;
+    private boolean mTestFlag;
+    private RecordTest mRecordTest;
+    private RecordRound mRecordRound;
+    private boolean mFirstTouchFlag;
+    private long startTime;
+    private TextView mTextRounds;
+    private TestActivity mTestActivity;
 
     public TouchView(Context context) {
         super(context);
@@ -38,6 +51,7 @@ public class TouchView extends View {
         drawPaint.setStrokeWidth(3);
         setWillNotDraw(false);
         next = 0;
+        mTestFlag = false;
     }
 
     @Override
@@ -49,6 +63,19 @@ public class TouchView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawPath(path, drawPaint);
+    }
+
+    public void setArray(PointCluster[] array) {
+        this.pointClusters = array;
+    }
+
+    public void initTest(RecordTest recordTest, TextView textRounds, TestActivity testActivity){
+        mTestFlag = true;
+        mFirstTouchFlag = true;
+        mRecordTest = recordTest;
+        mRecordRound = recordTest.createRecordRound();
+        mTextRounds = textRounds;
+        mTestActivity = testActivity;
     }
 
     @Override
@@ -72,7 +99,7 @@ public class TouchView extends View {
     }
 
 
-    private boolean checkPointInsideCircle(float x, float y){
+    private void checkPointInsideCircle(float x, float y){
         if (Math.sqrt(
                 (x - pointClusters[next].getCx())*(x - pointClusters[next].getCx()) +
                 (y - pointClusters[next].getCy())*(y - pointClusters[next].getCy())) <
@@ -83,14 +110,34 @@ public class TouchView extends View {
             if (next == 1) {
                 path.reset();
                 path.moveTo(x, y);
+                if (mTestFlag && !mFirstTouchFlag) nextRound();
             }
-            return true;
         }
-        else
-            return false;
+        if (mTestFlag) localSave(x, y);
     }
 
-    public void setArray(PointCluster[] array) {
-        this.pointClusters = array;
+    private void localSave(float x, float y) {
+        if (mFirstTouchFlag){
+            startTime = System.currentTimeMillis();
+            mFirstTouchFlag = false;
+        }
+        mRecordRound.x.add(x);
+        mRecordRound.y.add(y);
+        mRecordRound.s.add(System.currentTimeMillis() - startTime);
+        mRecordRound.v.add(0.0);
+        mRecordRound.jerk.add(0.0);
     }
+
+    private void nextRound() {
+        mRecordRound.saveXYRound();
+        if (TestType.NUM_OF_ROUNDS == mRecordRound.getID()) {
+            mTestActivity.finish();
+            return;
+        }
+
+        mTextRounds.setText(String.valueOf(TestType.NUM_OF_ROUNDS - mRecordRound.getID()));
+        mRecordRound = mRecordTest.createRecordRound();
+    }
+
+
 }

@@ -12,14 +12,14 @@ public class TestType implements Identifier {
     private final int testTypeID;
     public int num_of_tests;
     public int num_of_rounds;
-    public double A_x;
-    public double A_y;
-    public double B_x;
-    public double B_y;
-    public double C_x;
-    public double C_y;
-    public double D_x;
-    public double D_y;
+    public int A_x;
+    public int A_y;
+    public int B_x;
+    public int B_y;
+    public int C_x;
+    public int C_y;
+    public int D_x;
+    public int D_y;
     public static final int NUM_OF_TESTS = 5;
     public static final int NUM_OF_ROUNDS = 7;
 
@@ -31,14 +31,14 @@ public class TestType implements Identifier {
                 new MyPair[]{new MyPair(tte.PK_AI_TEST_TYPE_ID, testTypeID)});
         num_of_tests = cursor.getInt(cursor.getColumnIndex(tte.NUM_OF_TESTS));
         num_of_rounds = cursor.getInt(cursor.getColumnIndex(tte.NUM_OF_ROUNDS));
-        A_x = cursor.getDouble(cursor.getColumnIndex(tte.A_X));
-        A_y = cursor.getDouble(cursor.getColumnIndex(tte.A_Y));
-        B_x = cursor.getDouble(cursor.getColumnIndex(tte.B_X));
-        B_y = cursor.getDouble(cursor.getColumnIndex(tte.B_Y));
-        C_x = cursor.getDouble(cursor.getColumnIndex(tte.C_X));
-        C_y = cursor.getDouble(cursor.getColumnIndex(tte.C_Y));
-        D_x = cursor.getDouble(cursor.getColumnIndex(tte.D_X));
-        D_y = cursor.getDouble(cursor.getColumnIndex(tte.D_Y));
+        A_x = cursor.getInt(cursor.getColumnIndex(tte.A_X));
+        A_y = cursor.getInt(cursor.getColumnIndex(tte.A_Y));
+        B_x = cursor.getInt(cursor.getColumnIndex(tte.B_X));
+        B_y = cursor.getInt(cursor.getColumnIndex(tte.B_Y));
+        C_x = cursor.getInt(cursor.getColumnIndex(tte.C_X));
+        C_y = cursor.getInt(cursor.getColumnIndex(tte.C_Y));
+        D_x = cursor.getInt(cursor.getColumnIndex(tte.D_X));
+        D_y = cursor.getInt(cursor.getColumnIndex(tte.D_Y));
         cursor.close();
 
     }
