@@ -2,10 +2,6 @@ package braude.motorsequence;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
-
-import database.RecordRound;
-import database.RecordTest;
 
 /**
  * Created by ASAF on 16/9/2017.
@@ -17,9 +13,16 @@ public class TestActivity extends ExerciseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        BuildTouchScreen(mParticipant.testSets.getLast().testType);
+        BuildTouchScreen(participant.testSets.getLast().testType);
 
-        touchView.initTest(mParticipant.testSets.getLast().createRecordTest(), mTextRounds, this);
+        touchView.initTest(participant.testSets.getLast().createRecordTest(), textRounds, this);
+
+        abort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
     }
 

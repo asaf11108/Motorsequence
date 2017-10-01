@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -35,6 +34,7 @@ import java.util.List;
 import database.Participant;
 import database.FactoryEntry;
 import database.ParticipantEntry;
+import util.MyApplication;
 import util.MyPair;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -95,6 +95,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
+                i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(i);
             }
         });
@@ -198,6 +199,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(true);
             mAuthTask = new UserLoginTask(user, password);
             mAuthTask.execute((Void) null);
+            mEmailView.getText().clear();
+            mPasswordView.getText().clear();
         }
     }
 
@@ -330,7 +333,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Intent i = new Intent(LoginActivity.this, ParticipantActivity.class);
                 Participant participant = new Participant(check.getInt(check.getColumnIndex(pe.PK_AI_PARTICIPANT_ID)));
                 check.close();
-                i.putExtra(getString(R.string.key_Participent), participant);
+                MyApplication app = (MyApplication) getApplicationContext();
+                app.setParticipant(participant);
                 startActivity(i);
                 return true;
             }
@@ -342,9 +346,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
-                finish();
-            } else {
+            if (!success) {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }

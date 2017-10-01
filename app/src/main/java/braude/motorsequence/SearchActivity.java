@@ -21,6 +21,7 @@ import java.util.List;
 import database.FactoryEntry;
 import database.Participant;
 import database.ParticipantEntry;
+import util.MyApplication;
 import util.MyPair;
 import util.MyTableRow;
 
@@ -128,7 +129,8 @@ public class SearchActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent i = new Intent(SearchActivity.this, ParticipantAnalysisActivity.class);
                     Participant participant = new Participant(row.getMyId());
-                    i.putExtra(getString(R.string.key_Participent), participant);
+                    MyApplication app = (MyApplication) getApplicationContext();
+                    app.setParticipant(participant);
                     startActivity(i);
                 }
             });

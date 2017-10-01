@@ -9,23 +9,22 @@ import android.widget.Toast;
 
 import database.Participant;
 import database.TestSet;
+import util.MyApplication;
 
 public class ParticipantAnalysisActivity extends AppCompatActivity {
 
-    private Participant mParticipant;
+    private Participant participant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_participant_analysis);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras == null)
-            return;
-        mParticipant = (Participant) getIntent().getSerializableExtra(getString(R.string.key_Participent));
+        MyApplication app = (MyApplication) getApplicationContext();
+        participant = app.getParticipant();
 
         final TextView currentTestType = (TextView) findViewById(R.id.text_participantAnalysis_currentSetType);
-        TestSet testSet = mParticipant.testSets.getLast();
+        TestSet testSet = participant.testSets.getLast();
         boolean testSetFlag;
         if (testSet == null) {
             currentTestType.setText("None");
@@ -64,7 +63,7 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             if(mTestSetFlag) {
-                mTestSet = mParticipant.createTestSet(mTestTypeID);
+                mTestSet = participant.createTestSet(mTestTypeID);
                 mCurrentTestType.setText("Pattern" + mTestTypeID);
                 mTestSetFlag = false;
 

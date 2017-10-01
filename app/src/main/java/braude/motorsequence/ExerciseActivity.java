@@ -2,45 +2,47 @@ package braude.motorsequence;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import database.Participant;
 import database.TestType;
+import util.MyApplication;
 import util.PointCluster;
 import util.TouchView;
 
 public abstract class ExerciseActivity extends AppCompatActivity {
 
-    protected Participant mParticipant;
-    protected TextView mTextRounds;
-    protected RelativeLayout mRelativeLayout;
-    protected PointCluster[] mPointClusters;
+    protected Participant participant;
+    protected TextView textRounds;
+    protected RelativeLayout relativeLayout;
+    protected PointCluster[] pointClusters;
     protected TouchView touchView;
+    protected Button abort;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras == null)
-            return;
-        mParticipant = (Participant) getIntent().getSerializableExtra(getString(R.string.key_Participent));
+        MyApplication app = (MyApplication) getApplicationContext();
+        participant = app.getParticipant();
 
-        mTextRounds = (TextView) findViewById(R.id.text_exercise_rounds);
-        mRelativeLayout = (RelativeLayout) findViewById(R.id.relative_exercise_drawFrame);
-        mPointClusters = new PointCluster[PointCluster.POINT_CLUSTERS_SIZE];
+        textRounds = (TextView) findViewById(R.id.text_exercise_rounds);
+        relativeLayout = (RelativeLayout) findViewById(R.id.relative_exercise_drawFrame);
+        pointClusters = new PointCluster[PointCluster.POINT_CLUSTERS_SIZE];
+        abort = (Button) findViewById(R.id.button_exercise_abort);
     }
 
     protected void BuildTouchScreen(TestType testType){
-        mPointClusters[0] = new PointCluster(getApplicationContext(), mRelativeLayout, "A", testType.A_x, testType.A_y);
-        mPointClusters[1] = new PointCluster(getApplicationContext(), mRelativeLayout, "B", testType.B_x, testType.B_y);
-        mPointClusters[2] = new PointCluster(getApplicationContext(), mRelativeLayout, "C", testType.C_x, testType.C_y);
-        mPointClusters[3] = new PointCluster(getApplicationContext(), mRelativeLayout, "D", testType.D_x, testType.D_y);
+        pointClusters[0] = new PointCluster(getApplicationContext(), relativeLayout, "A", testType.A_x, testType.A_y);
+        pointClusters[1] = new PointCluster(getApplicationContext(), relativeLayout, "B", testType.B_x, testType.B_y);
+        pointClusters[2] = new PointCluster(getApplicationContext(), relativeLayout, "C", testType.C_x, testType.C_y);
+        pointClusters[3] = new PointCluster(getApplicationContext(), relativeLayout, "D", testType.D_x, testType.D_y);
 
         touchView = (TouchView) findViewById(R.id.touch_exercise_touchFrame);
-        touchView.setArray(mPointClusters);
-        mPointClusters[0].setClusterColor(PointCluster.COLOR_RED);
+        touchView.setArray(pointClusters);
+        pointClusters[0].setClusterColor(PointCluster.COLOR_RED);
     }
 }

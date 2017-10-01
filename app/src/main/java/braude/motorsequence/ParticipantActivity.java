@@ -12,32 +12,28 @@ import java.text.DecimalFormat;
 
 import database.Participant;
 import database.TestSet;
-
-import static android.R.attr.x;
+import util.MyApplication;
 
 public class ParticipantActivity extends AppCompatActivity {
 
-    private Participant mParticipant;
+    private Participant participant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_participant);
 
-        Bundle extras = getIntent().getExtras();
-        if (extras == null)
-            return;
-        mParticipant = (Participant) getIntent().getSerializableExtra(getString(R.string.key_Participent));
+        MyApplication app = (MyApplication) getApplicationContext();
+        participant = app.getParticipant();
 
         TextView title = (TextView) findViewById(R.id.text_participant_title);
-        title.setText("Hello, " + mParticipant.firstName);
+        title.setText("Hello, " + participant.firstName);
 
         Button buttPractice = (Button) findViewById(R.id.button_participant_practice);
         buttPractice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(ParticipantActivity.this, PracticeActivity.class);
-                i.putExtra(getString(R.string.key_Participent), mParticipant);
                 startActivity(i);
             }
         });
@@ -45,7 +41,7 @@ public class ParticipantActivity extends AppCompatActivity {
         buttTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TestSet testSet = mParticipant.testSets.getLast();
+                TestSet testSet = participant.testSets.getLast();
                 boolean testFlag;
                 if (testSet == null) {
                     Toast.makeText(getApplicationContext(),
@@ -72,7 +68,6 @@ public class ParticipantActivity extends AppCompatActivity {
                 }
                 if (testFlag) {
                     Intent i = new Intent(ParticipantActivity.this, TestActivity.class);
-                    i.putExtra(getString(R.string.key_Participent), mParticipant);
                     startActivity(i);
                 }
             }

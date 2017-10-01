@@ -12,7 +12,6 @@
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."</string>
-    <string name="key_Participent">key_participent</string>
     <string name="show_advance_search"><u>▼ Show advance Search</u></string>
     <string name="hide_advance_search"><u>▲ Hide advance Search</u></string>
     <string-array name="array_group">

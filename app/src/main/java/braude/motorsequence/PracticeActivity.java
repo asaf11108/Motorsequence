@@ -16,7 +16,14 @@ public class PracticeActivity extends ExerciseActivity {
 
         BuildTouchScreen(new TestType(1));
 
-        mTextRounds.setVisibility(View.INVISIBLE);
+        textRounds.setVisibility(View.INVISIBLE);
+
+        abort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 
     }
