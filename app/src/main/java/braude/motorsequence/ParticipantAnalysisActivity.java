@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import database.Participant;
 import database.TestSet;
+import util.MovementView;
 import util.MyApplication;
 
 public class ParticipantAnalysisActivity extends AppCompatActivity {
@@ -29,12 +31,10 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
         if (testSet == null) {
             currentTestType.setText("None");
             testSetFlag = true;
-        }
-        else if(testSet.recordTests.getSeq() >= testSet.testType.num_of_tests) {
+        } else if (testSet.recordTests.getSeq() >= testSet.testType.num_of_tests) {
             currentTestType.setText("Participant finished Test Set");
             testSetFlag = true;
-        }
-        else {
+        } else {
             currentTestType.setText("Pattern" + testSet.testType.getID());
             testSetFlag = false;
         }
@@ -42,11 +42,14 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
         Button pattern1 = (Button) findViewById(R.id.button_participantAnalysis_pattern1);
         pattern1.setOnClickListener(new Pattern(1, currentTestType, testSet, testSetFlag));
 
-
+        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_participantAnalysis_container);
+        frameLayout.addView(new MovementView(getApplicationContext(),
+                participant.testSets.getLast().recordTests.getLast(),
+                participant.testSets.getLast().testType));
 
     }
 
-    private class Pattern implements View.OnClickListener{
+    private class Pattern implements View.OnClickListener {
 
         private int mTestTypeID;
         private TextView mCurrentTestType;
@@ -62,13 +65,12 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            if(mTestSetFlag) {
+            if (mTestSetFlag) {
                 mTestSet = participant.createTestSet(mTestTypeID);
                 mCurrentTestType.setText("Pattern" + mTestTypeID);
                 mTestSetFlag = false;
 
-            }
-            else Toast.makeText(getApplicationContext(), "TestSet exists", Toast.LENGTH_SHORT)
+            } else Toast.makeText(getApplicationContext(), "TestSet exists", Toast.LENGTH_SHORT)
                     .show();
         }
     }

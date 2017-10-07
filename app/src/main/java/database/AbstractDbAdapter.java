@@ -148,7 +148,7 @@ public abstract class AbstractDbAdapter {
      * @param where list of all where rows to delete
      * @return true if deleted, false otherwise
      */
-    public boolean delete(MyPair[] where) {
+    boolean delete(MyPair[] where) {
         SQLiteDatabase db = open().getWritableDatabase();
         StringBuilder whereClause =  new StringBuilder();
         String[] whereArgs = convertToWhereStr(where, whereClause);

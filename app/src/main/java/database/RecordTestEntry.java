@@ -4,10 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
-import java.util.Date;
-import java.text.SimpleDateFormat;
-
 import util.MyPair;
+
+import static database.XYRoundEntry.PARTICIPANT_ID;
+import static database.XYRoundEntry.RECORD_TEST_ID;
+import static database.XYRoundEntry.TEST_SET_ID;
 
 
 /**
@@ -73,5 +74,40 @@ public class RecordTestEntry extends AbstractDbAdapter {
                                 new MyPair(tse.PK_TEST_SET_ID, testSetID)}) == 1;
         }
         return (flag) ? (recordTestID) : (-1);
+    }
+    /**
+     * delete record test
+     *
+     * @return record test participanID or -1 if faild
+     */
+    boolean delete(int participantID, int testSetID, int recordTestID){
+        XYRoundEntry xyre = FactoryEntry.getXYRoundEntry();
+        boolean flag = xyre.delete(new MyPair[]{new MyPair(PARTICIPANT_ID, participantID),
+                                new MyPair(TEST_SET_ID, testSetID),
+                                new MyPair(RECORD_TEST_ID, recordTestID)});
+        if (flag) {
+            RecordRoundEntry rre = FactoryEntry.getRecordRoundEntry();
+            flag = rre.delete(new MyPair[]{new MyPair(rre.PK_PARTICIPANT_ID, participantID),
+                    new MyPair(rre.PK_TEST_SET_ID, testSetID),
+                    new MyPair(rre.PK_RECORD_TEST_ID, recordTestID)});
+            if (flag) {
+                flag = delete(new MyPair[]{new MyPair(PARTICIPANT_ID, participantID),
+                        new MyPair(TEST_SET_ID, testSetID),
+                        new MyPair(RECORD_TEST_ID, recordTestID)});
+
+                recordTestID--;
+                TestSetEntry tse = FactoryEntry.getTestSetEntry();
+
+                if (flag) {
+                    ContentValues values = new ContentValues();
+                    values.put(tse.RECORD_TEST_SEQ, recordTestID);
+                    flag = tse.update(
+                            values,
+                            new MyPair[]{new MyPair(tse.PK_PARTICIPANT_ID, participantID),
+                                    new MyPair(tse.PK_TEST_SET_ID, testSetID)}) == 1;
+                }
+            }
+        }
+        return flag;
     }
 }

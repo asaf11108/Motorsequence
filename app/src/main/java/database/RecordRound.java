@@ -48,9 +48,9 @@ public class RecordRound implements Identifier {
         XYRoundEntry xyre = FactoryEntry.getXYRoundEntry();
         cursor = xyre.fetch(
                 null,
-                new MyPair[]{new MyPair(xyre.PK_PARTICIPANT_ID, recordTest.getParent().getParent().getID()),
-                        new MyPair(xyre.PK_TEST_SET_ID, recordTest.getParent().getID()),
-                        new MyPair(xyre.PK_RECORD_TEST_ID, recordTest.getID()),
+                new MyPair[]{new MyPair(xyre.PARTICIPANT_ID, recordTest.getParent().getParent().getID()),
+                        new MyPair(xyre.TEST_SET_ID, recordTest.getParent().getID()),
+                        new MyPair(xyre.RECORD_TEST_ID, recordTest.getID()),
                         new MyPair(xyre.RECORD_ROUND_ID, recordRoundID)});
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             x.add(cursor.getFloat(cursor.getColumnIndex(xyre.X)));

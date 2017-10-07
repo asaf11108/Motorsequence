@@ -33,7 +33,8 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".PracticeActivity" />
         <activity android:name=".TestActivity" />
-
+        <activity android:name=".ClusterActivity" />
+        <activity android:name=".ClusterResultActivity"></activity>
     </application>
 
 </manifest>

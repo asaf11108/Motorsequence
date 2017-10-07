@@ -25,5 +25,13 @@ public class DiagnosticianActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        analysis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(DiagnosticianActivity.this, ClusterActivity.class);
+                startActivity(i);
+            }
+        });
     }
 }

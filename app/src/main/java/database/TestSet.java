@@ -49,4 +49,10 @@ public class TestSet implements Identifier, NewObject<RecordTest> {
         if (rte.create(participant.getID(), testSetID) == -1) return null;
         return recordTests.add();
     }
+
+    public void deleteRecordTest() {
+        RecordTestEntry rte = FactoryEntry.getRecordTestEntry();
+        rte.delete(participant.getID(), testSetID, recordTests.getSeq());
+        recordTests.remove();
+    }
 }

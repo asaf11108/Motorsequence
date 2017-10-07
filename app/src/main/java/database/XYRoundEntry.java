@@ -9,9 +9,9 @@ import android.database.sqlite.SQLiteStatement;
  */
 public class XYRoundEntry extends AbstractDbAdapter {
 
-    public static final String PK_PARTICIPANT_ID = "participantID";
-    public static final String PK_TEST_SET_ID = "testSetID";
-    public static final String PK_RECORD_TEST_ID = "recordTestID";
+    public static final String PARTICIPANT_ID = "participantID";
+    public static final String TEST_SET_ID = "testSetID";
+    public static final String RECORD_TEST_ID = "recordTestID";
     public static final String RECORD_ROUND_ID = "recordRoundID";
     public static final String X = "x";
     public static final String Y = "y";

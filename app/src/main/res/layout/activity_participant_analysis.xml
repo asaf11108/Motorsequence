@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_participantAnalysis_parent"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:fillViewport="false"
@@ -243,12 +244,21 @@
                         android:text="Jerk Graph" />
                 </LinearLayout>
 
-                <com.jjoe64.graphview.GraphView
-                    android:id="@+id/graph"
+                <FrameLayout
+                    android:id="@+id/frame_participantAnalysis_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:padding="5dp" />
+                    android:background="@color/TouchView"
+                    android:padding="5dp"/>
+
+                <!--<com.jjoe64.graphview.GraphView-->
+                <!--android:id="@+id/graph_participantAnalysis_graph"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="1"-->
+                <!--android:padding="5dp" />-->
+
 
             </LinearLayout>
         </LinearLayout>
@@ -263,51 +273,51 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
-                    style="@style/tableTextView"
                     android:textStyle="bold" />
 
                 <TextView
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
-                    style="@style/tableTextView"
-                    android:textStyle="bold"
-                    android:text="No. of Peeks" />
+                    android:text="No. of Peeks"
+                    android:textStyle="bold" />
 
                 <TextView
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
-                    style="@style/tableTextView"
-                    android:textStyle="bold"
-                    android:text="Jerk" />
+                    android:text="Jerk"
+                    android:textStyle="bold" />
 
                 <TextView
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
-                    style="@style/tableTextView"
-                    android:textStyle="bold"
-                    android:text="Max Vel." />
+                    android:text="Max Vel."
+                    android:textStyle="bold" />
 
                 <TextView
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
-                    style="@style/tableTextView"
-                    android:textStyle="bold"
-                    android:text="Max Time" />
+                    android:text="Max Time"
+                    android:textStyle="bold" />
 
                 <TextView
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
-                    style="@style/tableTextView"
-                    android:textStyle="bold"
-                    android:text="Grade" />
+                    android:text="Grade"
+                    android:textStyle="bold" />
             </TableRow>
 
             <TableRow
@@ -315,47 +325,47 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
-                    style="@style/tableTextView"
-                    android:textStyle="bold"
-                    android:text="Day 1" />
+                    android:text="Day 1"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r2c2"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r2c3"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r2c4"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r2c5"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r2c6"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
             </TableRow>
 
             <TableRow
@@ -363,47 +373,47 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
-                    style="@style/tableTextView"
-                    android:textStyle="bold"
-                    android:text="Day 2" />
+                    android:text="Day 2"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r3c2"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r3c3"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r3c4"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r3c5"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r3c6"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
             </TableRow>
 
             <TableRow
@@ -411,47 +421,47 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
-                    style="@style/tableTextView"
-                    android:textStyle="bold"
-                    android:text="Day 3" />
+                    android:text="Day 3"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r4c2"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r4c3"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r4c4"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r4c5"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r4c6"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
             </TableRow>
 
             <TableRow
@@ -459,47 +469,47 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
-                    style="@style/tableTextView"
-                    android:textStyle="bold"
-                    android:text="Day 4" />
+                    android:text="Day 4"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r5c2"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r5c3"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r5c4"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r5c5"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r5c6"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
             </TableRow>
 
             <TableRow
@@ -507,47 +517,47 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
-                    style="@style/tableTextView"
-                    android:textStyle="bold"
-                    android:text="Day 5" />
+                    android:text="Day 5"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r6c2"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r6c3"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r6c4"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r6c5"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r6c6"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
             </TableRow>
 
             <TableRow
@@ -555,47 +565,47 @@
                 android:layout_height="wrap_content">
 
                 <TextView
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
-                    style="@style/tableTextView"
-                    android:textStyle="bold"
-                    android:text="Average" />
+                    android:text="Average"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r7c2"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r7c3"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r7c4"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r7c5"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
 
                 <TextView
                     android:id="@+id/text_participantAnalysis_r7c6"
+                    style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    style="@style/tableTextView" />
+                    android:background="@drawable/border" />
             </TableRow>
         </TableLayout>
 

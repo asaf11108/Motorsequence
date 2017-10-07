@@ -15,6 +15,8 @@ import database.RecordRound;
 import database.RecordTest;
 import database.TestType;
 
+import static android.R.attr.data;
+
 /**
  * https://inducesmile.com/android/android-touch-screen-example-tutorial/
  */
@@ -76,6 +78,9 @@ public class TouchView extends View {
         mRecordRound = recordTest.createRecordRound();
         mTextRounds = textRounds;
         mTestActivity = testActivity;
+        testActivity.Toast.makeText(getActivity(), (String)data.result,
+                Toast.LENGTH_LONG).show();
+
     }
 
     @Override
@@ -138,6 +143,4 @@ public class TouchView extends View {
         mTextRounds.setText(String.valueOf(TestType.NUM_OF_ROUNDS - mRecordRound.getID()));
         mRecordRound = mRecordTest.createRecordRound();
     }
-
-
 }

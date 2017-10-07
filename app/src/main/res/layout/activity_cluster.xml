@@ -1,0 +1,139 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_vertical_margin"
+    tools:context="braude.motorsequence.ClusterActivity">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Please select parameters for the clustering algorithm"
+        android:textSize="@dimen/activity_font_subtitle" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Number of cluster (0 - for automatic clustering):   "
+            android:textSize="@dimen/activity_font_regular" />
+
+        <EditText
+            android:id="@+id/edit_cluster_numOfCluster"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="5"
+            android:gravity="center"
+            android:text="0"
+            android:textSize="@dimen/activity_font_regular" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radio_cluster_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Age range from   "
+            android:textSize="@dimen/activity_font_regular" />
+
+        <EditText
+            android:id="@+id/edit_cluster_ageFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="5"
+            android:gravity="center"
+            android:textSize="@dimen/activity_font_regular" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="   to   "
+            android:textSize="@dimen/activity_font_regular" />
+
+        <EditText
+            android:id="@+id/edit_cluster_ageTo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="5"
+            android:gravity="center"
+            android:textSize="@dimen/activity_font_regular" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="left"
+        android:layout_margin="10dp">
+
+        <RadioButton
+            android:id="@+id/radio_cluster_totalTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total time of test(ms):   "
+            android:textSize="@dimen/activity_font_regular" />
+
+        <EditText
+            android:id="@+id/edit_cluster_totalTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="5"
+            android:gravity="center"
+            android:textSize="@dimen/activity_font_regular" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="left"
+        android:layout_margin="10dp">
+
+        <RadioButton
+            android:id="@+id/radio_cluster_maxVelocity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Max velocity(mm / ms):   "
+            android:textSize="@dimen/activity_font_regular" />
+
+        <EditText
+            android:id="@+id/edit_cluster_maxVelocity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="5"
+            android:gravity="center"
+            android:textSize="@dimen/activity_font_regular" />
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/butt_cluster_analyze"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Analyze"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="50dp"
+        android:layout_gravity="right"
+        style="@style/MyButton"/>
+</LinearLayout>

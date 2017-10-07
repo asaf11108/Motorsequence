@@ -45,8 +45,8 @@ import static android.provider.Contacts.SettingsColumns.KEY;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    private static final String ADMIN_USER = "admin";
-    private static final String ADMIN_PASSWORD = "admin";
+    private static final String ADMIN_USER = "a";
+    private static final String ADMIN_PASSWORD = "a";
     /**
      * Id to identity READ_CONTACTS permission request.
      */

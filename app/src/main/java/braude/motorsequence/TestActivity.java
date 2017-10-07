@@ -21,6 +21,7 @@ public class TestActivity extends ExerciseActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                participant.testSets.getLast().deleteRecordTest();
             }
         });
 
