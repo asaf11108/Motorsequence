@@ -7,5 +7,8 @@
     <color name="LinkHover">#33B1FF</color>
     <color name="Link">#005999</color>
     <color name="TouchView">#d3d3d3</color>
+    <color name="buttonClick">#7CFC00</color>
+    <color name="buttonRegular">#d3d3d3</color>
+
 
 </resources>

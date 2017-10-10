@@ -1,5 +1,6 @@
 package braude.motorsequence;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -8,14 +9,23 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jjoe64.graphview.GraphView;
+
 import database.Participant;
 import database.TestSet;
-import util.MovementView;
+import util.ButtonGraph;
+import util.DayButtonGraph;
+import util.DrawView;
 import util.MyApplication;
+import util.TypeButtonGraph;
+
+import static android.os.Build.VERSION_CODES.M;
 
 public class ParticipantAnalysisActivity extends AppCompatActivity {
 
     private Participant participant;
+    private static final int TEST_DAYS = 5;
+    private static final int GRAPH_TYPES = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +35,13 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
         MyApplication app = (MyApplication) getApplicationContext();
         participant = app.getParticipant();
 
+        definePatten();
+
+        if (participant.testSets.getLast() != null) defineGraph();
+
+    }
+
+    private void definePatten(){
         final TextView currentTestType = (TextView) findViewById(R.id.text_participantAnalysis_currentSetType);
         TestSet testSet = participant.testSets.getLast();
         boolean testSetFlag;
@@ -40,38 +57,98 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
         }
 
         Button pattern1 = (Button) findViewById(R.id.button_participantAnalysis_pattern1);
-        pattern1.setOnClickListener(new Pattern(1, currentTestType, testSet, testSetFlag));
+        pattern1.setOnClickListener(new Pattern(1, currentTestType, testSetFlag));
+    }
 
+    private void defineGraph(){
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_participantAnalysis_container);
-        frameLayout.addView(new MovementView(getApplicationContext(),
-                participant.testSets.getLast().recordTests.getLast(),
-                participant.testSets.getLast().testType));
+        final Button[] dayButtons = new Button[TEST_DAYS];
+        dayButtons[0] = (Button) findViewById(R.id.button_participantAnalysis_day1);
+        dayButtons[1] = (Button) findViewById(R.id.button_participantAnalysis_day2);
+        dayButtons[2] = (Button) findViewById(R.id.button_participantAnalysis_day3);
+        dayButtons[3] = (Button) findViewById(R.id.button_participantAnalysis_day4);
+        dayButtons[4] = (Button) findViewById(R.id.button_participantAnalysis_day5);
+        ButtonGraph dayButtonGraph = new DayButtonGraph(dayButtons);
+        dayButtons[0].setOnClickListener(new GraphListener(0, dayButtonGraph, frameLayout));
+        dayButtons[1].setOnClickListener(new GraphListener(1, dayButtonGraph, frameLayout));
+        dayButtons[2].setOnClickListener(new GraphListener(2, dayButtonGraph, frameLayout));
+        dayButtons[3].setOnClickListener(new GraphListener(3, dayButtonGraph, frameLayout));
+        dayButtons[4].setOnClickListener(new GraphListener(4, dayButtonGraph, frameLayout));
 
+        Button[] graphTypes = new Button[GRAPH_TYPES];
+        graphTypes[0] = (Button) findViewById(R.id.button_participantAnalysis_movement);
+        graphTypes[1] = (Button) findViewById(R.id.button_participantAnalysis_velocity);
+        graphTypes[2] = (Button) findViewById(R.id.button_participantAnalysis_jerk);
+        ButtonGraph typeButtonGraph = new TypeButtonGraph(graphTypes);
+        graphTypes[0].setOnClickListener(new GraphListener(0, typeButtonGraph, frameLayout));
+        graphTypes[1].setOnClickListener(new GraphListener(1, typeButtonGraph, frameLayout));
+        graphTypes[2].setOnClickListener(new GraphListener(2, typeButtonGraph, frameLayout));
+
+        dayButtons[0].setBackgroundColor(Color.GREEN);
+        graphTypes[0].setBackgroundColor(Color.GREEN);
+        if (participant.testSets.getLast().recordTests.get(dayButtonGraph.getVal()+1) != null)
+            frameLayout.addView(new DrawView(getApplicationContext(),
+                    participant.testSets.getLast().recordTests.get(dayButtonGraph.getVal()+1),
+                    participant.testSets.getLast().testType));
     }
 
     private class Pattern implements View.OnClickListener {
 
         private int mTestTypeID;
         private TextView mCurrentTestType;
-        private TestSet mTestSet;
         private boolean mTestSetFlag;
 
-        public Pattern(int mTestTypeID, TextView mCurrentTestType, TestSet mTestSet, boolean mTestSetFlag) {
+        public Pattern(int mTestTypeID, TextView mCurrentTestType, boolean mTestSetFlag) {
             this.mTestTypeID = mTestTypeID;
             this.mCurrentTestType = mCurrentTestType;
-            this.mTestSet = mTestSet;
             this.mTestSetFlag = mTestSetFlag;
         }
 
         @Override
         public void onClick(View v) {
             if (mTestSetFlag) {
-                mTestSet = participant.createTestSet(mTestTypeID);
+                participant.createTestSet(mTestTypeID);
                 mCurrentTestType.setText("Pattern" + mTestTypeID);
                 mTestSetFlag = false;
 
             } else Toast.makeText(getApplicationContext(), "TestSet exists", Toast.LENGTH_SHORT)
                     .show();
+        }
+    }
+
+    private class GraphListener implements View.OnClickListener {
+        private int buttID;
+        private ButtonGraph buttonGraph;
+        private FrameLayout frameLayout;
+
+        public GraphListener(int buttID, ButtonGraph buttonGraph, FrameLayout frameLayout) {
+            this.buttID = buttID;
+            this.buttonGraph = buttonGraph;
+            this.frameLayout = frameLayout;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (v == buttonGraph.getButton()) return;
+            Button clickedButt = (Button) v;
+            clickedButt.setBackgroundColor(Color.GREEN);
+            buttonGraph.getButton().setBackgroundResource(android.R.drawable.btn_default);
+            buttonGraph.setVal(buttID);
+            frameLayout.removeAllViews();
+            switch (buttonGraph.type){
+                case  0:
+                    if (participant.testSets.getLast().recordTests.get(buttID + 1) != null)
+                        frameLayout.addView(new DrawView(getApplicationContext(),
+                                participant.testSets.getLast().recordTests.get(buttID + 1),
+                                participant.testSets.getLast().testType));
+                    break;
+                case  1:
+                    frameLayout.addView(new GraphView(getApplicationContext()));
+                    break;
+                case  2:
+                    frameLayout.addView(new GraphView(getApplicationContext()));
+                    break;
+            }
         }
     }
 }

@@ -34,7 +34,7 @@ public class MyArrayList<E extends Identifier>{
     }
 
     /**
-     * get to list last record
+     * getButton to list last record
      */
     public E getLast() {
         E element = null;
@@ -47,7 +47,7 @@ public class MyArrayList<E extends Identifier>{
     }
 
     /**
-     * get to list all records
+     * getButton to list all records
      */
     public List<E> getAll() {
         for (int i = 1; i <= seq; i++) fetchToList(i);
@@ -55,7 +55,7 @@ public class MyArrayList<E extends Identifier>{
     }
 
     /**
-     * get new object to list.
+     * getButton new object to list.
      *
      * @param id thr desirable object index
      * @return element or null if the parameter i is invalid

@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import braude.motorsequence.TestActivity;
 import database.RecordRound;
@@ -50,7 +51,7 @@ public class TouchView extends View {
         drawPaint.setStyle(Paint.Style.STROKE);
         drawPaint.setStrokeJoin(Paint.Join.ROUND);
 //        drawPaint.setPathEffect(new CornerPathEffect(10) );
-        drawPaint.setStrokeWidth(3);
+        drawPaint.setStrokeWidth(1);
         setWillNotDraw(false);
         next = 0;
         mTestFlag = false;
@@ -78,9 +79,6 @@ public class TouchView extends View {
         mRecordRound = recordTest.createRecordRound();
         mTextRounds = textRounds;
         mTestActivity = testActivity;
-        testActivity.Toast.makeText(getActivity(), (String)data.result,
-                Toast.LENGTH_LONG).show();
-
     }
 
     @Override
