@@ -42,11 +42,11 @@ public class XYRoundEntry extends AbstractDbAdapter {
      * @return row participanID or -1 if faild
      */
     long create(SQLiteStatement statement,
-                       float x, float y, long s, double v, double jerk){
+                       float x, float y, double s, double v, double jerk){
         statement.clearBindings();
         statement.bindDouble(1, x);
         statement.bindDouble(2, y);
-        statement.bindLong(3, s);
+        statement.bindDouble(3, s);
         statement.bindDouble(4, v);
         statement.bindDouble(5, jerk);
         return statement.executeInsert();

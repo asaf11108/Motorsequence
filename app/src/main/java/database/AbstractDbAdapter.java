@@ -76,7 +76,7 @@ public abstract class AbstractDbAdapter {
                     "recordRoundID integer(10) NOT NULL, " +
                     "x REAL NOT NULL, " +
                     "y REAL NOT NULL, " +
-                    "s INTEGER NOT NULL, " +
+                    "s double(10) NOT NULL, " +
                     "v double(10) NOT NULL, " +
                     "jerk double(10) NOT NULL, " +
                     "FOREIGN KEY(participantID, testSetID, recordTestID, recordRoundID) REFERENCES RecordRound(participantID, testSetID, recordTestID, recordRoundID))";

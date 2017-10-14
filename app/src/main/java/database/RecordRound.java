@@ -23,7 +23,7 @@ public class RecordRound implements Identifier {
 
     public List<Float> x;
     public List<Float> y;
-    public List<Long> s;
+    public List<Double> s;
     public List<Double> v;
     public List<Double> jerk;
 
@@ -55,7 +55,7 @@ public class RecordRound implements Identifier {
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             x.add(cursor.getFloat(cursor.getColumnIndex(xyre.X)));
             y.add(cursor.getFloat(cursor.getColumnIndex(xyre.Y)));
-            s.add(cursor.getLong(cursor.getColumnIndex(xyre.S)));
+            s.add(cursor.getDouble(cursor.getColumnIndex(xyre.S)));
             v.add(cursor.getDouble(cursor.getColumnIndex(xyre.V)));
             jerk.add(cursor.getDouble(cursor.getColumnIndex(xyre.JERK)));
         }

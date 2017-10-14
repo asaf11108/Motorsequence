@@ -10,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.DataPoint;
 
 import database.Participant;
 import database.TestSet;
@@ -18,8 +20,7 @@ import util.DayButtonGraph;
 import util.DrawView;
 import util.MyApplication;
 import util.TypeButtonGraph;
-
-import static android.os.Build.VERSION_CODES.M;
+import java.util.List;
 
 public class ParticipantAnalysisActivity extends AppCompatActivity {
 
@@ -121,6 +122,7 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
         private ButtonGraph buttonGraph;
         private FrameLayout frameLayout;
 
+
         public GraphListener(int buttID, ButtonGraph buttonGraph, FrameLayout frameLayout) {
             this.buttID = buttID;
             this.buttonGraph = buttonGraph;
@@ -137,13 +139,23 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
             frameLayout.removeAllViews();
             switch (buttonGraph.type){
                 case  0:
-                    if (participant.testSets.getLast().recordTests.get(buttID + 1) != null)
+                    if (participant.testSets.getLast().recordTests.get(buttonGraph.day+1) != null)
                         frameLayout.addView(new DrawView(getApplicationContext(),
-                                participant.testSets.getLast().recordTests.get(buttID + 1),
+                                participant.testSets.getLast().recordTests.get(buttonGraph.day+1),
                                 participant.testSets.getLast().testType));
                     break;
                 case  1:
-                    frameLayout.addView(new GraphView(getApplicationContext()));
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.MATCH_PARENT,
+                            FrameLayout.LayoutParams.MATCH_PARENT);
+                    GraphView graphView = new GraphView(getApplicationContext());
+                    frameLayout.addView(graphView, layoutParams);
+                    LineGraphSeries<DataPoint> series = new LineGraphSeries();
+                    List<Double> velocity = participant.testSets.getLast().recordTests.get(buttonGraph.day+1).recordRounds.getLast().v;
+                    List<Double> s = participant.testSets.getLast().recordTests.get(buttonGraph.day+1).recordRounds.getLast().s;
+                    for (int i = 0; i <velocity.size(); i++)
+                        series.appendData(new DataPoint(s.get(i)-s.get(0), velocity.get(i)), true, velocity.size());
+                    graphView.addSeries(series);
                     break;
                 case  2:
                     frameLayout.addView(new GraphView(getApplicationContext()));

@@ -9,14 +9,15 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
+
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import braude.motorsequence.TestActivity;
-import database.RecordRound;
 import database.RecordTest;
-import database.TestType;
 
-import static android.R.attr.data;
+import database.TestType;
 
 /**
  * https://inducesmile.com/android/android-touch-screen-example-tutorial/
@@ -32,12 +33,15 @@ public class TouchView extends View {
     private int next;
     private PointCluster[] pointClusters;
     private boolean mTestFlag;
-    private RecordTest mRecordTest;
-    private RecordRound mRecordRound;
-    private boolean mFirstTouchFlag;
-    private long startTime;
-    private TextView mTextRounds;
     private TestActivity mTestActivity;
+
+    private TextView mTextRounds;
+    private boolean mFirstTouchFlag;
+    private double startTime;
+    private int roundID;
+
+    private BlockingQueue<Item> itemQueue;
+    private Thread consumer;
 
     public TouchView(Context context) {
         super(context);
@@ -51,7 +55,7 @@ public class TouchView extends View {
         drawPaint.setStyle(Paint.Style.STROKE);
         drawPaint.setStrokeJoin(Paint.Join.ROUND);
 //        drawPaint.setPathEffect(new CornerPathEffect(10) );
-        drawPaint.setStrokeWidth(1);
+        drawPaint.setStrokeWidth(3);
         setWillNotDraw(false);
         next = 0;
         mTestFlag = false;
@@ -72,20 +76,25 @@ public class TouchView extends View {
         this.pointClusters = array;
     }
 
-    public void initTest(RecordTest recordTest, TextView textRounds, TestActivity testActivity){
+    public void initTest(RecordTest recordTest, TextView textRounds, TestActivity testActivity) {
         mTestFlag = true;
-        mFirstTouchFlag = true;
-        mRecordTest = recordTest;
-        mRecordRound = recordTest.createRecordRound();
         mTextRounds = textRounds;
         mTestActivity = testActivity;
+        mFirstTouchFlag = true;
+        roundID = TestType.NUM_OF_ROUNDS;
+
+        itemQueue = new LinkedBlockingQueue<>();
+        consumer = new ThreadItem(itemQueue, testActivity, recordTest);
+        consumer.setPriority(Thread.MIN_PRIORITY);
+        consumer.start();
+
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         x = event.getX();
         y = event.getY();
-        switch (event.getAction()){
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 path.moveTo(x, y);
                 checkPointInsideCircle(x, y);
@@ -102,10 +111,10 @@ public class TouchView extends View {
     }
 
 
-    private void checkPointInsideCircle(float x, float y){
+    private void checkPointInsideCircle(float x, float y) {
         if (Math.sqrt(
-                (x - pointClusters[next].getCx())*(x - pointClusters[next].getCx()) +
-                (y - pointClusters[next].getCy())*(y - pointClusters[next].getCy())) <
+                (x - pointClusters[next].getCx()) * (x - pointClusters[next].getCx()) +
+                        (y - pointClusters[next].getCy()) * (y - pointClusters[next].getCy())) <
                 PointCircle.POINT_RADIUS) {
             pointClusters[next].setClusterColor(PointCluster.COLOR_DARK_RED);
             next = (next + 1) % PointCluster.POINT_CLUSTERS_SIZE;
@@ -113,32 +122,32 @@ public class TouchView extends View {
             if (next == 1) {
                 path.reset();
                 path.moveTo(x, y);
-                if (mTestFlag && !mFirstTouchFlag) nextRound();
+                if (mTestFlag && !mFirstTouchFlag) {
+                    roundID--;
+                    mTextRounds.setText(String.valueOf(roundID));
+                    try {
+                        itemQueue.put(new Item());
+                        if (roundID == 0) mTestActivity.finish();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
-        if (mTestFlag) localSave(x, y);
-    }
-
-    private void localSave(float x, float y) {
-        if (mFirstTouchFlag){
-            startTime = System.currentTimeMillis();
-            mFirstTouchFlag = false;
+        if (mTestFlag) {
+            if (mFirstTouchFlag) {
+                startTime = System.currentTimeMillis();
+                mFirstTouchFlag = false;
+            }
+            try {
+                itemQueue.put(new Item(x, y, System.currentTimeMillis()-startTime));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        mRecordRound.x.add(x);
-        mRecordRound.y.add(y);
-        mRecordRound.s.add(System.currentTimeMillis() - startTime);
-        mRecordRound.v.add(0.0);
-        mRecordRound.jerk.add(0.0);
     }
 
-    private void nextRound() {
-        mRecordRound.saveXYRound();
-        if (TestType.NUM_OF_ROUNDS == mRecordRound.getID()) {
-            mTestActivity.finish();
-            return;
-        }
 
-        mTextRounds.setText(String.valueOf(TestType.NUM_OF_ROUNDS - mRecordRound.getID()));
-        mRecordRound = mRecordTest.createRecordRound();
-    }
+
+
 }
