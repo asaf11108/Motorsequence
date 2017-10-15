@@ -43,7 +43,7 @@ public class ThreadItem extends Thread {
         while (!done) {
             try {
                 Item item = localQueue.take();
-                if (item.isLocal()) localSave(item.x, item.y, item.s);
+                if (item.isLocal()) localSave(item.x, item.y, item.s, item.v_x, item.v_y);
                 else nextRound();
             } catch (InterruptedException ex) {
 //                    Logger.getLogger(Consumer.class.getName()).log(Level.SEVERE, null, ex);
@@ -51,50 +51,20 @@ public class ThreadItem extends Thread {
         }
     }
 
-    private void localSave(float x, float y, double s) {
+    private void localSave(float x, float y, double s, float v_x, float v_y) {
 
 //        float w = pxToMm(getWidth(), mTestActivity.getApplicationContext());
         mRecordRound.x.add(x);
         mRecordRound.y.add(y);
         mRecordRound.s.add(s / 1000);
-        mRecordRound.v.add(calcVelocity(mRecordRound.x, mRecordRound.y, mRecordRound.s));
+        mRecordRound.v.add(pxToMm(Math.sqrt(v_x*v_x + v_y*v_y), mTestActivity.getApplicationContext()));
         mRecordRound.jerk.add(0.0);
     }
 
-    private double calcVelocity(List<Float> x, List<Float> y, List<Double> s) {
-        int size = x.size();
-        if (size == 1)
-            return 0.0;
-        float dx = pxToMm(x.get(size - 1) - x.get(size - 2), mTestActivity.getApplicationContext());
-        float dy = pxToMm(y.get(size - 1) - y.get(size - 2), mTestActivity.getApplicationContext());
-        double ds = s.get(size - 1) - s.get(size - 2);
-        double distance = Math.sqrt(dx * dx + dy * dy);
-        return distance / ds;
-    }
 
-
-
-    private static float pxToMm(final float px, final Context context) {
+    private static double pxToMm(final double px, final Context context) {
         final DisplayMetrics dm = context.getResources().getDisplayMetrics();
         return px / TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 1, dm);
-    }
-
-    public static float applyDimension(int unit, float value, DisplayMetrics metrics) {
-        switch (unit) {
-            case COMPLEX_UNIT_PX:
-                return value;
-            case COMPLEX_UNIT_DIP:
-                return value * metrics.density;
-            case COMPLEX_UNIT_SP:
-                return value * metrics.scaledDensity;
-            case COMPLEX_UNIT_PT:
-                return value * metrics.xdpi * (1.0f / 72);
-            case COMPLEX_UNIT_IN:
-                return value * metrics.xdpi;
-            case COMPLEX_UNIT_MM:
-                return value * metrics.xdpi * (1.0f / 25.4f);
-        }
-        return 0;
     }
 
     private void nextRound() {

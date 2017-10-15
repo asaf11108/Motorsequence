@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -19,13 +20,13 @@ import database.RecordTest;
 
 import database.TestType;
 
+import android.view.VelocityTracker;
+import android.support.v4.view.VelocityTrackerCompat;
+
 /**
  * https://inducesmile.com/android/android-touch-screen-example-tutorial/
  */
 public class TouchView extends View {
-
-    private float x;
-    private float y;
 
     Paint drawPaint;
     private Path path = new Path();
@@ -42,6 +43,7 @@ public class TouchView extends View {
 
     private BlockingQueue<Item> itemQueue;
     private Thread consumer;
+    private VelocityTracker mVelocityTracker = null;
 
     public TouchView(Context context) {
         super(context);
@@ -92,16 +94,34 @@ public class TouchView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        x = event.getX();
-        y = event.getY();
-        switch (event.getAction()) {
+        float x = event.getX();
+        float y = event.getY();
+
+        int index = event.getActionIndex();
+        int action = event.getActionMasked();
+        int pointerId = event.getPointerId(index);
+
+        switch (action) {
             case MotionEvent.ACTION_DOWN:
                 path.moveTo(x, y);
-                checkPointInsideCircle(x, y);
+                checkPointInsideCircle(x, y, 0, 0);
+
+                if(mVelocityTracker == null) mVelocityTracker = VelocityTracker.obtain();
+                else mVelocityTracker.clear();
+                mVelocityTracker.addMovement(event);
                 return true;
             case MotionEvent.ACTION_MOVE:
                 path.lineTo(x, y);
-                checkPointInsideCircle(x, y);
+                checkPointInsideCircle(x, y, VelocityTrackerCompat.getXVelocity(mVelocityTracker,
+                        pointerId), VelocityTrackerCompat.getYVelocity(mVelocityTracker,
+                        pointerId));
+
+                mVelocityTracker.addMovement(event);
+                mVelocityTracker.computeCurrentVelocity(1000);
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                mVelocityTracker.recycle();
                 break;
             default:
                 return false;
@@ -111,7 +131,7 @@ public class TouchView extends View {
     }
 
 
-    private void checkPointInsideCircle(float x, float y) {
+    private void checkPointInsideCircle(float x, float y, float v_x, float v_y) {
         if (Math.sqrt(
                 (x - pointClusters[next].getCx()) * (x - pointClusters[next].getCx()) +
                         (y - pointClusters[next].getCy()) * (y - pointClusters[next].getCy())) <
@@ -140,7 +160,7 @@ public class TouchView extends View {
                 mFirstTouchFlag = false;
             }
             try {
-                itemQueue.put(new Item(x, y, System.currentTimeMillis()-startTime));
+                itemQueue.put(new Item(x, y, System.currentTimeMillis()-startTime, v_x, v_y));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

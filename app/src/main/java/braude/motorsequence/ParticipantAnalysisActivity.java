@@ -19,6 +19,7 @@ import util.ButtonGraph;
 import util.DayButtonGraph;
 import util.DrawView;
 import util.MyApplication;
+import util.MyGraphView;
 import util.TypeButtonGraph;
 import java.util.List;
 
@@ -148,9 +149,10 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
                     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
                             FrameLayout.LayoutParams.MATCH_PARENT,
                             FrameLayout.LayoutParams.MATCH_PARENT);
-                    GraphView graphView = new GraphView(getApplicationContext());
+                    GraphView graphView = new MyGraphView(getApplicationContext());
                     frameLayout.addView(graphView, layoutParams);
                     LineGraphSeries<DataPoint> series = new LineGraphSeries();
+                    series.setColor(Color.RED);
                     List<Double> velocity = participant.testSets.getLast().recordTests.get(buttonGraph.day+1).recordRounds.getLast().v;
                     List<Double> s = participant.testSets.getLast().recordTests.get(buttonGraph.day+1).recordRounds.getLast().s;
                     for (int i = 0; i <velocity.size(); i++)
