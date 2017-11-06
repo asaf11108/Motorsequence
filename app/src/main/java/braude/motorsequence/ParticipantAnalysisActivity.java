@@ -14,6 +14,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 
 import database.Participant;
+import database.RecordTest;
 import database.TestSet;
 import util.ButtonGraph;
 import util.DayButtonGraph;
@@ -39,7 +40,10 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
 
         definePatten();
 
-        if (participant.testSets.getLast() != null) defineGraph();
+        if (participant.testSets.getLast() != null) {
+            defineGraph();
+            defineTable();
+        }
 
     }
 
@@ -92,6 +96,28 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
             frameLayout.addView(new DrawView(getApplicationContext(),
                     participant.testSets.getLast().recordTests.get(dayButtonGraph.getVal()+1),
                     participant.testSets.getLast().testType));
+    }
+
+    private void defineTable(){
+        int seq = participant.testSets.getLast().recordTests.getSeq();
+        int currColumns = 3;
+        if (seq != 0) {
+            TextView[][] summeryTable = new TextView[seq][currColumns];
+
+            for (int i = 0; i < seq; i++) {
+                for (int j = 0; j < currColumns; j++) {
+                    int resID = getResources().getIdentifier(
+                            "text_participantAnalysis_r" + (i+2) + "c" + (j+2),"id", getPackageName());
+                    summeryTable[i][j] = (TextView) findViewById(resID);
+                }
+
+                RecordTest recordTest = participant.testSets.getLast().recordTests.get(i + 1);
+                summeryTable[i][0].setText(String.valueOf(recordTest.totalTime));
+                summeryTable[i][1].setText(String.valueOf(recordTest.maxVelocity));
+                summeryTable[i][2].setText(String.valueOf(recordTest.velocityPeaks));
+            }
+        }
+
     }
 
     private class Pattern implements View.OnClickListener {

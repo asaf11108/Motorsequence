@@ -284,15 +284,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
-                    android:text="No. of Peeks"
-                    android:textStyle="bold" />
-
-                <TextView
-                    style="@style/tableTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/border"
-                    android:text="Jerk"
+                    android:text="Total Time"
                     android:textStyle="bold" />
 
                 <TextView
@@ -308,7 +300,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border"
-                    android:text="Max Time"
+                    android:text="No. of Peeks"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/tableTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border"
+                    android:text="Jerk"
                     android:textStyle="bold" />
 
                 <TextView

@@ -1,22 +1,23 @@
 package util;
 
 import android.content.Context;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.util.Pair;
 import android.util.TypedValue;
-import java.util.List;
 
 import braude.motorsequence.TestActivity;
 import database.RecordRound;
 import database.RecordTest;
 import database.TestType;
 
-import static android.util.TypedValue.COMPLEX_UNIT_DIP;
-import static android.util.TypedValue.COMPLEX_UNIT_IN;
-import static android.util.TypedValue.COMPLEX_UNIT_MM;
-import static android.util.TypedValue.COMPLEX_UNIT_PT;
-import static android.util.TypedValue.COMPLEX_UNIT_PX;
-import static android.util.TypedValue.COMPLEX_UNIT_SP;
+import static android.R.attr.x;
+import static android.R.id.list;
+import static android.media.CamcorderProfile.get;
 
 /**
  * Created by ASAF on 13/10/2017.
@@ -30,12 +31,17 @@ public class ThreadItem extends Thread {
     private RecordRound mRecordRound;
     private boolean done;
 
+    private double maxVelocity;
+    private int velocityPeaks;
+
     public ThreadItem(BlockingQueue<Item> localQueue, TestActivity testActivity, RecordTest recordTest) {
         this.localQueue = localQueue;
         mTestActivity = testActivity;
         mRecordTest = recordTest;
         mRecordRound = recordTest.createRecordRound();
         done = false;
+
+        maxVelocity = 0;
     }
 
     @Override
@@ -53,12 +59,17 @@ public class ThreadItem extends Thread {
 
     private void localSave(float x, float y, double s, float v_x, float v_y) {
 
-//        float w = pxToMm(getWidth(), mTestActivity.getApplicationContext());
         mRecordRound.x.add(x);
         mRecordRound.y.add(y);
         mRecordRound.s.add(s / 1000);
-        mRecordRound.v.add(pxToMm(Math.sqrt(v_x*v_x + v_y*v_y), mTestActivity.getApplicationContext()));
-        mRecordRound.jerk.add(0.0);
+        double v = pxToMm(Math.sqrt(v_x*v_x + v_y*v_y), mTestActivity.getApplicationContext());
+        mRecordRound.v.add(v);
+        int size = mRecordRound.v.size();
+        if (size > 1) mRecordRound.jerk.add((v-mRecordRound.v.get(size-2)) /
+                                        (mRecordRound.s.get(size-1)-mRecordRound.s.get(size-2)));
+        else mRecordRound.jerk.add(0.0);
+
+        if (v > maxVelocity) maxVelocity = v;
     }
 
 
@@ -69,10 +80,59 @@ public class ThreadItem extends Thread {
 
     private void nextRound() {
         mRecordRound.saveXYRound();
+        velocityPeaks += peakdet(mRecordRound.v, 150, mRecordRound.s);
         if (TestType.NUM_OF_ROUNDS == mRecordRound.getID()) {
+            mRecordTest.updateTestParameters(mRecordRound.s.get(mRecordRound.s.size()-1), maxVelocity, velocityPeaks);
             done = true;
             return;
         }
         mRecordRound = mRecordTest.createRecordRound();
+    }
+
+    private int peakdet(List<Double> v, int delta, List<Double> s){
+//        List<Pair> peaksList  = new ArrayList<>();
+//        peaksList.add(new Pair(0, v.get(0)));
+        int peaks = 0;
+
+        double mn = 1000000;
+        double mx = -1000000;
+        boolean loopForMax = true;
+
+        for (int i = 0; i < v.size(); i++){
+           double curr =  v.get(i);
+            if (curr > mx) {
+                mx = curr;
+//                int index = peaksList.size()-1;
+//                peaksList.set(index, new Pair(s.get(i)-s.get(0), mx));
+            }
+            if (curr < mn) {
+                mn = curr;
+            }
+
+            if (loopForMax) {
+                if (curr < mx - delta) {
+//                    peaksList.add(new Pair(s.get(i), v.get(i)));
+                    mn = curr;
+                    loopForMax = false;
+                    peaks++;
+                }
+            }
+            else {
+                    if (curr > mn + delta) {
+                        mx = curr;
+                        loopForMax = true;
+                    }
+                }
+
+        }
+        Log.d("peak", String.valueOf(peaks));
+        String listString = "";
+//        for (Pair p : peaksList)
+//        {
+//            listString += "[" + p.first + " , " + p.second + "], ";
+//        }
+//
+//        Log.d("peak", listString);
+        return peaks;
     }
 }

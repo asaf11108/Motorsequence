@@ -22,8 +22,8 @@ public class RecordTestEntry extends AbstractDbAdapter {
     public static final String RECORD_ROUND_SEQ = "recordRoundSeq";
     public static final String DATE = "_date";
     public static final String TOTAL_TIME = "total_time";
-    public static final String VELOCITY_PEEKS = "velocity_peaks";
     public static final String MAX_VELOCITY = "max_velocity";
+    public static final String VELOCITY_PEEKS = "velocity_peaks";
 
     private static RecordTestEntry mRecordTestEntry;
 
@@ -62,8 +62,8 @@ public class RecordTestEntry extends AbstractDbAdapter {
         values.put(RECORD_ROUND_SEQ, 0);
         values.put(DATE, System.currentTimeMillis());
         values.put(TOTAL_TIME, 0);
-        values.put(VELOCITY_PEEKS, 0);
         values.put(MAX_VELOCITY, 0);
+        values.put(VELOCITY_PEEKS, 0);
         boolean flag = insert(values) != -1;
         if (flag){
             values.clear();
