@@ -19,7 +19,7 @@ public class RecordTest implements Identifier, NewObject<RecordRound> {
     public double maxVelocity;
     public double velocityPeaks;
     public MyArrayList<RecordRound> recordRounds;
-
+//
     public RecordTest(TestSet testSet, int recordTestID) {
         this.testSet = testSet;
         this.recordTestID = recordTestID;
