@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,22 +102,31 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
 
     private void defineTable(){
         int seq = participant.testSets.getLast().recordTests.getSeq();
+        double totalTimeAvg = 0.0, maxVelocityAvg = 0.0;
+        int velocityPeaksAvg = 0;
         int currColumns = 3;
+        TableLayout summeryTable = (TableLayout) findViewById(R.id.table_participantAnalysis_summery);
         if (seq != 0) {
-            TextView[][] summeryTable = new TextView[seq][currColumns];
-
             for (int i = 0; i < seq; i++) {
-                for (int j = 0; j < currColumns; j++) {
-                    int resID = getResources().getIdentifier(
-                            "text_participantAnalysis_r" + (i+2) + "c" + (j+2),"id", getPackageName());
-                    summeryTable[i][j] = (TextView) findViewById(resID);
-                }
-
                 RecordTest recordTest = participant.testSets.getLast().recordTests.get(i + 1);
-                summeryTable[i][0].setText(String.valueOf(recordTest.totalTime));
-                summeryTable[i][1].setText(String.valueOf(recordTest.maxVelocity));
-                summeryTable[i][2].setText(String.valueOf(recordTest.velocityPeaks));
+                double totalTimeDay = Math.round(recordTest.totalTime * 100.0) / 100.0;
+                double maxVelocityDay = Math.round(recordTest.maxVelocity * 100.0) / 100.0;
+                int velocityPeaksDay = recordTest.velocityPeaks;
+                getCellAtPos(summeryTable, i+1, 1).setText(String.valueOf(totalTimeDay));
+                getCellAtPos(summeryTable, i+1, 2).setText(String.valueOf(maxVelocityDay));
+                getCellAtPos(summeryTable, i+1, 3).setText(String.valueOf(velocityPeaksDay));
+
+                totalTimeAvg += totalTimeDay;
+                maxVelocityAvg += maxVelocityDay;
+                velocityPeaksAvg += velocityPeaksDay;
             }
+            totalTimeAvg /= seq;
+            maxVelocityAvg /= seq;
+            velocityPeaksAvg /= seq;
+
+            getCellAtPos(summeryTable, TEST_DAYS+1, 1).setText(String.valueOf(totalTimeAvg));
+            getCellAtPos(summeryTable, TEST_DAYS+1, 2).setText(String.valueOf(maxVelocityAvg));
+            getCellAtPos(summeryTable, TEST_DAYS+1, 3).setText(String.valueOf(velocityPeaksAvg));
         }
 
     }
@@ -172,23 +183,33 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
                                 participant.testSets.getLast().testType));
                     break;
                 case  1:
-                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
-                            FrameLayout.LayoutParams.MATCH_PARENT,
-                            FrameLayout.LayoutParams.MATCH_PARENT);
-                    GraphView graphView = new MyGraphView(getApplicationContext());
-                    frameLayout.addView(graphView, layoutParams);
-                    LineGraphSeries<DataPoint> series = new LineGraphSeries();
-                    series.setColor(Color.RED);
-                    List<Double> velocity = participant.testSets.getLast().recordTests.get(buttonGraph.day+1).recordRounds.getLast().v;
-                    List<Double> s = participant.testSets.getLast().recordTests.get(buttonGraph.day+1).recordRounds.getLast().s;
-                    for (int i = 0; i <velocity.size(); i++)
-                        series.appendData(new DataPoint(s.get(i)-s.get(0), velocity.get(i)), true, velocity.size());
-                    graphView.addSeries(series);
+                    createGraph("mm / s",
+                            participant.testSets.getLast().recordTests.get(buttonGraph.day+1).recordRounds.getLast().v);
                     break;
                 case  2:
-                    frameLayout.addView(new GraphView(getApplicationContext()));
+                    createGraph("mm / s^2",
+                            participant.testSets.getLast().recordTests.get(buttonGraph.day+1).recordRounds.getLast().jerk);
                     break;
             }
         }
+
+        private void createGraph(String verticalAxisName, List<Double> ySeries){
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT);
+            GraphView graphView = new MyGraphView(getApplicationContext(), verticalAxisName);
+            frameLayout.addView(graphView, layoutParams);
+            LineGraphSeries<DataPoint> series = new LineGraphSeries();
+            series.setColor(Color.RED);
+            List<Double> s = participant.testSets.getLast().recordTests.get(buttonGraph.day+1).recordRounds.getLast().s;
+            for (int i = 0; i <ySeries.size(); i++)
+                series.appendData(new DataPoint(s.get(i)-s.get(0), ySeries.get(i)), true, ySeries.size());
+            graphView.addSeries(series);
+        }
+    }
+
+    private TextView getCellAtPos(TableLayout table, int x, int y) {
+        TableRow row = (TableRow) table.getChildAt(x);
+        return (TextView) row.getChildAt(y);
     }
 }

@@ -17,9 +17,9 @@ public class RecordTest implements Identifier, NewObject<RecordRound> {
     public long date;
     public double totalTime;
     public double maxVelocity;
-    public double velocityPeaks;
+    public int velocityPeaks;
     public MyArrayList<RecordRound> recordRounds;
-//
+
     public RecordTest(TestSet testSet, int recordTestID) {
         this.testSet = testSet;
         this.recordTestID = recordTestID;
@@ -32,7 +32,7 @@ public class RecordTest implements Identifier, NewObject<RecordRound> {
         date = cursor.getLong(cursor.getColumnIndex(rte.DATE));
         totalTime = cursor.getDouble(cursor.getColumnIndex(rte.TOTAL_TIME));
         maxVelocity = cursor.getDouble(cursor.getColumnIndex(rte.MAX_VELOCITY));
-        velocityPeaks = cursor.getDouble(cursor.getColumnIndex(rte.VELOCITY_PEEKS));
+        velocityPeaks = cursor.getInt(cursor.getColumnIndex(rte.VELOCITY_PEEKS));
         int recordRoundSeq = cursor.getInt(cursor.getColumnIndex(rte.RECORD_ROUND_SEQ));
         cursor.close();
         recordRounds = new MyArrayList<>(recordRoundSeq, this);

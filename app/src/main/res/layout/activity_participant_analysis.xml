@@ -247,23 +247,16 @@
                 <FrameLayout
                     android:id="@+id/frame_participantAnalysis_container"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="@dimen/height_paticipantAnalysis_frameContainer"
                     android:layout_weight="1"
                     android:background="@color/TouchView"
                     android:padding="5dp"/>
-
-                <!--<com.jjoe64.graphview.GraphView-->
-                <!--android:id="@+id/graph_participantAnalysis_graph"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight="1"-->
-                <!--android:padding="5dp" />-->
-
 
             </LinearLayout>
         </LinearLayout>
 
         <TableLayout
+            android:id="@+id/table_participantAnalysis_summery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="15dp">
@@ -333,35 +326,30 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r2c2"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r2c3"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r2c4"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r2c5"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r2c6"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -381,35 +369,30 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r3c2"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r3c3"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r3c4"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r3c5"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r3c6"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -429,35 +412,30 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r4c2"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r4c3"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r4c4"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r4c5"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r4c6"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -477,35 +455,30 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r5c2"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r5c3"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r5c4"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r5c5"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r5c6"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -525,35 +498,30 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r6c2"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r6c3"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r6c4"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r6c5"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r6c6"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -573,35 +541,30 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r7c2"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r7c3"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r7c4"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r7c5"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border" />
 
                 <TextView
-                    android:id="@+id/text_participantAnalysis_r7c6"
                     style="@style/tableTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

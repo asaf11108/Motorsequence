@@ -6,4 +6,5 @@
     <dimen name="activity_font_subtitle">32sp</dimen>
     <dimen name="activity_font_regular">18sp</dimen>
     <dimen name="button_font">8sp</dimen>
+    <dimen name="height_paticipantAnalysis_frameContainer">230dp</dimen>
 </resources>

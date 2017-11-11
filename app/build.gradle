@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "braude.motorsequence"
         minSdkVersion 17
@@ -28,6 +28,10 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.jjoe64:graphview:4.2.1'
-//    compile 'com.github.RBVI:clusterMaker2:-SNAPSHOT'
+//    compile 'com.github.tgsmith61591:clust4j:1.2.4'
+    compile 'com.github.apache:commons-math:trunk_tmp_2012-03-01'
+    compile group: 'log4j', name: 'log4j', version: '1.2.17'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+
     testCompile 'junit:junit:4.12'
 }

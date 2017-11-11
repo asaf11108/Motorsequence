@@ -14,9 +14,6 @@ import database.RecordRound;
 import database.RecordTest;
 import database.TestType;
 
-import static android.graphics.Color.parseColor;
-import static database.XYRoundEntry.S;
-
 /**
  * Created by ASAF on 5/10/2017.
  */
@@ -29,8 +26,7 @@ public class DrawView extends View {
     private RecordTest mRecordTest;
     private TestType mTestType;
 
-    private static final int HEIGHT = 230;
-    private static final double SCALLING_FACTOR = 0.5;
+    private static final double SCALING_FACTOR = 0.5;
     private static final int gradient = Color.rgb(0, 0, 139);
 
     public DrawView(Context context) {
@@ -45,8 +41,7 @@ public class DrawView extends View {
         setWillNotDraw(false);
         setBackgroundColor(ContextCompat.getColor(context, R.color.TouchView));
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                HEIGHT);
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         setLayoutParams(layoutParams);
     }
 
@@ -61,26 +56,26 @@ public class DrawView extends View {
         Paint drawPaint = null;
         for (int i = 0; i < mTestType.num_of_rounds-1; i++) {
             RecordRound recordRound = mRecordTest.recordRounds.get(i+1);
-            path.moveTo((int) (recordRound.x.get(0)*SCALLING_FACTOR), (int) (recordRound.y.get(0)*SCALLING_FACTOR));
+            path.moveTo((int) (recordRound.x.get(0)* SCALING_FACTOR), (int) (recordRound.y.get(0)* SCALING_FACTOR));
             int alpha = (int)(255 * (float)i*3/2 / (float)mTestType.num_of_rounds);
             int c = Color.argb(alpha, Color.red(gradient), Color.green(gradient), Color.blue(gradient));
             drawPaint = createPen(c);
             for (int j = 1; j < recordRound.x.size(); j++)
-                path.lineTo((int) (recordRound.x.get(j)*SCALLING_FACTOR), (int) (recordRound.y.get(j)*SCALLING_FACTOR));
+                path.lineTo((int) (recordRound.x.get(j)* SCALING_FACTOR), (int) (recordRound.y.get(j)* SCALING_FACTOR));
             canvas.drawPath(path, drawPaint);
             path.reset();
         }
 
 
         drawPaint = createBrush(PointCluster.COLOR_DEFULT);
-        canvas.drawCircle((int)(mTestType.A_x*SCALLING_FACTOR), (int)(mTestType.A_y*SCALLING_FACTOR),
-                (int)(PointCircle.POINT_RADIUS*SCALLING_FACTOR), drawPaint);
-        canvas.drawCircle((int)(mTestType.B_x*SCALLING_FACTOR), (int)(mTestType.B_y*SCALLING_FACTOR),
-                (int)(PointCircle.POINT_RADIUS*SCALLING_FACTOR), drawPaint);
-        canvas.drawCircle((int)(mTestType.C_x*SCALLING_FACTOR), (int)(mTestType.C_y*SCALLING_FACTOR),
-                (int)(PointCircle.POINT_RADIUS*SCALLING_FACTOR), drawPaint);
-        canvas.drawCircle((int)(mTestType.D_x*SCALLING_FACTOR), (int)(mTestType.D_y*SCALLING_FACTOR),
-                (int)(PointCircle.POINT_RADIUS*SCALLING_FACTOR), drawPaint);
+        canvas.drawCircle((int)(mTestType.A_x* SCALING_FACTOR), (int)(mTestType.A_y* SCALING_FACTOR),
+                (int)(PointCircle.POINT_RADIUS* SCALING_FACTOR), drawPaint);
+        canvas.drawCircle((int)(mTestType.B_x* SCALING_FACTOR), (int)(mTestType.B_y* SCALING_FACTOR),
+                (int)(PointCircle.POINT_RADIUS* SCALING_FACTOR), drawPaint);
+        canvas.drawCircle((int)(mTestType.C_x* SCALING_FACTOR), (int)(mTestType.C_y* SCALING_FACTOR),
+                (int)(PointCircle.POINT_RADIUS* SCALING_FACTOR), drawPaint);
+        canvas.drawCircle((int)(mTestType.D_x* SCALING_FACTOR), (int)(mTestType.D_y* SCALING_FACTOR),
+                (int)(PointCircle.POINT_RADIUS* SCALING_FACTOR), drawPaint);
     }
 
 

@@ -12,7 +12,7 @@ import com.jjoe64.graphview.GridLabelRenderer;
 
 public class MyGraphView extends GraphView {
 
-    public MyGraphView(Context context) {
+    public MyGraphView(Context context, String verticalvAxisName) {
         super(context);
         GridLabelRenderer gridLabelRenderer = getGridLabelRenderer();
         gridLabelRenderer.setHorizontalLabelsColor(Color.BLACK);
@@ -20,9 +20,8 @@ public class MyGraphView extends GraphView {
         gridLabelRenderer.setVerticalLabelsColor(Color.BLACK);
         gridLabelRenderer.setVerticalAxisTitleColor(Color.BLACK);
         gridLabelRenderer.setHorizontalAxisTitle("s");
-        gridLabelRenderer.setVerticalAxisTitle("mm / s");
+        gridLabelRenderer.setVerticalAxisTitle(verticalvAxisName);
         gridLabelRenderer.setGridColor(Color.BLACK);
-
 
     }
 }

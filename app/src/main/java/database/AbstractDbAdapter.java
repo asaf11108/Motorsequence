@@ -55,7 +55,7 @@ public abstract class AbstractDbAdapter {
                     "_date INTEGER NOT NULL, " +
                     "total_time double(10) NOT NULL, " +
                     "max_velocity double(10) NOT NULL, " +
-                    "velocity_peaks double(10) NOT NULL, " +
+                    "velocity_peaks integer(10) NOT NULL, " +
                     "PRIMARY KEY (participantID, testSetID, recordTestID), " +
                     "FOREIGN KEY(participantID, testSetID) REFERENCES TestSet(participantID, testSetID))";
     private static final String TABLE_CREATE_RecordRound =
