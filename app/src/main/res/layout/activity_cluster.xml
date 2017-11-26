@@ -45,8 +45,7 @@
         android:layout_margin="10dp"
         android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/radio_cluster_age"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Age range from   "
@@ -82,8 +81,7 @@
         android:layout_gravity="left"
         android:layout_margin="10dp">
 
-        <RadioButton
-            android:id="@+id/radio_cluster_totalTime"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Total time of test(ms):   "
@@ -107,8 +105,7 @@
         android:layout_gravity="left"
         android:layout_margin="10dp">
 
-        <RadioButton
-            android:id="@+id/radio_cluster_maxVelocity"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Max velocity(mm / ms):   "
@@ -126,7 +123,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/butt_cluster_analyze"
+        android:id="@+id/button_cluster_analyze"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Analyze"

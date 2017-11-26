@@ -120,9 +120,9 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
                 maxVelocityAvg += maxVelocityDay;
                 velocityPeaksAvg += velocityPeaksDay;
             }
-            totalTimeAvg /= seq;
-            maxVelocityAvg /= seq;
-            velocityPeaksAvg /= seq;
+            totalTimeAvg = Math.round(totalTimeAvg / seq * 100.0) / 100.0;
+            maxVelocityAvg = Math.round(maxVelocityAvg / seq * 100.0) / 100.0;
+            velocityPeaksAvg = Math.round(velocityPeaksAvg / seq * 100) / 100;
 
             getCellAtPos(summeryTable, TEST_DAYS+1, 1).setText(String.valueOf(totalTimeAvg));
             getCellAtPos(summeryTable, TEST_DAYS+1, 2).setText(String.valueOf(maxVelocityAvg));
@@ -205,11 +205,22 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
             for (int i = 0; i <ySeries.size(); i++)
                 series.appendData(new DataPoint(s.get(i)-s.get(0), ySeries.get(i)), true, ySeries.size());
             graphView.addSeries(series);
+            graphView.getViewport().setMinX(0);
+            graphView.getViewport().setMaxX(myCeil(s.get(s.size()-1) - s.get(0)));
+            graphView.getViewport().setXAxisBoundsManual(true);
         }
     }
 
     private TextView getCellAtPos(TableLayout table, int x, int y) {
         TableRow row = (TableRow) table.getChildAt(x);
         return (TextView) row.getChildAt(y);
+    }
+
+    private double myCeil(double sec){
+        int sInt = (int) sec;
+        if (sec-sInt >= 0.5)
+            return sInt + 1;
+        else
+            return sInt + 0.5;
     }
 }

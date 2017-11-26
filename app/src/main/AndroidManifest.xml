@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name="util.MyApplication"
@@ -35,6 +36,8 @@
         <activity android:name=".TestActivity" />
         <activity android:name=".ClusterActivity" />
         <activity android:name=".ClusterResultActivity"></activity>
+
+        <provider android:name="util.CachedFileProvider" android:authorities="util.provider" android:grantUriPermissions="true"></provider>
     </application>
 
 </manifest>

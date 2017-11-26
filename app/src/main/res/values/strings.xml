@@ -19,5 +19,12 @@
         <item>ADHD</item>
         <item>Parkinson</item>
         <item>Strokes</item>>
+        <item>Health</item>>
+    </string-array>
+    <string-array name="array_groupSymbol">
+        <item>POINT</item>
+        <item>RECTANGLE</item>
+        <item>TRIANGLE</item>
+        <item>x</item>
     </string-array>
 </resources>
