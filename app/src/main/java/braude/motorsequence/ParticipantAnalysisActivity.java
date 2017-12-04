@@ -183,11 +183,13 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
                                 participant.testSets.getLast().testType));
                     break;
                 case  1:
-                    createGraph("mm / s",
+                    if (participant.testSets.getLast().recordTests.get(buttonGraph.day+1) != null)
+                        createGraph("mm / s",
                             participant.testSets.getLast().recordTests.get(buttonGraph.day+1).recordRounds.getLast().v);
                     break;
                 case  2:
-                    createGraph("mm / s^2",
+                    if (participant.testSets.getLast().recordTests.get(buttonGraph.day+1) != null)
+                        createGraph("mm / s^2",
                             participant.testSets.getLast().recordTests.get(buttonGraph.day+1).recordRounds.getLast().jerk);
                     break;
             }

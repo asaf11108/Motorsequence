@@ -168,14 +168,15 @@
                     android:entries="@array/array_group"/>
             </TableRow>
         </TableLayout>
+
         <Button
             android:id="@+id/button_register_register"
+            style="@style/MyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_marginTop="50dp"
-            android:text="Register"
-            style="@style/MyButton"/>
+            android:text="Submit" />
     </LinearLayout>
 
 </ScrollView>

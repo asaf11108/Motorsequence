@@ -45,6 +45,7 @@ public class TestSetEntry extends AbstractDbAdapter {
                             new String[]{pe.TEST_SET_SEQ},
                             new MyPair[]{new MyPair(pe.PK_AI_PARTICIPANT_ID, participantID)});
         int testSetID = cursor.getInt(cursor.getColumnIndex(pe.TEST_SET_SEQ));
+        cursor.close();
         testSetID++;
         values.put(PK_TEST_SET_ID, testSetID);
         values.put(TEST_TYPE_ID, testTypeID);

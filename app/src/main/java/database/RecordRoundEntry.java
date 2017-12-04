@@ -52,6 +52,7 @@ public class RecordRoundEntry extends AbstractDbAdapter{
                         new MyPair(rte.PK_TEST_SET_ID, testSetID),
                         new MyPair(rte.PK_RECORD_TEST_ID, recordTestID)});
         int recordRoundID = cursor.getInt(cursor.getColumnIndex(rte.RECORD_ROUND_SEQ));
+        cursor.close();
         recordRoundID++;
         values.put(PK_RECORD_ROUND_ID, recordRoundID);
         values.put(ROUND_TIME, 0);

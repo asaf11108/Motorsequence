@@ -9,7 +9,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Pair;
 import android.view.Gravity;
@@ -38,7 +37,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -173,6 +171,8 @@ public class ClusterResultActivity extends AppCompatActivity {
 
             //set silhouetteScore
             TextView silhouetteText = (TextView) findViewById(R.id.text_clusterResult_silhouetteVal);
+//            String htmlString="Silhouette Value: <u>" + Math.round(silhouetteScore * 100.0) / 100.0 + "</u>";
+//            silhouetteText.setText(Html.fromHtml(htmlString));
             silhouetteText.setText("Silhouette Value: " + Math.round(silhouetteScore * 100.0) / 100.0);
 
             //initialize send Cluster Button

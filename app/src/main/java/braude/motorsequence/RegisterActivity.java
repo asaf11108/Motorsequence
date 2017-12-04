@@ -79,8 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
                     mUserName.getText().toString(),
                     mPassword.getText().toString(),
                     mGroup.getSelectedItem().toString());
-            Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
-            startActivity(i);
+            finish();
         }
     }
 

@@ -75,7 +75,7 @@ public class MyArrayList<E extends Identifier>{
     }
 
     public void remove() {
-        data.remove(seq-1);
+        data.remove(data.size()-1);
         seq--;
     }
 }

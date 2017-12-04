@@ -3,13 +3,10 @@ package database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
+
 
 import util.MyPair;
-
-import static database.XYRoundEntry.PARTICIPANT_ID;
-import static database.XYRoundEntry.RECORD_TEST_ID;
-import static database.XYRoundEntry.TEST_SET_ID;
-
 
 /**
  * Created by ASAF on 6/8/2017.
@@ -26,6 +23,7 @@ public class RecordTestEntry extends AbstractDbAdapter {
     public static final String VELOCITY_PEEKS = "velocity_peaks";
 
     private static RecordTestEntry mRecordTestEntry;
+    private static final String TAG = "RecordTestEntry";
 
     /**
      * Constructor - takes the context to allow the database to be
@@ -57,7 +55,9 @@ public class RecordTestEntry extends AbstractDbAdapter {
                 new MyPair[]{new MyPair(tse.PK_PARTICIPANT_ID, participantID),
                             new MyPair(tse.PK_TEST_SET_ID, testSetID)});
         int recordTestID = cursor.getInt(cursor.getColumnIndex(tse.RECORD_TEST_SEQ));
+        cursor.close();
         recordTestID++;
+        Log.d(TAG, "recordTestID " + recordTestID);
         values.put(PK_RECORD_TEST_ID, recordTestID);
         values.put(RECORD_ROUND_SEQ, 0);
         values.put(DATE, System.currentTimeMillis());
@@ -82,20 +82,21 @@ public class RecordTestEntry extends AbstractDbAdapter {
      */
     boolean delete(int participantID, int testSetID, int recordTestID){
         XYRoundEntry xyre = FactoryEntry.getXYRoundEntry();
-        boolean flag = xyre.delete(new MyPair[]{new MyPair(PARTICIPANT_ID, participantID),
-                                new MyPair(TEST_SET_ID, testSetID),
-                                new MyPair(RECORD_TEST_ID, recordTestID)});
+        boolean flag = xyre.delete(new MyPair[]{new MyPair(xyre.PARTICIPANT_ID, participantID),
+                                new MyPair(xyre.TEST_SET_ID, testSetID),
+                                new MyPair(xyre.RECORD_TEST_ID, recordTestID)});
         if (flag) {
             RecordRoundEntry rre = FactoryEntry.getRecordRoundEntry();
             flag = rre.delete(new MyPair[]{new MyPair(rre.PK_PARTICIPANT_ID, participantID),
                     new MyPair(rre.PK_TEST_SET_ID, testSetID),
                     new MyPair(rre.PK_RECORD_TEST_ID, recordTestID)});
             if (flag) {
-                flag = delete(new MyPair[]{new MyPair(PARTICIPANT_ID, participantID),
-                        new MyPair(TEST_SET_ID, testSetID),
-                        new MyPair(RECORD_TEST_ID, recordTestID)});
+                flag = delete(new MyPair[]{new MyPair(PK_PARTICIPANT_ID, participantID),
+                        new MyPair(PK_TEST_SET_ID, testSetID),
+                        new MyPair(PK_RECORD_TEST_ID, recordTestID)});
 
                 recordTestID--;
+                Log.d(TAG, "recordTestID " + recordTestID);
                 TestSetEntry tse = FactoryEntry.getTestSetEntry();
 
                 if (flag) {

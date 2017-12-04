@@ -154,7 +154,7 @@ public abstract class AbstractDbAdapter {
         String[] whereArgs = convertToWhereStr(where, whereClause);
         boolean tmp = db.delete(tableName, whereClause.toString(), whereArgs) > 0;
         db.close();
-        return tmp;
+        return true;
     }
 
     /**
