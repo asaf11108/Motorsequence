@@ -15,10 +15,10 @@
  *******************************************************************************/
 package com.clust4j.log;
 
+import org.apache.commons.math3.util.FastMath;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import org.apache.commons.math3.util.FastMath;
 
 public class LogTimer implements Timer {
 	private static final ThreadLocal<SimpleDateFormat> dateFormat = new ThreadLocal<SimpleDateFormat>(){

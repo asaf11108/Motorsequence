@@ -1,23 +1,17 @@
-package util;
+package util.board;
 
 import android.content.Context;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.BlockingQueue;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.Pair;
 import android.util.TypedValue;
 
-import braude.motorsequence.TestActivity;
-import database.RecordRound;
-import database.RecordTest;
-import database.TestType;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
-import static android.R.attr.x;
-import static android.R.id.list;
-import static android.media.CamcorderProfile.get;
+import braude.motorsequence.TestActivity;
+import database.oop.RecordRound;
+import database.oop.RecordTest;
+import database.oop.TestType;
 
 /**
  * Created by ASAF on 13/10/2017.

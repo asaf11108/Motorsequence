@@ -16,9 +16,9 @@
 
 package com.clust4j.algo;
 
-import org.apache.commons.math3.linear.RealMatrix;
-
 import com.clust4j.algo.AbstractCentroidClusterer.InitializationStrategy;
+
+import org.apache.commons.math3.linear.RealMatrix;
 
 public abstract class CentroidClustererParameters<T extends AbstractCentroidClusterer> extends BaseClustererParameters
 		implements UnsupervisedClassifierParameters<T>, ConvergeablePlanner {

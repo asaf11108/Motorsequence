@@ -1,27 +1,23 @@
-package util;
+package util.board;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.support.v4.view.VelocityTrackerCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.widget.TextView;
-
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import braude.motorsequence.TestActivity;
-import database.RecordTest;
-
-import database.TestType;
-
-import android.view.VelocityTracker;
-import android.support.v4.view.VelocityTrackerCompat;
+import database.oop.RecordTest;
+import database.oop.TestType;
 
 /**
  * https://inducesmile.com/android/android-touch-screen-example-tutorial/

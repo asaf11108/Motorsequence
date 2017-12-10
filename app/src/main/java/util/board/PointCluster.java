@@ -1,12 +1,10 @@
-package util;
+package util.board;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import static util.PointCircle.POINT_RADIUS;
 
 /**
  * Created by ASAF on 23/9/2017.
@@ -26,8 +24,8 @@ public class PointCluster {
 
 
     public PointCluster(Context context, RelativeLayout relativeLayout, String name, int cx, int cy) {
-        this.posX = cx + POINT_RADIUS;
-        this.posY = cy + POINT_RADIUS;
+        this.posX = cx + PointCircle.POINT_RADIUS;
+        this.posY = cy + PointCircle.POINT_RADIUS;
 
         pointName = new TextView(context);
         pointName.setText(name);
@@ -36,12 +34,12 @@ public class PointCluster {
         RelativeLayout.LayoutParams paramLayout = new RelativeLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-        paramLayout.leftMargin = cx + POINT_RADIUS - pointName.getMeasuredWidth()/2;
-        paramLayout.topMargin = cy - POINT_RADIUS;
+        paramLayout.leftMargin = cx + PointCircle.POINT_RADIUS - pointName.getMeasuredWidth()/2;
+        paramLayout.topMargin = cy - PointCircle.POINT_RADIUS;
         relativeLayout.addView(pointName, paramLayout);
 
-        pointCircle = new PointCircle(context, POINT_RADIUS,
-                POINT_RADIUS);
+        pointCircle = new PointCircle(context, PointCircle.POINT_RADIUS,
+                PointCircle.POINT_RADIUS);
         paramLayout = new RelativeLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);

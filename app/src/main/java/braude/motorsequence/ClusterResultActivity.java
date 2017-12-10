@@ -45,8 +45,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import util.CachedFileProvider;
-import util.GenerateCsv;
+import util.email.CachedFileProvider;
+import util.email.GenerateCsv;
 
 public class ClusterResultActivity extends AppCompatActivity {
 

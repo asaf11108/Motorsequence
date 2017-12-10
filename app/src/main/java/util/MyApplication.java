@@ -2,7 +2,7 @@ package util;
 
 import android.app.Application;
 
-import database.Participant;
+import database.oop.Participant;
 
 /**
  * Created by ASAF on 1/10/2017.

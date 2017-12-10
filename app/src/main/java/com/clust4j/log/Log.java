@@ -15,16 +15,21 @@
  *******************************************************************************/
 package com.clust4j.log;
 
-import static com.clust4j.log.Log.Tag.*;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.PropertyConfigurator;
 
-import java.io.*;
+import java.io.File;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.PropertyConfigurator;
+import static com.clust4j.log.Log.Tag.Algo;
+import static com.clust4j.log.Log.Tag.Type;
 
 /**
  * A wrapper class for log4j adapted heavily from 0XData H2O's logger class

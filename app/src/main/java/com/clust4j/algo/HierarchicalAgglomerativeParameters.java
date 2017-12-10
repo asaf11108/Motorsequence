@@ -16,12 +16,12 @@
 
 package com.clust4j.algo;
 
-import java.util.Random;
+import com.clust4j.algo.HierarchicalAgglomerative.Linkage;
+import com.clust4j.metrics.pairwise.GeometricallySeparable;
 
 import org.apache.commons.math3.linear.RealMatrix;
 
-import com.clust4j.algo.HierarchicalAgglomerative.Linkage;
-import com.clust4j.metrics.pairwise.GeometricallySeparable;
+import java.util.Random;
 
 final public class HierarchicalAgglomerativeParameters 
 		extends BaseClustererParameters 

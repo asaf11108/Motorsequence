@@ -1,13 +1,6 @@
-package database;
+package database.tables;
 
 import android.content.Context;
-
-import database.tables.ParticipantEntry;
-import database.tables.RecordRoundEntry;
-import database.tables.RecordTestEntry;
-import database.tables.TestSetEntry;
-import database.tables.TestTypeEntry;
-import database.tables.XYRoundEntry;
 
 /**
  * This class stores single tone classes of tables entries.

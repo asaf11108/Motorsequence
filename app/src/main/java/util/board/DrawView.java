@@ -1,4 +1,4 @@
-package util;
+package util.board;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,9 +10,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import braude.motorsequence.R;
-import database.RecordRound;
-import database.RecordTest;
-import database.TestType;
+import database.oop.RecordRound;
+import database.oop.RecordTest;
+import database.oop.TestType;
 
 /**
  * Created by ASAF on 5/10/2017.

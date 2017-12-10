@@ -16,12 +16,12 @@
 
 package com.clust4j.algo;
 
-import java.util.Random;
+import com.clust4j.metrics.pairwise.GeometricallySeparable;
+import com.clust4j.utils.MatUtils;
 
 import org.apache.commons.math3.linear.RealMatrix;
 
-import com.clust4j.metrics.pairwise.GeometricallySeparable;
-import com.clust4j.utils.MatUtils;
+import java.util.Random;
 
 /**
  * A builder class to provide an easier constructing

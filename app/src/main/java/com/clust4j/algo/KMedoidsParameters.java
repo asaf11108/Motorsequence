@@ -16,12 +16,12 @@
 
 package com.clust4j.algo;
 
-import java.util.Random;
+import com.clust4j.algo.AbstractCentroidClusterer.InitializationStrategy;
+import com.clust4j.metrics.pairwise.GeometricallySeparable;
 
 import org.apache.commons.math3.linear.RealMatrix;
 
-import com.clust4j.algo.AbstractCentroidClusterer.InitializationStrategy;
-import com.clust4j.metrics.pairwise.GeometricallySeparable;
+import java.util.Random;
 
 public class KMedoidsParameters extends CentroidClustererParameters<KMedoids> {
 	private static final long serialVersionUID = -3288579217568576647L;

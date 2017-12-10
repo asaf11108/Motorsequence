@@ -5,8 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
-
-import database.FactoryEntry;
 import util.MyPair;
 
 /**

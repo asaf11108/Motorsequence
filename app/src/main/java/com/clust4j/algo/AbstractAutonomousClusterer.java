@@ -15,9 +15,10 @@
  *******************************************************************************/
 package com.clust4j.algo;
 
+import com.clust4j.metrics.scoring.SupervisedMetric;
+
 import org.apache.commons.math3.linear.RealMatrix;
 
-import com.clust4j.metrics.scoring.SupervisedMetric;
 import static com.clust4j.metrics.scoring.UnsupervisedMetric.SILHOUETTE;
 
 public abstract class AbstractAutonomousClusterer extends AbstractClusterer implements UnsupervisedClassifier {

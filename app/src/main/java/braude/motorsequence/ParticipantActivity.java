@@ -8,10 +8,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DecimalFormat;
-
-import database.Participant;
-import database.TestSet;
+import database.oop.Participant;
+import database.oop.TestSet;
 import util.MyApplication;
 
 public class ParticipantActivity extends AppCompatActivity {

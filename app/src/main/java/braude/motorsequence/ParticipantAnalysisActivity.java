@@ -6,25 +6,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
-import database.Participant;
-import database.RecordTest;
-import database.TestSet;
-import util.ButtonGraph;
-import util.DayButtonGraph;
-import util.DrawView;
-import util.MyApplication;
-import util.MyGraphView;
-import util.TypeButtonGraph;
 import java.util.List;
+
+import database.oop.Participant;
+import database.oop.RecordTest;
+import database.oop.TestSet;
+import util.graph.ButtonGraph;
+import util.graph.DayButtonGraph;
+import util.MyApplication;
+import util.graph.MyGraphView;
+import util.graph.TypeButtonGraph;
+import util.board.DrawView;
 
 public class ParticipantAnalysisActivity extends AppCompatActivity {
 
@@ -51,37 +53,36 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
 
     private void definePatten(){
         final TextView currentTestType = (TextView) findViewById(R.id.text_participantAnalysis_currentSetType);
+        final LinearLayout patterns = (LinearLayout) findViewById(R.id.linear_participantAnalysis_patterns);
         TestSet testSet = participant.testSets.getLast();
-        boolean testSetFlag;
-        if (testSet == null) {
-            currentTestType.setText("None");
-            testSetFlag = true;
-        } else if (testSet.recordTests.getSeq() >= testSet.testType.num_of_tests) {
-            currentTestType.setText("Participant finished Test Set");
-            testSetFlag = true;
-        } else {
+        if (testSet == null)
+            currentTestType.setVisibility(View.GONE);
+        else if (testSet.recordTests.getSeq() >= testSet.testType.num_of_tests)
+            currentTestType.setVisibility(View.GONE);
+        else {
             currentTestType.setText("Pattern" + testSet.testType.getID());
-            testSetFlag = false;
+            patterns.setVisibility(View.GONE);
         }
 
         Button pattern1 = (Button) findViewById(R.id.button_participantAnalysis_pattern1);
-        pattern1.setOnClickListener(new Pattern(1, currentTestType, testSetFlag));
+        pattern1.setOnClickListener(new Pattern(1, currentTestType, patterns));
     }
 
     private void defineGraph(){
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_participantAnalysis_container);
-        final Button[] dayButtons = new Button[TEST_DAYS];
-        dayButtons[0] = (Button) findViewById(R.id.button_participantAnalysis_day1);
-        dayButtons[1] = (Button) findViewById(R.id.button_participantAnalysis_day2);
-        dayButtons[2] = (Button) findViewById(R.id.button_participantAnalysis_day3);
-        dayButtons[3] = (Button) findViewById(R.id.button_participantAnalysis_day4);
-        dayButtons[4] = (Button) findViewById(R.id.button_participantAnalysis_day5);
+        int finishedTests = participant.testSets.getLast().recordTests.getSeq();
+        final Button[] dayButtons = new Button[finishedTests];
         ButtonGraph dayButtonGraph = new DayButtonGraph(dayButtons);
-        dayButtons[0].setOnClickListener(new GraphListener(0, dayButtonGraph, frameLayout));
-        dayButtons[1].setOnClickListener(new GraphListener(1, dayButtonGraph, frameLayout));
-        dayButtons[2].setOnClickListener(new GraphListener(2, dayButtonGraph, frameLayout));
-        dayButtons[3].setOnClickListener(new GraphListener(3, dayButtonGraph, frameLayout));
-        dayButtons[4].setOnClickListener(new GraphListener(4, dayButtonGraph, frameLayout));
+        for (int i = 0; i < finishedTests; i++) {
+            int resId = getResources().getIdentifier("button_participantAnalysis_day" + (i+1), "id", getPackageName());
+            dayButtons[i] = (Button) findViewById(resId);
+            dayButtons[i].setOnClickListener(new GraphListener(i, dayButtonGraph, frameLayout));
+        }
+        for (int i = finishedTests; i < TEST_DAYS; i++) {
+            int resId = getResources().getIdentifier("button_participantAnalysis_day" + (i+1), "id", getPackageName());
+            Button butt = (Button) findViewById(resId);
+            butt.setEnabled(false);
+        }
 
         Button[] graphTypes = new Button[GRAPH_TYPES];
         graphTypes[0] = (Button) findViewById(R.id.button_participantAnalysis_movement);
@@ -135,23 +136,21 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
 
         private int mTestTypeID;
         private TextView mCurrentTestType;
-        private boolean mTestSetFlag;
+        private LinearLayout patterns;
 
-        public Pattern(int mTestTypeID, TextView mCurrentTestType, boolean mTestSetFlag) {
+        public Pattern(int mTestTypeID, TextView mCurrentTestType, LinearLayout patterns) {
             this.mTestTypeID = mTestTypeID;
             this.mCurrentTestType = mCurrentTestType;
-            this.mTestSetFlag = mTestSetFlag;
+            this.patterns = patterns;
         }
 
         @Override
         public void onClick(View v) {
-            if (mTestSetFlag) {
-                participant.createTestSet(mTestTypeID);
-                mCurrentTestType.setText("Pattern" + mTestTypeID);
-                mTestSetFlag = false;
-
-            } else Toast.makeText(getApplicationContext(), "TestSet exists", Toast.LENGTH_SHORT)
-                    .show();
+            participant.createTestSet(mTestTypeID);
+            mCurrentTestType.setText("Pattern" + mTestTypeID);
+            mCurrentTestType.setVisibility(View.VISIBLE);
+            patterns.setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(), "TestSet created", Toast.LENGTH_SHORT).show();
         }
     }
 

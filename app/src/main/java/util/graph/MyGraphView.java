@@ -1,4 +1,4 @@
-package util;
+package util.graph;
 
 import android.content.Context;
 import android.graphics.Color;

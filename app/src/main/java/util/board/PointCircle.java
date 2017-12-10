@@ -1,12 +1,10 @@
-package util;
+package util.board;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
-
-import static util.PointCluster.COLOR_RED;
 
 /**
  * Created by ASAF on 23/9/2017.

@@ -1,16 +1,16 @@
 package braude.motorsequence;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import database.Participant;
-import database.TestType;
+import database.oop.Participant;
+import database.oop.TestType;
 import util.MyApplication;
-import util.PointCluster;
-import util.TouchView;
+import util.board.PointCluster;
+import util.board.TouchView;
 
 public abstract class ExerciseActivity extends AppCompatActivity {
 

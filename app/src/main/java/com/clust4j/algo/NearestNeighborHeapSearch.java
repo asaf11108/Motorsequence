@@ -15,12 +15,6 @@
  *******************************************************************************/
 package com.clust4j.algo;
 
-import org.apache.commons.lang3.tuple.ImmutableTriple;
-import org.apache.commons.lang3.tuple.Triple;
-import org.apache.commons.math3.exception.DimensionMismatchException;
-import org.apache.commons.math3.linear.RealMatrix;
-import org.apache.commons.math3.util.FastMath;
-
 import com.clust4j.log.Loggable;
 import com.clust4j.metrics.pairwise.Distance;
 import com.clust4j.metrics.pairwise.DistanceMetric;
@@ -30,9 +24,17 @@ import com.clust4j.utils.MatUtils;
 import com.clust4j.utils.QuadTup;
 import com.clust4j.utils.VecUtils;
 
-import static com.clust4j.GlobalState.Mathematics.*;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
+import org.apache.commons.math3.exception.DimensionMismatchException;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.util.FastMath;
 
 import java.util.Arrays;
+
+import static com.clust4j.GlobalState.Mathematics.LOG_2PI;
+import static com.clust4j.GlobalState.Mathematics.LOG_PI;
+import static com.clust4j.GlobalState.Mathematics.lgamma;
 
 
 /**

@@ -1,4 +1,4 @@
-package util;
+package util.board;
 
 /**
  * Created by ASAF on 13/10/2017.

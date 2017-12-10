@@ -1,15 +1,15 @@
 package braude.motorsequence;
 
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import database.FactoryEntry;
+import database.tables.FactoryEntry;
 import database.tables.ParticipantEntry;
 import util.MyPair;
 

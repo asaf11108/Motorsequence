@@ -1,8 +1,6 @@
-package util;
+package util.graph;
 
 import android.widget.Button;
-
-import util.ButtonGraph;
 
 /**
  * Created by ASAF on 10/10/2017.

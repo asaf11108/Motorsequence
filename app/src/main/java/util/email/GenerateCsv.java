@@ -1,4 +1,4 @@
-package util;
+package util.email;
 
 import java.io.File;
 import java.io.FileWriter;

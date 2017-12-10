@@ -18,8 +18,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import database.FactoryEntry;
-import database.Participant;
+import database.oop.Participant;
+import database.tables.FactoryEntry;
 import database.tables.ParticipantEntry;
 import util.MyApplication;
 import util.MyPair;

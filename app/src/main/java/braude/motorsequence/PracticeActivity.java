@@ -3,7 +3,7 @@ package braude.motorsequence;
 import android.os.Bundle;
 import android.view.View;
 
-import database.TestType;
+import database.oop.TestType;
 
 /**
  * Created by ASAF on 27/8/2017.

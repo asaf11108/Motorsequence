@@ -37,7 +37,7 @@
         <activity android:name=".ClusterActivity" />
         <activity android:name=".ClusterResultActivity"></activity>
 
-        <provider android:name="util.CachedFileProvider" android:authorities="util.provider" android:grantUriPermissions="true"></provider>
+        <provider android:name="util.email.CachedFileProvider" android:authorities="util.provider" android:grantUriPermissions="true"></provider>
     </application>
 
 </manifest>
