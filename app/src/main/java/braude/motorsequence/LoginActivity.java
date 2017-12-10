@@ -33,12 +33,11 @@ import java.util.List;
 
 import database.Participant;
 import database.FactoryEntry;
-import database.ParticipantEntry;
+import database.tables.ParticipantEntry;
 import util.MyApplication;
 import util.MyPair;
 
 import static android.Manifest.permission.READ_CONTACTS;
-import static android.provider.Contacts.SettingsColumns.KEY;
 
 /**
  * A login screen that offers login via email/password.

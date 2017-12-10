@@ -2,6 +2,8 @@ package database;
 
 import android.database.Cursor;
 
+import database.tables.RecordTestEntry;
+import database.tables.TestSetEntry;
 import util.MyPair;
 
 /**

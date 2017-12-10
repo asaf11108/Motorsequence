@@ -1,4 +1,4 @@
-package database;
+package database.tables;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.content.Context;
 /**
  * Created by ASAF on 5/8/2017.
  */
-public class TestTypeEntry extends AbstractDbAdapter{
+public class TestTypeEntry extends AbstractDbAdapter {
 
     public static final String PK_AI_TEST_TYPE_ID = "testTypeID";
     public static final String NUM_OF_TESTS = "num_of_tests";

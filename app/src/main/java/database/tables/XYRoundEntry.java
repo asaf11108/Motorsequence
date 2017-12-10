@@ -1,6 +1,5 @@
-package database;
+package database.tables;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteStatement;
 
@@ -41,7 +40,7 @@ public class XYRoundEntry extends AbstractDbAdapter {
      *
      * @return row participanID or -1 if faild
      */
-    long create(SQLiteStatement statement,
+    public long create(SQLiteStatement statement,
                        float x, float y, double s, double v, double jerk){
         statement.clearBindings();
         statement.bindDouble(1, x);

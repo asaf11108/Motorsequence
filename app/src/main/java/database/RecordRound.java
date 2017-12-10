@@ -8,6 +8,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import database.tables.RecordRoundEntry;
+import database.tables.XYRoundEntry;
 import util.MyPair;
 
 /**

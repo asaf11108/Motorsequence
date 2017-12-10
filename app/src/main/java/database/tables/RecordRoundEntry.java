@@ -1,15 +1,16 @@
-package database;
+package database.tables;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import database.FactoryEntry;
 import util.MyPair;
 
 /**
  * Created by ASAF on 6/8/2017.
  */
-public class RecordRoundEntry extends AbstractDbAdapter{
+public class RecordRoundEntry extends AbstractDbAdapter {
 
     public static final String PK_PARTICIPANT_ID = "participantID";
     public static final String PK_TEST_SET_ID = "testSetID";
@@ -40,7 +41,7 @@ public class RecordRoundEntry extends AbstractDbAdapter{
      *
      * @return record round participanID or -1 if faild
      */
-    long create(int participantID, int testSetID, int recordTestID){
+    public long create(int participantID, int testSetID, int recordTestID){
         ContentValues values = new ContentValues();
         values.put(PK_PARTICIPANT_ID, participantID);
         values.put(PK_TEST_SET_ID, testSetID);

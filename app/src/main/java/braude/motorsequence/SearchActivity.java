@@ -20,7 +20,7 @@ import java.util.List;
 
 import database.FactoryEntry;
 import database.Participant;
-import database.ParticipantEntry;
+import database.tables.ParticipantEntry;
 import util.MyApplication;
 import util.MyPair;
 import util.MyTableRow;

@@ -1,4 +1,4 @@
-package database;
+package database.tables;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 
+import database.FactoryEntry;
 import util.MyPair;
 
 /**
@@ -45,7 +46,7 @@ public class RecordTestEntry extends AbstractDbAdapter {
      *
      * @return record test participanID or -1 if faild
      */
-    long create(int participantID, int testSetID){
+    public long create(int participantID, int testSetID){
         ContentValues values = new ContentValues();
         values.put(PK_PARTICIPANT_ID, participantID);
         values.put(PK_TEST_SET_ID, testSetID);
@@ -80,7 +81,7 @@ public class RecordTestEntry extends AbstractDbAdapter {
      *
      * @return record test participanID or -1 if faild
      */
-    boolean delete(int participantID, int testSetID, int recordTestID){
+    public boolean delete(int participantID, int testSetID, int recordTestID){
         XYRoundEntry xyre = FactoryEntry.getXYRoundEntry();
         boolean flag = xyre.delete(new MyPair[]{new MyPair(xyre.PARTICIPANT_ID, participantID),
                                 new MyPair(xyre.TEST_SET_ID, testSetID),

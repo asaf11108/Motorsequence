@@ -1,4 +1,4 @@
-package database;
+package database.tables;
 
 import android.content.ContentValues;
 import android.content.Context;

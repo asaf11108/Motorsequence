@@ -2,8 +2,8 @@ package database;
 
 import android.database.Cursor;
 
-import junit.framework.Test;
-
+import database.tables.ParticipantEntry;
+import database.tables.TestSetEntry;
 import util.MyPair;
 
 public class Participant implements Identifier, NewObject<TestSet> {

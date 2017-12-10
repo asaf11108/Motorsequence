@@ -1,9 +1,10 @@
-package database;
+package database.tables;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import database.FactoryEntry;
 import util.MyPair;
 
 /**
@@ -37,7 +38,7 @@ public class TestSetEntry extends AbstractDbAdapter {
      *
      * @return test set participanID or -1 if faild
      */
-    long create(int participantID, int testTypeID){
+    public long create(int participantID, int testTypeID){
         ContentValues values = new ContentValues();
         values.put(PK_PARTICIPANT_ID, participantID);
         ParticipantEntry pe = FactoryEntry.getParticipantEntry();

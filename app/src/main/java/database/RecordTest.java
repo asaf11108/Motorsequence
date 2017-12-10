@@ -3,8 +3,8 @@ package database;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import java.sql.Date;
-
+import database.tables.RecordRoundEntry;
+import database.tables.RecordTestEntry;
 import util.MyPair;
 
 /**

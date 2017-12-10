@@ -1,6 +1,5 @@
 package braude.motorsequence;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,10 +10,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import database.FactoryEntry;
-import database.ParticipantEntry;
+import database.tables.ParticipantEntry;
 import util.MyPair;
-
-import static android.R.string.cancel;
 
 public class RegisterActivity extends AppCompatActivity {
 

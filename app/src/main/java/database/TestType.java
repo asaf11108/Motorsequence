@@ -2,6 +2,7 @@ package database;
 
 import android.database.Cursor;
 
+import database.tables.TestTypeEntry;
 import util.MyPair;
 
 /**
