@@ -78,4 +78,9 @@ public class FactoryEntry {
         return XYRoundEntry.getInstance(mFactoryEntry.mContext);
 
     }
+
+    public static SQLiteSequenceEntry getSQLiteSequenceEntry(){
+        return SQLiteSequenceEntry.getInstance(mFactoryEntry.mContext);
+
+    }
 }

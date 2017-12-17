@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import database.oop.Participant;
 import database.tables.FactoryEntry;
 import database.tables.ParticipantEntry;
 import util.MyPair;
@@ -69,13 +70,14 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (flag) {
             ParticipantEntry pe = FactoryEntry.getParticipantEntry();
-            pe.create(mFirstName.getText().toString(),
+            long rowId = pe.create(mFirstName.getText().toString(),
                     mLastName.getText().toString(),
                     Integer.parseInt(mAge.getText().toString()),
                     mEmail.getText().toString(),
                     mUserName.getText().toString(),
                     mPassword.getText().toString(),
                     mGroup.getSelectedItem().toString());
+            Participant.addParticipant(rowId);
             finish();
         }
     }

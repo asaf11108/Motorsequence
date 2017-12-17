@@ -2,8 +2,12 @@ package database.oop;
 
 import android.database.Cursor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import database.tables.FactoryEntry;
 import database.tables.ParticipantEntry;
+import database.tables.SQLiteSequenceEntry;
 import database.tables.TestSetEntry;
 import util.MyPair;
 
@@ -18,6 +22,8 @@ public class Participant implements Identifier, NewObject<TestSet> {
     public String password;
     public String group;
     public MyArrayList<TestSet> testSets;
+    private static List<Participant> participants = new ArrayList<>();
+    private static boolean allCheck = false;
 
     public Participant(int participantID) {
         this.participantID = participantID;
@@ -53,5 +59,28 @@ public class Participant implements Identifier, NewObject<TestSet> {
         TestSetEntry tse = FactoryEntry.getTestSetEntry();
         if (tse.create(participantID, testTypeID) == -1) return null;
         return testSets.add();
+    }
+
+    public static List<Participant> getAllParticipants(){
+        if (allCheck)
+            return participants;
+        ParticipantEntry pe = FactoryEntry.getParticipantEntry();
+        int participantSeq = 0;
+        SQLiteSequenceEntry sqlSeq = FactoryEntry.getSQLiteSequenceEntry();
+        Cursor cursor = sqlSeq.fetch(new String[]{sqlSeq.SEQ}, new MyPair[]{new MyPair(sqlSeq.NAME, pe.getTableName())});
+        if (cursor.moveToFirst())
+            participantSeq =  cursor.getInt(cursor.getColumnIndex(sqlSeq.SEQ));
+        cursor.close();
+
+        for (int i = 1; i <= participantSeq; i++)
+            participants.add(new Participant(i));
+
+        allCheck = true;
+        return participants;
+    }
+
+    public static void addParticipant(long rowId) {
+        if (allCheck)
+            participants.add(new Participant((int) rowId));
     }
 }

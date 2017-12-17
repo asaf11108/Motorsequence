@@ -15,18 +15,7 @@
             android:id="@+id/graph_clusterResult_result"
             android:layout_width="match_parent"
             android:layout_height="350dp"
-            android:layout_margin="5dp"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/text_clusterResult_unableShow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:gravity="center"
-            android:text="Unable to show graph with more than two attributes"
-            android:textSize="@dimen/activity_font_subtitle"
-            android:visibility="gone" />
+            android:layout_margin="5dp" />
 
         <LinearLayout
             android:layout_width="match_parent"

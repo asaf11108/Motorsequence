@@ -27,7 +27,7 @@ public class ParticipantEntry extends AbstractDbAdapter {
      * @param ctx the Context within which to work
      */
     private ParticipantEntry(Context ctx) {
-        super(ctx, "participant");
+        super(ctx, "Participant");
     }
 
     static ParticipantEntry getInstance(Context context){

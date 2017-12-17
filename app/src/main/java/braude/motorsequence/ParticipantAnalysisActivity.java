@@ -147,9 +147,15 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             participant.createTestSet(mTestTypeID);
-            mCurrentTestType.setText("Pattern" + mTestTypeID);
+            mCurrentTestType.setText("Current:   Pattern" + mTestTypeID);
+//            patterns.setVisibility(View.GONE);
+            patterns.animate()
+                    .alpha(0.0f)
+                    .setDuration(700);
             mCurrentTestType.setVisibility(View.VISIBLE);
-            patterns.setVisibility(View.GONE);
+            mCurrentTestType.animate()
+                    .alpha(1.0f)
+                    .setDuration(700);
             Toast.makeText(getApplicationContext(), "TestSet created", Toast.LENGTH_SHORT).show();
         }
     }

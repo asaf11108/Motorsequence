@@ -64,11 +64,11 @@ public class ClusterResultActivity extends AppCompatActivity {
 
         //get extras
         Bundle extras = Preconditions.checkNotNull(getIntent().getExtras());
-
-//        int k = extras.getInt("braude.motorsequence.K");
-        int k = 2;
+        int k = extras.getInt(getString(R.string.cluster_k));
+        int[] clusterAtt = extras.getIntArray(getString(R.string.cluster_clusterAtt));
+        int[] graphAtt = extras.getIntArray(getString(R.string.cluster_graphAtt));
         Array2DRowRealMatrix mat = (Array2DRowRealMatrix) getIntent().getSerializableExtra("braude.motorsequence.DATA");
-        String[] ids = extras.getStringArray("braude.motorsequence.ID");
+        String[] names = extras.getStringArray("braude.motorsequence.NAMES");
 
 
         //clusterring
@@ -88,102 +88,97 @@ public class ClusterResultActivity extends AppCompatActivity {
         }
 
         //show cluster in graphview
-        if (mat.getColumnDimension() > 2) {
-            TextView text = (TextView) findViewById(R.id.text_clusterResult_unableShow);
-            text.setVisibility(View.VISIBLE);
-        } else {
-            //set list of colors
-            pointColors = new ArrayList<>(Arrays.asList(Color.BLUE, Color.RED, Color.GREEN, Color.MAGENTA));
-            Random random = new Random();
-            for (int i = pointColors.size(); i < k; i++) {
-                int r = random.nextInt();
-                int g = random.nextInt();
-                int b = random.nextInt();
-                pointColors.add(Color.rgb(r, g, b));
-            }
+        //set list of colors
+        pointColors = new ArrayList<>(Arrays.asList(Color.BLUE, Color.RED, Color.GREEN, Color.MAGENTA));
+        Random random = new Random();
+        for (int i = pointColors.size(); i < k; i++) {
+            int r = random.nextInt();
+            int g = random.nextInt();
+            int b = random.nextInt();
+            pointColors.add(Color.rgb(r, g, b));
+        }
 
-            GraphView graphView = (GraphView) findViewById(R.id.graph_clusterResult_result);
-            graphView.setVisibility(View.VISIBLE);
-            BiMap<PointsGraphSeries<DataPoint>, TableRow> biMap = HashBiMap.create();
+        GraphView graphView = (GraphView) findViewById(R.id.graph_clusterResult_result);
+        BiMap<PointsGraphSeries<DataPoint>, TableRow> biMap = HashBiMap.create();
 
-            Point p = new Point(0, 0);
-            for (int i = 0; i < mat.getRowDimension(); i++) {
-                double x = mat.getEntry(i, 0);
-                double y = mat.getEntry(i, 1);
-                final PointsGraphSeries<DataPoint> seriesPoint = new PointsGraphSeries<>(new DataPoint[]{new DataPoint(x, y)});
-                seriesPoint.setColor(pointColors.get(dataCluster[i]));
-                setShape(seriesPoint, groupsSymbol[0]);
-                graphView.addSeries(seriesPoint);
+        Point p = new Point(0, 0);
+        for (int i = 0; i < mat.getRowDimension(); i++) {
+            double x = mat.getEntry(i, 0);
+            double y = mat.getEntry(i, 1);
+            final PointsGraphSeries<DataPoint> seriesPoint = new PointsGraphSeries<>(new DataPoint[]{new DataPoint(x, y)});
+            seriesPoint.setColor(pointColors.get(dataCluster[i]));
+            setShape(seriesPoint, groupsSymbol[0]);
+            graphView.addSeries(seriesPoint);
 
-                if (x > p.x)
-                    p.x = (int) Math.ceil(x);
-                if (y > p.y)
-                    p.y = (int) Math.ceil(y);
+            if (x > p.x)
+                p.x = (int) Math.ceil(x);
+            if (y > p.y)
+                p.y = (int) Math.ceil(y);
 
-            }
-            p.x += Math.ceil(p.x / 5) + 1;
-            p.y += Math.ceil(p.y / 5) + 1;
+        }
+        p.x += Math.ceil(p.x / 5) + 1;
+        p.y += Math.ceil(p.y / 5) + 1;
 
-            graphView.getViewport().setMinX(0);
-            graphView.getViewport().setMinY(0);
-            graphView.getViewport().setMaxX(p.x);
-            graphView.getViewport().setMaxY(p.y);
-            graphView.getViewport().setYAxisBoundsManual(true);
-            graphView.getViewport().setXAxisBoundsManual(true);
+        graphView.getViewport().setMinX(0);
+        graphView.getViewport().setMinY(0);
+        graphView.getViewport().setMaxX(p.x);
+        graphView.getViewport().setMaxY(p.y);
+        graphView.getViewport().setYAxisBoundsManual(true);
+        graphView.getViewport().setXAxisBoundsManual(true);
 
-            //TODO: repair
-            //insert data to perticipant-cluater table
-            String[] dataClusterStr = convertIntegerToStringArray(dataCluster);
-            TableLayout participantTable = (TableLayout) findViewById(R.id.table_clusterResult_name);
-            for (int i = 0; i < mat.getRowDimension(); i++) {
-                TableRow row = new TableRow(getApplicationContext());
-                row.setLayoutParams(new TableLayout.LayoutParams(
-                        TableLayout.LayoutParams.MATCH_PARENT,
-                        TableLayout.LayoutParams.WRAP_CONTENT));
-                row.setWeightSum(4);
-                makeTextToRow(i, row, ids, 3);
-                makeTextToRow(i, row, dataClusterStr, 1);
+        //TODO: repair
+        //insert data to perticipant-cluater table
+        String[] dataClusterStr = convertIntegerToStringArray(dataCluster);
+        TableLayout participantTable = (TableLayout) findViewById(R.id.table_clusterResult_name);
+        for (int i = 0; i < mat.getRowDimension(); i++) {
+            TableRow row = new TableRow(getApplicationContext());
+            row.setLayoutParams(new TableLayout.LayoutParams(
+                    TableLayout.LayoutParams.MATCH_PARENT,
+                    TableLayout.LayoutParams.WRAP_CONTENT));
+            row.setWeightSum(4);
+            makeTextToRow(i, row, names, 3);
+            makeTextToRow(i, row, dataClusterStr, 1);
 
-                PointsGraphSeries<DataPoint> series = (PointsGraphSeries<DataPoint>) graphView.getSeries().get(i);
-                series.setOnDataPointTapListener(new MyOnDataPointTapListener(graphView, row));
-                row.setOnClickListener(new MyOnClickListener(graphView, series));
+            PointsGraphSeries<DataPoint> series = (PointsGraphSeries<DataPoint>) graphView.getSeries().get(i);
+            series.setOnDataPointTapListener(new MyOnDataPointTapListener(graphView, row));
+            row.setOnClickListener(new MyOnClickListener(graphView, series));
 
-                biMap.put(series, row);
-                participantTable.addView(row);
-            }
+            biMap.put(series, row);
+            participantTable.addView(row);
+        }
 
-            //TODO: repair
-            //insert data to group-symbol table
-            String[] groups = getApplicationContext().getResources().getStringArray(R.array.array_group);
-            String[] groups1 = Arrays.copyOfRange(groups, 1, groups.length);
-            TableLayout groupTable = (TableLayout) findViewById(R.id.table_clusterResult_group);
-            for (int i = 0; i < groupsSymbol.length; i++) {
-                TableRow row = new TableRow(getApplicationContext());
-                row.setLayoutParams(new TableLayout.LayoutParams(
-                        TableLayout.LayoutParams.MATCH_PARENT,
-                        TableLayout.LayoutParams.WRAP_CONTENT));
-                row.setWeightSum(4);
-                makeTextToRow(i, row, groups1, 3);
-                makeTextToRow(i, row, groupsSymbol, 1);
+        //TODO: repair
+        //insert data to group-symbol table
+        String[] groups = getApplicationContext().getResources().getStringArray(R.array.array_group);
+        String[] groups1 = Arrays.copyOfRange(groups, 1, groups.length);
+        TableLayout groupTable = (TableLayout) findViewById(R.id.table_clusterResult_group);
+        for (int i = 0; i < groupsSymbol.length; i++) {
+            TableRow row = new TableRow(getApplicationContext());
+            row.setLayoutParams(new TableLayout.LayoutParams(
+                    TableLayout.LayoutParams.MATCH_PARENT,
+                    TableLayout.LayoutParams.WRAP_CONTENT));
+            row.setWeightSum(4);
+            makeTextToRow(i, row, groups1, 3);
+            makeTextToRow(i, row, groupsSymbol, 1);
 
-                groupTable.addView(row);
-            }
+            groupTable.addView(row);
+        }
 
-            //set silhouetteScore
-            TextView silhouetteText = (TextView) findViewById(R.id.text_clusterResult_silhouetteVal);
+        //set silhouetteScore
+        TextView silhouetteText = (TextView) findViewById(R.id.text_clusterResult_silhouetteVal);
 //            String htmlString="Silhouette Value: <u>" + Math.round(silhouetteScore * 100.0) / 100.0 + "</u>";
 //            silhouetteText.setText(Html.fromHtml(htmlString));
-            silhouetteText.setText("Silhouette Value: " + Math.round(silhouetteScore * 100.0) / 100.0);
+        silhouetteText.setText("Silhouette Value: " + Math.round(silhouetteScore * 100.0) / 100.0);
 
-            //initialize send Cluster Button
-            Button send = (Button) findViewById(R.id.button_clusterResult_send);
-            send.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    sendEmail3();
-                }
-            });
-        }
+        //initialize send Cluster Button
+        Button send = (Button) findViewById(R.id.button_clusterResult_send);
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendEmail3();
+            }
+        });
+
     }
 
     private String[] convertIntegerToStringArray(int[] dataCluster) {
@@ -354,7 +349,7 @@ public class ClusterResultActivity extends AppCompatActivity {
             FileWriter out = (FileWriter) GenerateCsv.generateCsvFile(
                     data, "Name,Data1");
             i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(data));
-            i.putExtra(Intent.EXTRA_EMAIL, new String[] { to });
+            i.putExtra(Intent.EXTRA_EMAIL, new String[]{to});
             i.putExtra(Intent.EXTRA_SUBJECT, subject);
             i.putExtra(Intent.EXTRA_TEXT, message);
             startActivity(Intent.createChooser(i, "E-mail"));
@@ -362,7 +357,6 @@ public class ClusterResultActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 
 
     public static void createCachedFile(Context context, String fileName, String content) throws IOException {
@@ -379,17 +373,18 @@ public class ClusterResultActivity extends AppCompatActivity {
         pw.flush();
         pw.close();
     }
+
     public static Intent getSendEmailIntent(Context context, String email, String subject, String body, String fileName) {
 
         final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
 
         //Explicitly only use Gmail to send
-        emailIntent.setClassName("com.google.android.gm","com.google.android.gm.ComposeActivityGmail");
+        emailIntent.setClassName("com.google.android.gm", "com.google.android.gm.ComposeActivityGmail");
 
         emailIntent.setType("plain/text");
 
         //Add the recipients
-        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[] { email });
+        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{email});
 
         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
 
@@ -402,11 +397,11 @@ public class ClusterResultActivity extends AppCompatActivity {
         return emailIntent;
     }
 
-    private void sendEmail3(){
+    private void sendEmail3() {
         try {
             createCachedFile(ClusterResultActivity.this, "Test.txt", "This is a test");
 
-            startActivity(getSendEmailIntent( ClusterResultActivity.this, "asaf11108@gmail.com", "Test", "See attached", "Test.txt"));
+            startActivity(getSendEmailIntent(ClusterResultActivity.this, "asaf11108@gmail.com", "Test", "See attached", "Test.txt"));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ActivityNotFoundException e) {

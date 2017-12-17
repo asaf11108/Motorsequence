@@ -28,25 +28,13 @@
                 android:text="Test Type:"
                 android:textSize="@dimen/activity_font_subtitle" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Current:   "
-                    android:textSize="@dimen/activity_font_regular" />
-
                 <TextView
                     android:id="@+id/text_participantAnalysis_currentSetType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/activity_font_regular" />
+                    android:textSize="@dimen/activity_font_regular"
+                    android:layout_margin="5dp"/>
 
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linear_participantAnalysis_patterns"

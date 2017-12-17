@@ -27,4 +27,7 @@
         <item>TRIANGLE</item>
         <item>x</item>
     </string-array>
+    <string name="cluster_k">braude.motorsequence.K</string>
+    <string name="cluster_clusterAtt">braude.motorsequence.CLUSTER_ATT</string>
+    <string name="cluster_graphAtt">braude.motorsequence.GRAPH_ATT</string>
 </resources>

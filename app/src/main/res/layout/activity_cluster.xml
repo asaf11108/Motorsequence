@@ -1,7 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:numberpicker="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipToPadding="false"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="@dimen/activity_vertical_margin"
@@ -25,112 +27,211 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Number of cluster (0 - for automatic clustering):   "
+            android:layout_gravity="center_vertical"
+            android:text="Number of cluster (1 - for automatic clustering):   "
             android:textSize="@dimen/activity_font_regular" />
 
-        <EditText
-            android:id="@+id/edit_cluster_numOfCluster"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="5"
-            android:gravity="center"
-            android:text="0"
-            android:textSize="@dimen/activity_font_regular" />
+        <com.travijuu.numberpicker.library.NumberPicker
+            android:id="@+id/number_picker"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            numberpicker:focusable="false"
+            numberpicker:max="20"
+            numberpicker:min="1"
+            numberpicker:unit="1"
+            numberpicker:value="0" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linear_cluster_attributes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:layout_margin="10dp"
-        android:orientation="horizontal">
+        android:background="@drawable/shadow"
+        android:elevation="24dp"
+        android:orientation="vertical"
+        android:visibility="invisible">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Age range from   "
-            android:textSize="@dimen/activity_font_regular" />
-
-        <EditText
-            android:id="@+id/edit_cluster_ageFrom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="5"
-            android:gravity="center"
+            android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="- Choose attributes for clustering calculation"
             android:textSize="@dimen/activity_font_regular" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="   to   "
+            android:layout_margin="10dp"
+            android:text="- Choose two attributes for 2D graph display"
             android:textSize="@dimen/activity_font_regular" />
 
-        <EditText
-            android:id="@+id/edit_cluster_ageTo"
+
+        <TableLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="5"
-            android:gravity="center"
-            android:textSize="@dimen/activity_font_regular" />
+            android:layout_gravity="left"
+            android:layout_margin="10dp">
 
+            <TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Cluster\nAttribute"
+                    android:textSize="@dimen/activity_font_regular" />
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="0dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Graph\nAttribute"
+                    android:textSize="@dimen/activity_font_regular" />
+
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="0dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Attributes"
+                    android:textSize="@dimen/activity_font_regular" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="#DCDCDC" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="#DCDCDC" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="#DCDCDC" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button
+                    android:id="@+id/button_cluster_r1c1"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorLightGray"/>
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="0dp" />
+
+                <Button android:id="@+id/button_cluster_r1c2"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorLightGray"/>
+
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="0dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Age"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/activity_font_regular" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button android:id="@+id/button_cluster_r2c1"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorLightGray"/>
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="0dp" />
+
+                <Button android:id="@+id/button_cluster_r2c2"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorLightGray"/>
+
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="0dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Time"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/activity_font_regular" />
+            </TableRow>
+
+            <TableRow>
+
+                <Button android:id="@+id/button_cluster_r3c1"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorLightGray"/>
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="0dp" />
+
+                <Button android:id="@+id/button_cluster_r3c2"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorLightGray"/>
+
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="0dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Max Velocity"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/activity_font_regular" />
+            </TableRow>
+        </TableLayout>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="left"
-        android:layout_margin="10dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Total time of test(ms):   "
-            android:textSize="@dimen/activity_font_regular" />
-
-        <EditText
-            android:id="@+id/edit_cluster_totalTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="5"
-            android:gravity="center"
-            android:textSize="@dimen/activity_font_regular" />
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="left"
-        android:layout_margin="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Max velocity(mm / ms):   "
-            android:textSize="@dimen/activity_font_regular" />
-
-        <EditText
-            android:id="@+id/edit_cluster_maxVelocity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="5"
-            android:gravity="center"
-            android:textSize="@dimen/activity_font_regular" />
-
-
-    </LinearLayout>
 
     <Button
         android:id="@+id/button_cluster_analyze"
+        style="@style/MyButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Analyze"
-        android:layout_marginTop="10dp"
+        android:layout_gravity="right"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="50dp"
-        android:layout_gravity="right"
-        style="@style/MyButton"/>
+        android:layout_marginTop="10dp"
+        android:text="Analyze" />
 </LinearLayout>
