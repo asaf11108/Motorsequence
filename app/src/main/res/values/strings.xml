@@ -22,12 +22,21 @@
         <item>Health</item>>
     </string-array>
     <string-array name="array_groupSymbol">
-        <item>POINT</item>
-        <item>RECTANGLE</item>
-        <item>TRIANGLE</item>
+        <item>\u25CF</item>
+        <item>\u25A0</item>
+        <item>\u25B2</item>
         <item>x</item>
     </string-array>
     <string name="cluster_k">braude.motorsequence.K</string>
     <string name="cluster_clusterAtt">braude.motorsequence.CLUSTER_ATT</string>
     <string name="cluster_graphAtt">braude.motorsequence.GRAPH_ATT</string>
+    <string name="cluster_data">braude.motorsequence.DATA</string>
+    <string name="cluster_names">braude.motorsequence.NAMES</string>
+    <string name="cluster_groups">braude.motorsequence.GROUPS</string>
+    <string-array name="array_clusterResult_graphLabels">
+        <item>Age</item>
+        <item>Total Time</item>
+        <item>Max Velocity</item>
+
+    </string-array>
 </resources>

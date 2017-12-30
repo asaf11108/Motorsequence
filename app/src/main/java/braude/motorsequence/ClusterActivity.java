@@ -80,12 +80,12 @@ public class ClusterActivity extends AppCompatActivity {
         numOfCluster = (NumberPicker) findViewById(R.id.number_picker);
         numOfCluster.setValueChangedListener(new DefaultValueChangedListener() {
             public void valueChanged(int value, ActionEnum action) {
-                if (value != 0) {
+                if (value != 1) {
                     attributes.setVisibility(View.VISIBLE);
                     attributes.animate()
                             .alpha(1.0f)
                             .setDuration(700);
-                } else if (value == 0) {
+                } else {
                     attributes.animate()
                             .alpha(0.0f)
                             .setDuration(700);
@@ -132,12 +132,16 @@ public class ClusterActivity extends AppCompatActivity {
         }
         Bundle bundle = new Bundle();
         final Array2DRowRealMatrix mat = new Array2DRowRealMatrix(data);
-        bundle.putSerializable("braude.motorsequence.DATA", mat);
+        bundle.putSerializable(getString(R.string.cluster_data), mat);
         i.putExtras(bundle);
         String[] names = new String[rows.size()];
-        for (int x = 0; x < rows.size(); x++)
-            names[x] = participants.get(rows.get(x)).firstName +' '+ participants.get(rows.get(x)).lastName;
-        i.putExtra("braude.motorsequence.NAMES", names);
+        String[] groups = new String[rows.size()];
+        for (int x = 0; x < rows.size(); x++) {
+            names[x] = participants.get(rows.get(x)).firstName + ' ' + participants.get(rows.get(x)).lastName;
+            groups[x] = participants.get(rows.get(x)).group;
+        }
+        i.putExtra(getString(R.string.cluster_names), names);
+        i.putExtra(getString(R.string.cluster_groups), groups);
 /*
         Bundle bundle = new Bundle();
         final Array2DRowRealMatrix mat = new Array2DRowRealMatrix(new double[][]{

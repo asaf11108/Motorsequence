@@ -25,6 +25,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.OnDataPointTapListener;
@@ -61,15 +62,17 @@ public class ClusterResultActivity extends AppCompatActivity {
 
         pointColors = new ArrayList<>(Arrays.asList(Color.BLUE, Color.RED, Color.GREEN, Color.MAGENTA));
         groupsSymbol = getApplicationContext().getResources().getStringArray(R.array.array_groupSymbol);
+        String[] groups = getApplicationContext().getResources().getStringArray(R.array.array_group);
+        String[] groups1 = Arrays.copyOfRange(groups, 1, groups.length);
 
         //get extras
         Bundle extras = Preconditions.checkNotNull(getIntent().getExtras());
         int k = extras.getInt(getString(R.string.cluster_k));
         int[] clusterAtt = extras.getIntArray(getString(R.string.cluster_clusterAtt));
         int[] graphAtt = extras.getIntArray(getString(R.string.cluster_graphAtt));
-        Array2DRowRealMatrix mat = (Array2DRowRealMatrix) getIntent().getSerializableExtra("braude.motorsequence.DATA");
-        String[] names = extras.getStringArray("braude.motorsequence.NAMES");
-
+        Array2DRowRealMatrix mat = (Array2DRowRealMatrix) getIntent().getSerializableExtra(getString(R.string.cluster_data));
+        String[] names = extras.getStringArray(getString(R.string.cluster_names));
+        String[] groupOfParticipant = extras.getStringArray(getString(R.string.cluster_groups));
 
         //clusterring
         boolean autoClustFlag = (k == 0);
@@ -99,15 +102,20 @@ public class ClusterResultActivity extends AppCompatActivity {
         }
 
         GraphView graphView = (GraphView) findViewById(R.id.graph_clusterResult_result);
+        GridLabelRenderer gridLabelRenderer = graphView.getGridLabelRenderer();
+        String[] graphLabels = getApplicationContext().getResources().getStringArray(R.array.array_clusterResult_graphLabels);
+        gridLabelRenderer.setHorizontalAxisTitle(graphLabels[graphAtt[0]]);
+        gridLabelRenderer.setVerticalAxisTitle(graphLabels[graphAtt[1]]);
         BiMap<PointsGraphSeries<DataPoint>, TableRow> biMap = HashBiMap.create();
 
+        List<String> groups1List = Arrays.asList(groups1);
         Point p = new Point(0, 0);
         for (int i = 0; i < mat.getRowDimension(); i++) {
             double x = mat.getEntry(i, 0);
             double y = mat.getEntry(i, 1);
             final PointsGraphSeries<DataPoint> seriesPoint = new PointsGraphSeries<>(new DataPoint[]{new DataPoint(x, y)});
             seriesPoint.setColor(pointColors.get(dataCluster[i]));
-            setShape(seriesPoint, groupsSymbol[0]);
+            setShape(seriesPoint, groupsSymbol[groups1List.indexOf(groupOfParticipant[i])]);
             graphView.addSeries(seriesPoint);
 
             if (x > p.x)
@@ -135,9 +143,10 @@ public class ClusterResultActivity extends AppCompatActivity {
             row.setLayoutParams(new TableLayout.LayoutParams(
                     TableLayout.LayoutParams.MATCH_PARENT,
                     TableLayout.LayoutParams.WRAP_CONTENT));
-            row.setWeightSum(4);
+            row.setWeightSum(5);
             makeTextToRow(i, row, names, 3);
             makeTextToRow(i, row, dataClusterStr, 1);
+            makeTextToRow(i, row, groupOfParticipant, 1);
 
             PointsGraphSeries<DataPoint> series = (PointsGraphSeries<DataPoint>) graphView.getSeries().get(i);
             series.setOnDataPointTapListener(new MyOnDataPointTapListener(graphView, row));
@@ -149,8 +158,6 @@ public class ClusterResultActivity extends AppCompatActivity {
 
         //TODO: repair
         //insert data to group-symbol table
-        String[] groups = getApplicationContext().getResources().getStringArray(R.array.array_group);
-        String[] groups1 = Arrays.copyOfRange(groups, 1, groups.length);
         TableLayout groupTable = (TableLayout) findViewById(R.id.table_clusterResult_group);
         for (int i = 0; i < groupsSymbol.length; i++) {
             TableRow row = new TableRow(getApplicationContext());
@@ -175,7 +182,7 @@ public class ClusterResultActivity extends AppCompatActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendEmail3();
+                sendEmail();
             }
         });
 
@@ -201,16 +208,13 @@ public class ClusterResultActivity extends AppCompatActivity {
     }
 
     private void setShape(PointsGraphSeries<DataPoint> series, final String columnKey) {
-        if (columnKey.length() > 1)
-            series.setShape(PointsGraphSeries.Shape.valueOf(columnKey));
-        else
-            series.setCustomShape(new PointsGraphSeries.CustomShape() {
-                @Override
-                public void draw(Canvas canvas, Paint paint, float x, float y, DataPointInterface dataPoint) {
-                    paint.setTextSize(25);
-                    canvas.drawText(columnKey, x - 7, y + 7, paint);
-                }
-            });
+        series.setCustomShape(new PointsGraphSeries.CustomShape() {
+            @Override
+            public void draw(Canvas canvas, Paint paint, float x, float y, DataPointInterface dataPoint) {
+                paint.setTextSize(32);
+                canvas.drawText(columnKey, x - 7, y + 7, paint);
+            }
+        });
     }
 
     private class MyOnDataPointTapListener implements OnDataPointTapListener {

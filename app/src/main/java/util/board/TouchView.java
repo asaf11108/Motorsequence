@@ -131,7 +131,7 @@ public class TouchView extends View {
         if (Math.sqrt(
                 (x - pointClusters[next].getCx()) * (x - pointClusters[next].getCx()) +
                         (y - pointClusters[next].getCy()) * (y - pointClusters[next].getCy())) <
-                PointCircle.POINT_RADIUS) {
+                PointCircle.POINT_RADIUS + 5) {
             pointClusters[next].setClusterColor(PointCluster.COLOR_DARK_RED);
             next = (next + 1) % PointCluster.POINT_CLUSTERS_SIZE;
             pointClusters[next].setClusterColor(PointCluster.COLOR_RED);
