@@ -36,18 +36,15 @@ import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import util.email.CachedFileProvider;
-import util.email.GenerateCsv;
 
 public class ClusterResultActivity extends AppCompatActivity {
 
@@ -73,22 +70,9 @@ public class ClusterResultActivity extends AppCompatActivity {
         Array2DRowRealMatrix mat = (Array2DRowRealMatrix) getIntent().getSerializableExtra(getString(R.string.cluster_data));
         String[] names = extras.getStringArray(getString(R.string.cluster_names));
         String[] groupOfParticipant = extras.getStringArray(getString(R.string.cluster_groups));
+        final int[] clusters = extras.getIntArray(getString(R.string.cluster_clusters));
+        double silhouetteScore = extras.getDouble(getString(R.string.cluster_silhouetteScore));
 
-        //clusterring
-        boolean autoClustFlag = (k == 0);
-        KMedoids km = new KMedoidsParameters(k).fitNewModel(mat);
-        int[] dataCluster = km.getLabels();
-        double silhouetteScore = km.silhouetteScore();
-        for (; k < 4 && autoClustFlag; k++) {
-            KMedoids kmTemp = new KMedoidsParameters(k).fitNewModel(mat);
-            final int[] resultsTemp = kmTemp.getLabels();
-            double rTemp = kmTemp.silhouetteScore();
-            if (rTemp > silhouetteScore) {
-                km = kmTemp;
-                dataCluster = resultsTemp;
-                silhouetteScore = rTemp;
-            }
-        }
 
         //show cluster in graphview
         //set list of colors
@@ -114,7 +98,7 @@ public class ClusterResultActivity extends AppCompatActivity {
             double x = mat.getEntry(i, 0);
             double y = mat.getEntry(i, 1);
             final PointsGraphSeries<DataPoint> seriesPoint = new PointsGraphSeries<>(new DataPoint[]{new DataPoint(x, y)});
-            seriesPoint.setColor(pointColors.get(dataCluster[i]));
+            seriesPoint.setColor(pointColors.get(clusters[i]));
             setShape(seriesPoint, groupsSymbol[groups1List.indexOf(groupOfParticipant[i])]);
             graphView.addSeries(seriesPoint);
 
@@ -136,7 +120,7 @@ public class ClusterResultActivity extends AppCompatActivity {
 
         //TODO: repair
         //insert data to perticipant-cluater table
-        String[] dataClusterStr = convertIntegerToStringArray(dataCluster);
+        String[] dataClusterStr = convertIntegerToStringArray(clusters);
         TableLayout participantTable = (TableLayout) findViewById(R.id.table_clusterResult_name);
         for (int i = 0; i < mat.getRowDimension(); i++) {
             TableRow row = new TableRow(getApplicationContext());
@@ -182,7 +166,7 @@ public class ClusterResultActivity extends AppCompatActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendEmail();
+                sendEmail3();
             }
         });
 
@@ -266,102 +250,6 @@ public class ClusterResultActivity extends AppCompatActivity {
         row.setBackgroundColor(color);
         graphView.invalidate();
     }
-
-    private void sendEmail() {
-        String content = "Hello Wourld!";
-        File file = null;
-        FileOutputStream fos = null;
-        String fileName = null;
-        try {
-            fileName = "data";
-            file = File.createTempFile(fileName, ".txt", this.getCacheDir());
-            fos = new FileOutputStream(file);
-            // get the content in bytes
-            byte[] contentInBytes = content.getBytes();
-            fos.write(contentInBytes);
-            fos.flush();
-            fos.close();
-
-            Intent email = new Intent(Intent.ACTION_SEND);
-            email.putExtra(Intent.EXTRA_EMAIL, new String[]{"asaf11108@gmail.com"});
-            email.putExtra(Intent.EXTRA_SUBJECT, "subject");
-            email.putExtra(Intent.EXTRA_TEXT, "message");
-            // the attachment
-            email.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-            //need this to prompts email client only
-            email.setType("message/rfc822");
-
-            startActivity(Intent.createChooser(email, "Choose an Email client :"));
-
-//            boolean del = this.deleteFile(fileName);
-        } catch (IOException e) {
-            // Error while creating file
-        } finally {
-            try {
-                if (fos != null) {
-                    fos.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-//        try {
-//            Intent intent = new Intent(Intent.ACTION_SENDTO);
-//            intent.setType("text/plain");
-//            intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
-//            intent.putExtra(Intent.EXTRA_STREAM, Uri.parse( "file://"+filelocation));
-//            intent.putExtra(Intent.EXTRA_TEXT, "message");
-//            intent.setData(Uri.parse("mailto:asaf11108@gmail.com"));
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//
-//            startActivity(intent);
-//        } catch(Exception e)  {
-//            System.out.println("is exception raises during sending mail"+e);
-//        }
-
-//        String filename="contacts_sid.vcf";
-//        File filelocation = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), filename);
-//        Uri path = Uri.fromFile(filelocation);
-//
-//        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-// set the type to 'email'
-//        emailIntent .setType("vnd.android.cursor.dir/email");
-//        String to[] = {"asaf11108@gmail.com"};
-//        emailIntent .putExtra(Intent.EXTRA_EMAIL, to);
-// the attachment
-//        emailIntent .putExtra(Intent.EXTRA_STREAM, path);
-// the mail subject
-//        emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
-//        startActivity(Intent.createChooser(emailIntent , "Send email..."));
-    }
-
-    private void sendEmail2() {
-        String to = "asaf11108@gmail.com";
-        String subject = "sub1";
-        String message = "m";
-
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("plain/text");
-        File data = null;
-
-        try {
-            Date dateVal = new Date();
-            String filename = dateVal.toString();
-            data = File.createTempFile("Report", ".csv");
-            FileWriter out = (FileWriter) GenerateCsv.generateCsvFile(
-                    data, "Name,Data1");
-            i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(data));
-            i.putExtra(Intent.EXTRA_EMAIL, new String[]{to});
-            i.putExtra(Intent.EXTRA_SUBJECT, subject);
-            i.putExtra(Intent.EXTRA_TEXT, message);
-            startActivity(Intent.createChooser(i, "E-mail"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public static void createCachedFile(Context context, String fileName, String content) throws IOException {
 

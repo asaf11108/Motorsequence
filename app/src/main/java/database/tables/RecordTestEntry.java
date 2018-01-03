@@ -20,6 +20,7 @@ public class RecordTestEntry extends AbstractDbAdapter {
     public static final String TOTAL_TIME = "total_time";
     public static final String MAX_VELOCITY = "max_velocity";
     public static final String VELOCITY_PEEKS = "velocity_peaks";
+    public static final String AVERAGE_JERK = "average_jerk";
 
     private static RecordTestEntry mRecordTestEntry;
     private static final String TAG = "RecordTestEntry";
@@ -63,6 +64,7 @@ public class RecordTestEntry extends AbstractDbAdapter {
         values.put(TOTAL_TIME, 0);
         values.put(MAX_VELOCITY, 0);
         values.put(VELOCITY_PEEKS, 0);
+        values.put(AVERAGE_JERK, 0);
         boolean flag = insert(values) != -1;
         if (flag){
             values.clear();

@@ -33,6 +33,8 @@
     <string name="cluster_data">braude.motorsequence.DATA</string>
     <string name="cluster_names">braude.motorsequence.NAMES</string>
     <string name="cluster_groups">braude.motorsequence.GROUPS</string>
+    <string name="cluster_clusters">braude.motorsequence.CLUSTERS</string>
+    <string name="cluster_silhouetteScore">braude.motorsequence.SILHOUETTE_SCORE</string>
     <string-array name="array_clusterResult_graphLabels">
         <item>Age</item>
         <item>Total Time</item>

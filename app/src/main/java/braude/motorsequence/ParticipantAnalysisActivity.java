@@ -2,6 +2,7 @@ package braude.motorsequence;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -12,27 +13,37 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.clust4j.algo.KMedoids;
+import com.clust4j.algo.KMedoidsParameters;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import database.oop.Participant;
 import database.oop.RecordTest;
 import database.oop.TestSet;
+import util.MyApplication;
+import util.board.DrawView;
 import util.graph.ButtonGraph;
 import util.graph.DayButtonGraph;
-import util.MyApplication;
 import util.graph.MyGraphView;
 import util.graph.TypeButtonGraph;
-import util.board.DrawView;
 
 public class ParticipantAnalysisActivity extends AppCompatActivity {
 
     private Participant participant;
     private static final int TEST_DAYS = 5;
     private static final int GRAPH_TYPES = 3;
+    private static final int ATTRIBUTES_SIZE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +60,133 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
             defineTable();
         }
 
+        Button analysis = (Button) findViewById(R.id.button_participantAnalysis_analysis);
+        analysis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attemptAnalysis();
+            }
+        });
     }
 
-    private void definePatten(){
+    private void attemptAnalysis() {
+        //fatch data
+        List<Participant> participants = Participant.getAllParticipants();
+        //init data
+        List<Integer> rows = new ArrayList<>();
+        for (int x = 0; x < participants.size(); x++) {
+            if (participants.get(x).testSets.getLast() != null && participants.get(x).testSets.getLast().recordTests.getLast() != null)
+                rows.add(x);
+        }
+        if (rows.size() < 4) {
+            Toast.makeText(ParticipantAnalysisActivity.this, "Not enough data for clustering", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int[] kValues = {2, 3, 4};
+        BitSet[] attributes = setAttributes();
+        int attMax = 0;
+        Array2DRowRealMatrix mat = null;
+        KMedoids km = null;
+        int[] clusters = null;
+        double silhouetteScore = -2;
+
+        //clusterring
+        for (int att = 0; att < attributes.length; att++) {
+            double[][] data = new double[rows.size()][attributes[att].cardinality()];
+            //set data
+            int y = 0;
+            int attIndex = 0;
+            if (attIndex != -1 && attributes[att].nextSetBit(attIndex) == 0) {
+                for (int x = 0; x < rows.size(); x++)
+                    data[x][y] = participants.get(rows.get(x)).age;
+                y++;
+                attIndex = attributes[att].nextSetBit(attributes[att].nextSetBit(attIndex) + 1);
+            }
+            if (attIndex != -1 && attributes[att].nextSetBit(attIndex) == 1) {
+                for (int x = 0; x < rows.size(); x++)
+                    data[x][y] = participants.get(rows.get(x)).testSets.getLast().recordTests.getLast().totalTime;
+                y++;
+                attIndex = attributes[att].nextSetBit(attributes[att].nextSetBit(attIndex) + 1);
+            }
+            if (attIndex != -1 && attributes[att].nextSetBit(attIndex) == 2) {
+                for (int x = 0; x < rows.size(); x++)
+                    data[x][y] = participants.get(rows.get(x)).testSets.getLast().recordTests.getLast().maxVelocity;
+                y++;
+                attIndex = attributes[att].nextSetBit(attributes[att].nextSetBit(attIndex) + 1);
+            }
+            Array2DRowRealMatrix matTemp = new Array2DRowRealMatrix(data);
+
+            for (int k = 0; k < kValues.length; k++) {
+                KMedoids kmTemp = new KMedoidsParameters(kValues[k]).fitNewModel(matTemp);
+                final int[] resultsTemp = kmTemp.getLabels();
+                double scoreTemp = kmTemp.silhouetteScore();
+                if (scoreTemp > silhouetteScore) {
+                    km = kmTemp;
+                    clusters = resultsTemp;
+                    silhouetteScore = scoreTemp;
+                    attMax = att;
+                    mat = matTemp;
+                }
+            }
+        }
+        String[] groups = getApplicationContext().getResources().getStringArray(R.array.array_group);
+        String[] groups1 = Arrays.copyOfRange(groups, 1, groups.length);
+        HashMap<String, Integer>[] groupsInCluster = new HashMap[km.getK()];
+        for (int i = 0; i < km.getK(); i++) {
+            groupsInCluster[i] = new HashMap<>();
+            for (String groupStr : groups1)
+                groupsInCluster[i].put(groupStr, 0);
+        }
+        int participantIndex = 0;
+        for (int x = 0; x < rows.size(); x++) {
+            groupsInCluster[clusters[x]].put(participants.get(rows.get(x)).group, groupsInCluster[clusters[x]].get(participants.get(rows.get(x)).group) + 1);
+            if (participant.getID() == participants.get(rows.get(x)).getID()) {
+                participantIndex = x;
+            }
+        }
+        Map.Entry<String, Integer> maxEntry = null;
+        for(Map.Entry<String, Integer> entry : groupsInCluster[clusters[participantIndex]].entrySet()){
+            if (maxEntry == null || entry.getValue() > maxEntry.getValue()){
+                maxEntry = entry;
+            }
+        }
+        // setup the alert builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Participant analysis");
+        builder.setMessage("Participant belong to group: " + participant.group +
+                "\n\nAfter clustering the system found that" +
+                "\nthere is high chance that participant belong to: " +  maxEntry.getKey());
+
+        // add a button
+        builder.setPositiveButton("OK", null);
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private BitSet[] setAttributes() {
+        BitSet[] attributes = new BitSet[3];
+
+        attributes[0] = new BitSet(ATTRIBUTES_SIZE);
+        attributes[1] = new BitSet(ATTRIBUTES_SIZE);
+        attributes[2] = new BitSet(ATTRIBUTES_SIZE);
+
+        attributes[0].set(0);
+        attributes[0].set(1);
+
+        attributes[1].set(0);
+        attributes[1].set(1);
+        attributes[1].set(2);
+
+        attributes[2].set(1);
+        attributes[2].set(2);
+
+        return attributes;
+    }
+
+    private void definePatten() {
         final TextView currentTestType = (TextView) findViewById(R.id.text_participantAnalysis_currentSetType);
         final LinearLayout patterns = (LinearLayout) findViewById(R.id.linear_participantAnalysis_patterns);
         TestSet testSet = participant.testSets.getLast();
@@ -68,18 +203,18 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
         pattern1.setOnClickListener(new Pattern(1, currentTestType, patterns));
     }
 
-    private void defineGraph(){
+    private void defineGraph() {
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_participantAnalysis_container);
         int finishedTests = participant.testSets.getLast().recordTests.getSeq();
         final Button[] dayButtons = new Button[finishedTests];
         ButtonGraph dayButtonGraph = new DayButtonGraph(dayButtons);
         for (int i = 0; i < finishedTests; i++) {
-            int resId = getResources().getIdentifier("button_participantAnalysis_day" + (i+1), "id", getPackageName());
+            int resId = getResources().getIdentifier("button_participantAnalysis_day" + (i + 1), "id", getPackageName());
             dayButtons[i] = (Button) findViewById(resId);
             dayButtons[i].setOnClickListener(new GraphListener(i, dayButtonGraph, frameLayout));
         }
         for (int i = finishedTests; i < TEST_DAYS; i++) {
-            int resId = getResources().getIdentifier("button_participantAnalysis_day" + (i+1), "id", getPackageName());
+            int resId = getResources().getIdentifier("button_participantAnalysis_day" + (i + 1), "id", getPackageName());
             Button butt = (Button) findViewById(resId);
             butt.setEnabled(false);
         }
@@ -95,17 +230,17 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
 
         dayButtons[0].setBackgroundColor(Color.GREEN);
         graphTypes[0].setBackgroundColor(Color.GREEN);
-        if (participant.testSets.getLast().recordTests.get(dayButtonGraph.getVal()+1) != null)
+        if (participant.testSets.getLast().recordTests.get(dayButtonGraph.getVal() + 1) != null)
             frameLayout.addView(new DrawView(getApplicationContext(),
-                    participant.testSets.getLast().recordTests.get(dayButtonGraph.getVal()+1),
+                    participant.testSets.getLast().recordTests.get(dayButtonGraph.getVal() + 1),
                     participant.testSets.getLast().testType));
     }
 
-    private void defineTable(){
+    private void defineTable() {
         int seq = participant.testSets.getLast().recordTests.getSeq();
-        double totalTimeAvg = 0.0, maxVelocityAvg = 0.0;
+        double totalTimeAvg = 0.0, maxVelocityAvg = 0.0, averageJerkAvg = 0.0, gradeAvg = 0.0;
         int velocityPeaksAvg = 0;
-        int currColumns = 3;
+        int[] grades = {2, 3, 3, 3, 4};
         TableLayout summeryTable = (TableLayout) findViewById(R.id.table_participantAnalysis_summery);
         if (seq != 0) {
             for (int i = 0; i < seq; i++) {
@@ -113,21 +248,30 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
                 double totalTimeDay = Math.round(recordTest.totalTime * 100.0) / 100.0;
                 double maxVelocityDay = Math.round(recordTest.maxVelocity * 100.0) / 100.0;
                 int velocityPeaksDay = recordTest.velocityPeaks;
-                getCellAtPos(summeryTable, i+1, 1).setText(String.valueOf(totalTimeDay));
-                getCellAtPos(summeryTable, i+1, 2).setText(String.valueOf(maxVelocityDay));
-                getCellAtPos(summeryTable, i+1, 3).setText(String.valueOf(velocityPeaksDay));
+                double averageJerkDay = Math.round(recordTest.averageJerk * 100.0) / 100.0;
+                getCellAtPos(summeryTable, i + 1, 1).setText(String.valueOf(totalTimeDay));
+                getCellAtPos(summeryTable, i + 1, 2).setText(String.valueOf(maxVelocityDay));
+                getCellAtPos(summeryTable, i + 1, 3).setText(String.valueOf(velocityPeaksDay));
+                getCellAtPos(summeryTable, i + 1, 4).setText(String.valueOf(averageJerkDay));
+                getCellAtPos(summeryTable, i + 1, 5).setText(String.valueOf(grades[i]));
 
                 totalTimeAvg += totalTimeDay;
                 maxVelocityAvg += maxVelocityDay;
                 velocityPeaksAvg += velocityPeaksDay;
+                averageJerkAvg += averageJerkDay;
+                gradeAvg += grades[i];
             }
             totalTimeAvg = Math.round(totalTimeAvg / seq * 100.0) / 100.0;
             maxVelocityAvg = Math.round(maxVelocityAvg / seq * 100.0) / 100.0;
             velocityPeaksAvg = Math.round(velocityPeaksAvg / seq * 100) / 100;
+            averageJerkAvg = Math.round(averageJerkAvg / seq * 100) / 100;
+            gradeAvg = Math.round(gradeAvg / seq * 100) / 100;
 
-            getCellAtPos(summeryTable, TEST_DAYS+1, 1).setText(String.valueOf(totalTimeAvg));
-            getCellAtPos(summeryTable, TEST_DAYS+1, 2).setText(String.valueOf(maxVelocityAvg));
-            getCellAtPos(summeryTable, TEST_DAYS+1, 3).setText(String.valueOf(velocityPeaksAvg));
+            getCellAtPos(summeryTable, TEST_DAYS + 1, 1).setText(String.valueOf(totalTimeAvg));
+            getCellAtPos(summeryTable, TEST_DAYS + 1, 2).setText(String.valueOf(maxVelocityAvg));
+            getCellAtPos(summeryTable, TEST_DAYS + 1, 3).setText(String.valueOf(velocityPeaksAvg));
+            getCellAtPos(summeryTable, TEST_DAYS + 1, 4).setText(String.valueOf(averageJerkAvg));
+            getCellAtPos(summeryTable, TEST_DAYS + 1, 5).setText(String.valueOf(gradeAvg));
         }
 
     }
@@ -180,27 +324,27 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
             buttonGraph.getButton().setBackgroundResource(android.R.drawable.btn_default);
             buttonGraph.setVal(buttID);
             frameLayout.removeAllViews();
-            switch (buttonGraph.type){
-                case  0:
-                    if (participant.testSets.getLast().recordTests.get(buttonGraph.day+1) != null)
+            switch (buttonGraph.type) {
+                case 0:
+                    if (participant.testSets.getLast().recordTests.get(buttonGraph.day + 1) != null)
                         frameLayout.addView(new DrawView(getApplicationContext(),
-                                participant.testSets.getLast().recordTests.get(buttonGraph.day+1),
+                                participant.testSets.getLast().recordTests.get(buttonGraph.day + 1),
                                 participant.testSets.getLast().testType));
                     break;
-                case  1:
-                    if (participant.testSets.getLast().recordTests.get(buttonGraph.day+1) != null)
+                case 1:
+                    if (participant.testSets.getLast().recordTests.get(buttonGraph.day + 1) != null)
                         createGraph("mm / s",
-                            participant.testSets.getLast().recordTests.get(buttonGraph.day+1).recordRounds.getLast().v);
+                                participant.testSets.getLast().recordTests.get(buttonGraph.day + 1).recordRounds.getLast().v);
                     break;
-                case  2:
-                    if (participant.testSets.getLast().recordTests.get(buttonGraph.day+1) != null)
+                case 2:
+                    if (participant.testSets.getLast().recordTests.get(buttonGraph.day + 1) != null)
                         createGraph("mm / s^2",
-                            participant.testSets.getLast().recordTests.get(buttonGraph.day+1).recordRounds.getLast().jerk);
+                                participant.testSets.getLast().recordTests.get(buttonGraph.day + 1).recordRounds.getLast().jerk);
                     break;
             }
         }
 
-        private void createGraph(String verticalAxisName, List<Double> ySeries){
+        private void createGraph(String verticalAxisName, List<Double> ySeries) {
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
                     FrameLayout.LayoutParams.MATCH_PARENT);
@@ -208,12 +352,12 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
             frameLayout.addView(graphView, layoutParams);
             LineGraphSeries<DataPoint> series = new LineGraphSeries();
             series.setColor(Color.RED);
-            List<Double> s = participant.testSets.getLast().recordTests.get(buttonGraph.day+1).recordRounds.getLast().s;
-            for (int i = 0; i <ySeries.size(); i++)
-                series.appendData(new DataPoint(s.get(i)-s.get(0), ySeries.get(i)), true, ySeries.size());
+            List<Double> s = participant.testSets.getLast().recordTests.get(buttonGraph.day + 1).recordRounds.getLast().s;
+            for (int i = 0; i < ySeries.size(); i++)
+                series.appendData(new DataPoint(s.get(i) - s.get(0), ySeries.get(i)), true, ySeries.size());
             graphView.addSeries(series);
             graphView.getViewport().setMinX(0);
-            graphView.getViewport().setMaxX(myCeil(s.get(s.size()-1) - s.get(0)));
+            graphView.getViewport().setMaxX(myCeil(s.get(s.size() - 1) - s.get(0)));
             graphView.getViewport().setXAxisBoundsManual(true);
         }
     }
@@ -223,9 +367,9 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
         return (TextView) row.getChildAt(y);
     }
 
-    private double myCeil(double sec){
+    private double myCeil(double sec) {
         int sInt = (int) sec;
-        if (sec-sInt >= 0.5)
+        if (sec - sInt >= 0.5)
             return sInt + 1;
         else
             return sInt + 0.5;

@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+
 import database.oop.Participant;
 import database.oop.TestSet;
 import util.MyApplication;
@@ -53,14 +55,14 @@ public class ParticipantActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                     testFlag = false;
                 }
-//                else if(testSet.recordTests.getLast() != null &&
-//                        (testSet.recordTests.getLast().date + 1.728e+8) >= System.currentTimeMillis()) {
-//                    double wait = (testSet.recordTests.getLast().date + 1.728e+8 - System.currentTimeMillis()) / 8.64e+7;
-//                    Toast.makeText(getApplicationContext(),
-//                            "Please wait " + new DecimalFormat("#.##").format(wait) + " days for the next test",
-//                            Toast.LENGTH_SHORT).show();
-//                    testFlag = false;
-//                }
+                else if(testSet.recordTests.getLast() != null &&
+                        (testSet.recordTests.getLast().date + 1.728e+8) >= System.currentTimeMillis()) {
+                    double wait = (testSet.recordTests.getLast().date + 1.728e+8 - System.currentTimeMillis()) / 8.64e+7;
+                    Toast.makeText(getApplicationContext(),
+                            "Please wait " + new DecimalFormat("#.##").format(wait) + " days for the next test",
+                            Toast.LENGTH_SHORT).show();
+                    testFlag = false;
+                }
                 else {
                     testFlag = true;
                 }

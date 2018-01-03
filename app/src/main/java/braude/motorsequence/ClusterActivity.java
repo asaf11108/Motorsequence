@@ -1,7 +1,6 @@
 package braude.motorsequence;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +9,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.clust4j.algo.KMedoids;
+import com.clust4j.algo.KMedoidsParameters;
 import com.google.common.primitives.Ints;
 import com.travijuu.numberpicker.library.Enums.ActionEnum;
 import com.travijuu.numberpicker.library.Listener.DefaultValueChangedListener;
@@ -18,24 +19,21 @@ import com.travijuu.numberpicker.library.NumberPicker;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.Arrays;
+import java.util.BitSet;
 import java.util.List;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import database.oop.Participant;
-import database.oop.RecordTest;
-import database.tables.FactoryEntry;
-import database.tables.ParticipantEntry;
-import database.tables.RecordTestEntry;
 
 public class ClusterActivity extends AppCompatActivity {
 
     private NumberPicker numOfCluster;
     private SortedSet<Integer> clusterAtt;
     private SortedSet<Integer> graphAtt;
+
+    private static final int ATTRIBUTES_SIZE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +61,7 @@ public class ClusterActivity extends AppCompatActivity {
         analyze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (graphAtt.size() < 2) {
+                if (graphAtt.size() < 2 && numOfCluster.getValue() != 1) {
                     Toast.makeText(ClusterActivity.this, "Please choose more graph attributes", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -96,12 +94,6 @@ public class ClusterActivity extends AppCompatActivity {
     }
 
     private boolean attemptCluster() {
-        boolean goodInput = true;
-        Intent i = new Intent(ClusterActivity.this, ClusterResultActivity.class);
-        i.putExtra(getString(R.string.cluster_k), numOfCluster.getValue());
-        i.putExtra(getString(R.string.cluster_clusterAtt), Ints.toArray(clusterAtt));
-        i.putExtra(getString(R.string.cluster_graphAtt), Ints.toArray(graphAtt));
-
         //fatch data
         List<Participant> participants = Participant.getAllParticipants();
         //init data
@@ -112,6 +104,30 @@ public class ClusterActivity extends AppCompatActivity {
         }
         if (rows.size() < 4)
             return false;
+
+        Intent i = new Intent(ClusterActivity.this, ClusterResultActivity.class);
+        if (numOfCluster.getValue() == 1)
+            autoClustering(i, participants, rows);
+        else {
+            manualClustering(i, participants, rows);
+        }
+        String[] names = new String[rows.size()];
+        String[] groups = new String[rows.size()];
+        for (int x = 0; x < rows.size(); x++) {
+            names[x] = participants.get(rows.get(x)).firstName + ' ' + participants.get(rows.get(x)).lastName;
+            groups[x] = participants.get(rows.get(x)).group;
+        }
+        i.putExtra(getString(R.string.cluster_names), names);
+        i.putExtra(getString(R.string.cluster_groups), groups);
+
+        startActivity(i);
+        return true;
+    }
+
+    private void manualClustering(Intent i, List<Participant> participants, List<Integer> rows) {
+        i.putExtra(getString(R.string.cluster_k), numOfCluster.getValue());
+        i.putExtra(getString(R.string.cluster_clusterAtt), Ints.toArray(clusterAtt));
+        i.putExtra(getString(R.string.cluster_graphAtt), Ints.toArray(graphAtt));
         double[][] data = new double[rows.size()][clusterAtt.size()];
         //set data
         int y = 0;
@@ -127,39 +143,107 @@ public class ClusterActivity extends AppCompatActivity {
         }
         if (clusterAtt.contains(2)) {
             for (int x = 0; x < rows.size(); x++)
-                 data[x][y] = participants.get(rows.get(x)).testSets.getLast().recordTests.getLast().maxVelocity;
+                data[x][y] = participants.get(rows.get(x)).testSets.getLast().recordTests.getLast().maxVelocity;
             y++;
         }
         Bundle bundle = new Bundle();
         final Array2DRowRealMatrix mat = new Array2DRowRealMatrix(data);
         bundle.putSerializable(getString(R.string.cluster_data), mat);
         i.putExtras(bundle);
-        String[] names = new String[rows.size()];
-        String[] groups = new String[rows.size()];
-        for (int x = 0; x < rows.size(); x++) {
-            names[x] = participants.get(rows.get(x)).firstName + ' ' + participants.get(rows.get(x)).lastName;
-            groups[x] = participants.get(rows.get(x)).group;
+
+        //do clusterring
+        KMedoids km = new KMedoidsParameters(numOfCluster.getValue()).fitNewModel(mat);
+        final int[] clusters = km.getLabels();
+        double silhouetteScore = km.silhouetteScore();
+        i.putExtra(getString(R.string.cluster_clusters), clusters);
+        i.putExtra(getString(R.string.cluster_silhouetteScore), silhouetteScore);
+    }
+
+    private void autoClustering(Intent i, List<Participant> participants, List<Integer> rows) {
+        int[] kValues = {2, 3, 4};
+        BitSet[] attributes = setAttributes();
+        int attMax = 0;
+        Array2DRowRealMatrix mat = null;
+        KMedoids km = null;
+        int[] clusters = null;
+        double silhouetteScore = -2;
+
+        //clusterring
+        for (int att = 0; att < attributes.length; att++) {
+            double[][] data = new double[rows.size()][attributes[att].cardinality()];
+            //set data
+            int y = 0;
+            int attIndex = 0;
+            if (attIndex != -1 && attributes[att].nextSetBit(attIndex) == 0) {
+                for (int x = 0; x < rows.size(); x++)
+                    data[x][y] = participants.get(rows.get(x)).age;
+                y++;
+                attIndex = attributes[att].nextSetBit(attributes[att].nextSetBit(attIndex) + 1);
+            }
+            if (attIndex != -1 && attributes[att].nextSetBit(attIndex) == 1) {
+                for (int x = 0; x < rows.size(); x++)
+                    data[x][y] = participants.get(rows.get(x)).testSets.getLast().recordTests.getLast().totalTime;
+                y++;
+                attIndex = attributes[att].nextSetBit(attributes[att].nextSetBit(attIndex) + 1);
+            }
+            if (attIndex != -1 && attributes[att].nextSetBit(attIndex) == 2) {
+                for (int x = 0; x < rows.size(); x++)
+                    data[x][y] = participants.get(rows.get(x)).testSets.getLast().recordTests.getLast().maxVelocity;
+                y++;
+                attIndex = attributes[att].nextSetBit(attributes[att].nextSetBit(attIndex) + 1);
+            }
+            Array2DRowRealMatrix matTemp = new Array2DRowRealMatrix(data);
+
+            for (int k = 0; k < kValues.length; k++) {
+                KMedoids kmTemp = new KMedoidsParameters(kValues[k]).fitNewModel(matTemp);
+                final int[] resultsTemp = kmTemp.getLabels();
+                double scoreTemp = kmTemp.silhouetteScore();
+                if (scoreTemp > silhouetteScore) {
+                    km = kmTemp;
+                    clusters = resultsTemp;
+                    silhouetteScore = scoreTemp;
+                    attMax = att;
+                    mat = matTemp;
+                }
+            }
         }
-        i.putExtra(getString(R.string.cluster_names), names);
-        i.putExtra(getString(R.string.cluster_groups), groups);
-/*
+        i.putExtra(getString(R.string.cluster_k), km.getK());
+        List<Integer> clusterAtt = new ArrayList<>();
+        for (int x = attributes[attMax].nextSetBit(0); x >= 0; x = attributes[attMax].nextSetBit(x+1)) {
+            clusterAtt.add(x);
+            if (x >= ATTRIBUTES_SIZE) {
+                break; // or (i+1) would overflow
+            }
+        }
+        i.putExtra(getString(R.string.cluster_clusterAtt), Ints.toArray(clusterAtt));
+        i.putExtra(getString(R.string.cluster_graphAtt), Arrays.copyOfRange(Ints.toArray(clusterAtt), 0, ATTRIBUTES_SIZE-1));
+
         Bundle bundle = new Bundle();
-        final Array2DRowRealMatrix mat = new Array2DRowRealMatrix(new double[][]{
-                new double[]{1, 2},
-                new double[]{3, 5},
-                new double[]{2, 0},
-                new double[]{4, 5}
-        });
-        bundle.putSerializable("braude.motorsequence.DATA", mat);
-        button.putExtras(bundle);
+        bundle.putSerializable(getString(R.string.cluster_data), mat);
+        i.putExtras(bundle);
+        
+        i.putExtra(getString(R.string.cluster_clusters), clusters);
+        i.putExtra(getString(R.string.cluster_silhouetteScore), silhouetteScore);
+    }
 
-        //TODO: fatch IDs
-        String[] ids = new String[]{"0", "1", "2", "3"};
-        button.putExtra("braude.motorsequence.ID", ids);
-*/
-        startActivity(i);
+    private BitSet[] setAttributes() {
+        BitSet[] attributes = new BitSet[3];
 
-        return true;
+        attributes[0] = new BitSet(ATTRIBUTES_SIZE);
+        attributes[1] = new BitSet(ATTRIBUTES_SIZE);
+        attributes[2] = new BitSet(ATTRIBUTES_SIZE);
+
+        attributes[0].set(0);
+        attributes[0].set(1);
+
+        attributes[1].set(0);
+        attributes[1].set(1);
+        attributes[1].set(2);
+
+        attributes[2].set(1);
+        attributes[2].set(2);
+
+        return attributes;
     }
 
     private class OnClickCluster implements View.OnClickListener {
@@ -177,12 +261,12 @@ public class ClusterActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Button button = (Button) v;
-            if (clicked){
+            if (clicked) {
                 button.setBackgroundColor(Color.parseColor("#D8D8D8"));
                 clusterAtt.remove(i);
                 if (graphAtt.contains(i))
                     adjButton.callOnClick();
-            }else {
+            } else {
                 if (MAXSIZE == clusterAtt.size())
                     return;
                 button.setBackgroundColor(Color.GREEN);
@@ -207,10 +291,10 @@ public class ClusterActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Button button = (Button) v;
-            if (clicked){
+            if (clicked) {
                 button.setBackgroundColor(Color.parseColor("#D8D8D8"));
                 graphAtt.remove(i);
-            }else {
+            } else {
                 if (MAXSIZE == graphAtt.size())
                     return;
                 button.setBackgroundColor(Color.GREEN);

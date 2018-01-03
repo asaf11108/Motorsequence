@@ -56,6 +56,7 @@ public abstract class AbstractDbAdapter {
                     "total_time double(10) NOT NULL, " +
                     "max_velocity double(10) NOT NULL, " +
                     "velocity_peaks integer(10) NOT NULL, " +
+                    "average_jerk double(10) NOT NULL, " +
                     "PRIMARY KEY (participantID, testSetID, recordTestID), " +
                     "FOREIGN KEY(participantID, testSetID) REFERENCES TestSet(participantID, testSetID))";
     private static final String TABLE_CREATE_RecordRound =
@@ -89,7 +90,7 @@ public abstract class AbstractDbAdapter {
 
     protected static final String TAG = "AbstractDbAdapter";
     private static final String DATABASE_NAME = "data.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private final String tableName;
     private DatabaseHelper mDbHelper;

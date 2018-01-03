@@ -27,6 +27,7 @@ public class ThreadItem extends Thread {
 
     private double maxVelocity;
     private int velocityPeaks;
+    private double sumJerk;
 
     public ThreadItem(BlockingQueue<Item> localQueue, TestActivity testActivity, RecordTest recordTest) {
         this.localQueue = localQueue;
@@ -36,6 +37,7 @@ public class ThreadItem extends Thread {
         done = false;
 
         maxVelocity = 0;
+        sumJerk = 0;
     }
 
     @Override
@@ -59,10 +61,13 @@ public class ThreadItem extends Thread {
         double v = pxToMm(Math.sqrt(v_x*v_x + v_y*v_y), mTestActivity.getApplicationContext());
         mRecordRound.v.add(v);
         int size = mRecordRound.v.size();
-        if (size > 1) mRecordRound.jerk.add((v-mRecordRound.v.get(size-2)) /
-                                        (mRecordRound.s.get(size-1)-mRecordRound.s.get(size-2)));
-        else mRecordRound.jerk.add(0.0);
-
+        if (size > 1) {
+            double jerk = (v - mRecordRound.v.get(size - 2)) /
+                    (mRecordRound.s.get(size - 1) - mRecordRound.s.get(size - 2));
+            mRecordRound.jerk.add(jerk);
+            sumJerk += jerk;
+        } else
+            mRecordRound.jerk.add(0.0);
         if (v > maxVelocity) maxVelocity = v;
     }
 
@@ -76,7 +81,8 @@ public class ThreadItem extends Thread {
         mRecordRound.saveXYRound();
         velocityPeaks += peakdet(mRecordRound.v, 150, mRecordRound.s);
         if (TestType.NUM_OF_ROUNDS == mRecordRound.getID()) {
-            mRecordTest.updateTestParameters(mRecordRound.s.get(mRecordRound.s.size()-1), maxVelocity, velocityPeaks);
+            mRecordTest.updateTestParameters(mRecordRound.s.get(mRecordRound.s.size()-1),
+                    maxVelocity, velocityPeaks, sumJerk / (mRecordRound.jerk.size()-1));
             done = true;
             return;
         }

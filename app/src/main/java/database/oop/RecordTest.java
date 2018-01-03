@@ -20,6 +20,7 @@ public class RecordTest implements Identifier, NewObject<RecordRound> {
     public double maxVelocity;
     public int velocityPeaks;
     public MyArrayList<RecordRound> recordRounds;
+    public double averageJerk;
 
     public RecordTest(TestSet testSet, int recordTestID) {
         this.testSet = testSet;
@@ -34,6 +35,7 @@ public class RecordTest implements Identifier, NewObject<RecordRound> {
         totalTime = cursor.getDouble(cursor.getColumnIndex(rte.TOTAL_TIME));
         maxVelocity = cursor.getDouble(cursor.getColumnIndex(rte.MAX_VELOCITY));
         velocityPeaks = cursor.getInt(cursor.getColumnIndex(rte.VELOCITY_PEEKS));
+        averageJerk = cursor.getInt(cursor.getColumnIndex(rte.AVERAGE_JERK));
         int recordRoundSeq = cursor.getInt(cursor.getColumnIndex(rte.RECORD_ROUND_SEQ));
         cursor.close();
         recordRounds = new MyArrayList<>(recordRoundSeq, this);
@@ -59,7 +61,7 @@ public class RecordTest implements Identifier, NewObject<RecordRound> {
         return  recordRounds.add();
     }
 
-    public void updateTestParameters(double totalTime, double maxVeloocity, int velocityPeaks) {
+    public void updateTestParameters(double totalTime, double maxVeloocity, int velocityPeaks, double averageJerk) {
         RecordTestEntry rte = FactoryEntry.getRecordTestEntry();
         this.totalTime = totalTime;
         this.maxVelocity = maxVeloocity;
@@ -68,6 +70,7 @@ public class RecordTest implements Identifier, NewObject<RecordRound> {
         values.put(rte.TOTAL_TIME, totalTime);
         values.put(rte.MAX_VELOCITY, maxVeloocity);
         values.put(rte.VELOCITY_PEEKS, velocityPeaks);
+        values.put(rte.AVERAGE_JERK, averageJerk);
         rte.update(values,
                 new MyPair[]{new MyPair(rte.PK_PARTICIPANT_ID, testSet.getParent().getID()),
                         new MyPair(rte.PK_TEST_SET_ID, testSet.getID()),
