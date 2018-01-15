@@ -39,8 +39,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -51,6 +54,10 @@ public class ClusterResultActivity extends AppCompatActivity {
     private List<Integer> pointColors;
     private String[] groupsSymbol;
     private static Pair<PointsGraphSeries<DataPoint>, TableRow> seletedData;
+    private int[] clusterAtt;
+    private Array2DRowRealMatrix mat;
+    private String[] names;
+    private String[] graphLabels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +72,10 @@ public class ClusterResultActivity extends AppCompatActivity {
         //get extras
         Bundle extras = Preconditions.checkNotNull(getIntent().getExtras());
         int k = extras.getInt(getString(R.string.cluster_k));
-        int[] clusterAtt = extras.getIntArray(getString(R.string.cluster_clusterAtt));
         int[] graphAtt = extras.getIntArray(getString(R.string.cluster_graphAtt));
-        Array2DRowRealMatrix mat = (Array2DRowRealMatrix) getIntent().getSerializableExtra(getString(R.string.cluster_data));
-        String[] names = extras.getStringArray(getString(R.string.cluster_names));
+        clusterAtt = extras.getIntArray(getString(R.string.cluster_clusterAtt));
+        mat = (Array2DRowRealMatrix) getIntent().getSerializableExtra(getString(R.string.cluster_data));
+        names = extras.getStringArray(getString(R.string.cluster_names));
         String[] groupOfParticipant = extras.getStringArray(getString(R.string.cluster_groups));
         final int[] clusters = extras.getIntArray(getString(R.string.cluster_clusters));
         double silhouetteScore = extras.getDouble(getString(R.string.cluster_silhouetteScore));
@@ -87,7 +94,7 @@ public class ClusterResultActivity extends AppCompatActivity {
 
         GraphView graphView = (GraphView) findViewById(R.id.graph_clusterResult_result);
         GridLabelRenderer gridLabelRenderer = graphView.getGridLabelRenderer();
-        String[] graphLabels = getApplicationContext().getResources().getStringArray(R.array.array_clusterResult_graphLabels);
+        graphLabels = getApplicationContext().getResources().getStringArray(R.array.array_clusterResult_graphLabels);
         gridLabelRenderer.setHorizontalAxisTitle(graphLabels[graphAtt[0]]);
         gridLabelRenderer.setVerticalAxisTitle(graphLabels[graphAtt[1]]);
         BiMap<PointsGraphSeries<DataPoint>, TableRow> biMap = HashBiMap.create();
@@ -290,10 +297,19 @@ public class ClusterResultActivity extends AppCompatActivity {
     }
 
     private void sendEmail3() {
-        try {
-            createCachedFile(ClusterResultActivity.this, "Test.txt", "This is a test");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
 
-            startActivity(getSendEmailIntent(ClusterResultActivity.this, "asaf11108@gmail.com", "Test", "See attached", "Test.txt"));
+        String[] clusterLabels = new String[clusterAtt.length];
+        for (int i = 0; i < clusterAtt.length; i++)
+            clusterLabels[i] = graphLabels[clusterAtt[i]];
+
+        try {
+            String fileName = "data_matrix.txt";
+            createCachedFile(ClusterResultActivity.this, fileName, "Name for each line:\n" + names.toString() + "Data:\n" + mat.toString());
+
+
+            startActivity(getSendEmailIntent(ClusterResultActivity.this, "asaf11108@gmail.com", "Cluster Data - " + dateFormat.format(date), "Cluster attributes:\n\n" + clusterLabels.toString(), fileName));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ActivityNotFoundException e) {
