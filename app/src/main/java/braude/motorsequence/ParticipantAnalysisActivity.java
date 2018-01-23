@@ -238,9 +238,9 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
 
     private void defineTable() {
         int seq = participant.testSets.getLast().recordTests.getSeq();
-        double totalTimeAvg = 0.0, maxVelocityAvg = 0.0, averageJerkAvg = 0.0, gradeAvg = 0.0;
-        int velocityPeaksAvg = 0;
-        int[] grades = {2, 3, 3, 3, 4};
+        double totalTimeAvg = 0.0, maxVelocityAvg = 0.0, averageJerkAvg = 0.0;
+        int velocityPeaksAvg = 0, improvementsAvg = 0;
+        int[] improvements = {0, 0, 0, 0, 0};
         TableLayout summeryTable = (TableLayout) findViewById(R.id.table_participantAnalysis_summery);
         if (seq != 0) {
             for (int i = 0; i < seq; i++) {
@@ -253,25 +253,54 @@ public class ParticipantAnalysisActivity extends AppCompatActivity {
                 getCellAtPos(summeryTable, i + 1, 2).setText(String.valueOf(maxVelocityDay));
                 getCellAtPos(summeryTable, i + 1, 3).setText(String.valueOf(velocityPeaksDay));
                 getCellAtPos(summeryTable, i + 1, 4).setText(String.valueOf(averageJerkDay));
-                getCellAtPos(summeryTable, i + 1, 5).setText(String.valueOf(grades[i]));
 
                 totalTimeAvg += totalTimeDay;
                 maxVelocityAvg += maxVelocityDay;
                 velocityPeaksAvg += velocityPeaksDay;
                 averageJerkAvg += averageJerkDay;
-                gradeAvg += grades[i];
+
+                if (i == 0) {
+                    improvements[i] = 0;
+                    getCellAtPos(summeryTable, i + 1, 5).setText("-");
+                }
+                else{
+                    improvements[i] = (totalTimeDay < totalTimeAvg/(i+1)) ? improvements[i]+2 : improvements[i]-2;
+                    improvements[i] = (maxVelocityDay > maxVelocityAvg/(i+1)) ? improvements[i]+1 : improvements[i]-1;
+                    improvements[i] = (velocityPeaksDay < velocityPeaksAvg/(i+1)) ? improvements[i]+1 : improvements[i]-1;
+                    improvements[i] = (averageJerkDay < Math.abs(averageJerkAvg/(i+1))) ? improvements[i]+1 : improvements[i]-1;
+                    if(improvements[i] == 0)
+                        getCellAtPos(summeryTable, i + 1, 5).setText('-');
+                    else if(improvements[i] > 0){
+                        improvementsAvg++;
+                        getCellAtPos(summeryTable, i + 1, 5).setText("⇑");
+                        getCellAtPos(summeryTable, i + 1, 5).setTextColor(Color.GREEN);
+                    }
+                    else{
+                        improvementsAvg--;
+                        getCellAtPos(summeryTable, i + 1, 5).setText("⇓");
+                        getCellAtPos(summeryTable, i + 1, 5).setTextColor(Color.RED);
+                    }
+                }
             }
             totalTimeAvg = Math.round(totalTimeAvg / seq * 100.0) / 100.0;
             maxVelocityAvg = Math.round(maxVelocityAvg / seq * 100.0) / 100.0;
             velocityPeaksAvg = Math.round(velocityPeaksAvg / seq * 100) / 100;
             averageJerkAvg = Math.round(averageJerkAvg / seq * 100) / 100;
-            gradeAvg = Math.round(gradeAvg / seq * 100) / 100;
 
             getCellAtPos(summeryTable, TEST_DAYS + 1, 1).setText(String.valueOf(totalTimeAvg));
             getCellAtPos(summeryTable, TEST_DAYS + 1, 2).setText(String.valueOf(maxVelocityAvg));
             getCellAtPos(summeryTable, TEST_DAYS + 1, 3).setText(String.valueOf(velocityPeaksAvg));
             getCellAtPos(summeryTable, TEST_DAYS + 1, 4).setText(String.valueOf(averageJerkAvg));
-            getCellAtPos(summeryTable, TEST_DAYS + 1, 5).setText(String.valueOf(gradeAvg));
+            if(improvementsAvg == 0)
+                getCellAtPos(summeryTable, TEST_DAYS + 1, 5).setText("-");
+            else if(improvementsAvg > 0){
+                getCellAtPos(summeryTable, TEST_DAYS + 1, 5).setText("⇑");
+                getCellAtPos(summeryTable, TEST_DAYS + 1, 5).setTextColor(Color.GREEN);
+            }
+            else{
+                getCellAtPos(summeryTable, TEST_DAYS + 1, 5).setText("⇓");
+                getCellAtPos(summeryTable, TEST_DAYS + 1, 5).setTextColor(Color.RED);
+            }
         }
 
     }

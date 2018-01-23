@@ -90,7 +90,7 @@ public abstract class AbstractDbAdapter {
 
     protected static final String TAG = "AbstractDbAdapter";
     private static final String DATABASE_NAME = "data.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 5;
 
     private final String tableName;
     private DatabaseHelper mDbHelper;
@@ -250,13 +250,14 @@ public abstract class AbstractDbAdapter {
             Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
                     + newVersion + ", which will destroy all old data");
 
-            db.execSQL("DROP TABLE IF EXISTS XYRound");
-            db.execSQL("DROP TABLE IF EXISTS RecordRound");
-            db.execSQL("DROP TABLE IF EXISTS RecordTest");
-            db.execSQL("DROP TABLE IF EXISTS TestType");
-            db.execSQL("DROP TABLE IF EXISTS TestSet");
-            db.execSQL("DROP TABLE IF EXISTS participant");
-            onCreate(db);
+//            db.execSQL("UPDATE participant SET _group = 'Young' where first_name = 'Asaf'");
+//            db.execSQL("DROP TABLE IF EXISTS XYRound");
+//            db.execSQL("DROP TABLE IF EXISTS RecordRound");
+//            db.execSQL("DROP TABLE IF EXISTS RecordTest");
+//            db.execSQL("DROP TABLE IF EXISTS TestType");
+//            db.execSQL("DROP TABLE IF EXISTS TestSet");
+//            db.execSQL("DROP TABLE IF EXISTS participant");
+//            onCreate(db);
         }
     }
 }

@@ -306,10 +306,10 @@ public class ClusterResultActivity extends AppCompatActivity {
 
         try {
             String fileName = "data_matrix.txt";
-            createCachedFile(ClusterResultActivity.this, fileName, "Name for each line:\n" + names.toString() + "Data:\n" + mat.toString());
+            createCachedFile(ClusterResultActivity.this, fileName, "Name for each line:\n" + Arrays.toString(names) + "\nData:\n" + mat.toString());
 
 
-            startActivity(getSendEmailIntent(ClusterResultActivity.this, "asaf11108@gmail.com", "Cluster Data - " + dateFormat.format(date), "Cluster attributes:\n\n" + clusterLabels.toString(), fileName));
+            startActivity(getSendEmailIntent(ClusterResultActivity.this, "", "Cluster Data - " + dateFormat.format(date), "Cluster attributes:\n\n" + Arrays.toString(clusterLabels), fileName));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ActivityNotFoundException e) {

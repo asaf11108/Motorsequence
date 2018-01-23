@@ -18,8 +18,8 @@
         <item>Select Group</item>
         <item>ADHD</item>
         <item>Parkinson</item>
-        <item>Strokes</item>>
-        <item>Health</item>>
+        <item>Old</item>>
+        <item>Young</item>>
     </string-array>
     <string-array name="array_groupSymbol">
         <item>\u25CF</item>
