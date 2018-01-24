@@ -83,7 +83,7 @@ public abstract class AbstractDbAdapter {
                     "FOREIGN KEY(participantID, testSetID, recordTestID, recordRoundID) REFERENCES RecordRound(participantID, testSetID, recordTestID, recordRoundID))";
     private static final String INSERT_ASAF =
             "INSERT INTO Participant (first_name, last_name, age, email, user_name, password, _group, testSetSeq) " +
-                    "VALUES ('Asaf', 'Regev', 27, 'asaf11108@gmail.com', 'asaf', '123', 'ADHD', 0)";
+                    "VALUES ('Asaf', 'Regev', 27, 'asaf11108@gmail.com', 'asaf', '123', 'Young', 0)";
     private static final String INSERT_1_TestType =
             "INSERT INTO TestType (num_of_tests, num_of_rounds, A_x, A_y, B_x, B_y, C_x, C_y, D_x, D_y) " +
                     "VALUES ( 5, 7, 850, 240, 400, 170, 150, 50, 650, 380)";
