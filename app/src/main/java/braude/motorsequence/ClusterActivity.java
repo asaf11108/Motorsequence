@@ -171,7 +171,7 @@ public class ClusterActivity extends AppCompatActivity {
         //clusterring
         for (int att = 0; att < attributes.length; att++) {
             double[][] data = new double[rows.size()][attributes[att].cardinality()];
-            //set data
+            //set data/
             int y = 0;
             int attIndex = 0;
             if (attIndex != -1 && attributes[att].nextSetBit(attIndex) == 0) {
