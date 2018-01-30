@@ -133,12 +133,12 @@ public class ClusterActivity extends AppCompatActivity {
         int y = 0;
         if (clusterAtt.contains(0)) {
             for (int x = 0; x < rows.size(); x++)
-                data[x][y] = participants.get(rows.get(x)).age;
+                data[x][y] = participants.get(rows.get(x)).testSets.getLast().recordTests.getLast().totalTime;
             y++;
         }
         if (clusterAtt.contains(1)) {
             for (int x = 0; x < rows.size(); x++)
-                data[x][y] = participants.get(rows.get(x)).testSets.getLast().recordTests.getLast().totalTime;
+                data[x][y] = participants.get(rows.get(x)).testSets.getLast().recordTests.getLast().velocityPeaks;
             y++;
         }
         if (clusterAtt.contains(2)) {
@@ -171,18 +171,18 @@ public class ClusterActivity extends AppCompatActivity {
         //clusterring
         for (int att = 0; att < attributes.length; att++) {
             double[][] data = new double[rows.size()][attributes[att].cardinality()];
-            //set data/
+            //set data
             int y = 0;
             int attIndex = 0;
             if (attIndex != -1 && attributes[att].nextSetBit(attIndex) == 0) {
                 for (int x = 0; x < rows.size(); x++)
-                    data[x][y] = participants.get(rows.get(x)).age;
+                    data[x][y] = participants.get(rows.get(x)).testSets.getLast().recordTests.getLast().totalTime;
                 y++;
                 attIndex = attributes[att].nextSetBit(attributes[att].nextSetBit(attIndex) + 1);
             }
             if (attIndex != -1 && attributes[att].nextSetBit(attIndex) == 1) {
                 for (int x = 0; x < rows.size(); x++)
-                    data[x][y] = participants.get(rows.get(x)).testSets.getLast().recordTests.getLast().totalTime;
+                    data[x][y] = participants.get(rows.get(x)).testSets.getLast().recordTests.getLast().velocityPeaks;
                 y++;
                 attIndex = attributes[att].nextSetBit(attributes[att].nextSetBit(attIndex) + 1);
             }
