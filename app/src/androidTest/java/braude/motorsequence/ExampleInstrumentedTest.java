@@ -20,7 +20,7 @@ public class ExampleInstrumentedTest {
     public void useAppContext() throws Exception {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
-		//package name
+		//package 1
 		//package name 2
         assertEquals("braude.motorsequence", appContext.getPackageName());
     }
